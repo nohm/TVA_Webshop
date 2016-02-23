@@ -95,4 +95,5 @@ group :test do
   gem 'shoulda-matchers', require: false
   gem 'timecop'
   gem 'webmock'
+  gem 'minitest-reporters', '1.0.5'
 end

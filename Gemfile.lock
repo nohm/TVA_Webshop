@@ -37,6 +37,7 @@ GEM
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     addressable (2.4.0)
+    ansi (1.5.0)
     arel (6.0.3)
     ast (2.2.0)
     astrolabe (1.3.1)
@@ -181,6 +182,11 @@ GEM
       rake
     mini_portile2 (2.0.0)
     minitest (5.8.4)
+    minitest-reporters (1.0.5)
+      ansi
+      builder
+      minitest (>= 5.0)
+      ruby-progressbar
     modernizr-rails (2.7.1)
     multi_json (1.11.2)
     nokogiri (1.6.7.2)
@@ -346,6 +352,7 @@ DEPENDENCIES
   lograge
   lol_dba
   mina
+  minitest-reporters (= 1.0.5)
   modernizr-rails
   nprogress-rails
   paperclip
