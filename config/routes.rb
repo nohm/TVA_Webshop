@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
 
+  get 'users/new'
+
     root 'static_pages#home'
+    get  'contact' => 'static_pages#contact'
+    get  'signup'  => 'user#new'
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
