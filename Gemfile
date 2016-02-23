@@ -59,6 +59,8 @@ gem 'rails-timeago', '~> 2.0'
 gem 'business_time'
 # Ignoring holidays
 gem 'holidays'
+# Encrypt password
+gem 'bcrypt',        '3.1.7'
 
 group :assets do
   # Javascript engine
