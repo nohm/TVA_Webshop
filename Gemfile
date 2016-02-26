@@ -51,8 +51,6 @@ gem 'redcarpet'
 # PDF rendering
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
-# Code style
-gem 'rubocop'
 # Timestamps
 gem 'rails-timeago', '~> 2.0'
 # Ignoring weekends

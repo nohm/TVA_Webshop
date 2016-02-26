@@ -1,17 +1,18 @@
-<% provide(:title, 'Sign up') %>
-<h1>Sign up</h1>
+<% provide(:title, 'Edit settings') %>
 
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     <%= bootstrap_form_for(@user) do |f| %>
-      <%= f.alert_message "Please fix the errors below." %>
+      <%= f.alert_message "Error" %>
 
       <%= f.text_field :name %>
       <%= f.email_field :email %>
       <%= f.password_field :password %>
       <%= f.password_field :password_confirmation %>
 
-      <%= f.submit "Create my account", class: "btn btn-primary" %>
+      <%= f.submit "Edit settings", class: "btn btn-primary" %>
+      <br><br>
+      <%= link_to("Cancel", root_path, class: "btn btn-primary") %>
     <% end %>
   </div>
 </div>

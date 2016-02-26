@@ -1,0 +1,14 @@
+<div id="alert-box">
+  <% flash.each do |name, msg| %>
+    <% if msg.is_a?(String) %>
+        <div class="alert alert-<%= name == "success" ? "success" : "danger" %>">
+          <a class="close" data-dismiss="alert">&#215;</a>
+          <div id="flash_<%= name %>">
+            <span class="glyphicon glyphicon-<%= name == "success" ? "ok" : "remove" %>"></span>
+           <%= '  ' + msg %>
+          </div>
+          <% flash.delete(name) %>
+        </div>
+    <% end %>
+  <% end %>
+</div>

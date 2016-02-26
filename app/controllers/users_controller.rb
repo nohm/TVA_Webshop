@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   def index
+    @users = User.all.page(params[:page]).per(25).order('id ASC')
   end
 
   def show
@@ -8,6 +9,20 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
+  end
+
+  def edit
+    @user = User.find(params[:id])
+  end
+
+  def update
+    @user = User.find(params[:id])
+    if @user.update(user_params)
+      redirect_to users_path
+      flash[:success] = "Settings updated"
+    else
+      render 'edit'
+    end
   end
 
   def create
@@ -19,6 +34,13 @@ class UsersController < ApplicationController
     else
       render 'new'
     end
+  end
+
+  def destroy
+    user = User.find(params[:id])
+    user.destroy
+    redirect_to users_path
+    flash[:success] = "User deleted"
   end
 
   private

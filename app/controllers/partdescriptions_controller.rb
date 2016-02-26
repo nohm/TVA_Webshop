@@ -1,0 +1,2 @@
+class PartDescriptionsController < ApplicationController
+end

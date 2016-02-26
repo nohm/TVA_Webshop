@@ -1,0 +1,31 @@
+<div class="panel-body panel-table">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th class="small-col"><%= "Id" %></th>
+              <th><%= "Naam" %></th>
+              <th><%= "Email" %></th>
+              <th class="small-col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @users.each do |user| %>
+              <tr>
+                <td><%= user.id %></td>
+                <td><%= user.name %></td>
+                <td><%= user.email %></td>
+                <td>
+                  <% if !current_user?(user) %>
+                    <%= link_to(user_path(user), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
+                      <span class="glyphicon glyphicon-remove"></span>
+                    <% end %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+          <%= link_to("Add part", new_user_path, :class => 'btn btn-mini btn-primary') %>
+  </div>

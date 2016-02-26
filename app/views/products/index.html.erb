@@ -1,0 +1,57 @@
+<% provide(:title, "Products") %>
+
+  <div class="panel-body panel-table">
+    <% if @products.length == 0 %>
+      <p class="empty_list">
+        <%= "De lijst is leeg" %>
+      </p>
+    <% else %>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th class="small-col"><%= "Id" %></th>
+              <th><%= "Device" %></th>
+              <th><%= "Brand" %></th>
+              <th><%= "Model" %></th>
+              <th><%= "Model Serial" %></th>
+              <th><%= "Categories" %></th>
+              <th><%= "Parts" %></th>
+              <th class="small-col"></th>
+              <th class="small-col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @products.each do |product| %>
+              <tr>
+                <td><%= product.id %></td>
+                <td><%= product.device %></td>
+                <td><%= product.brand %></td>
+                <td><%= product.model %></td>
+                <td><%= product.model_serial %></td>
+                <td>
+                  <% if !product.category.find_by(product_id: product.id).nil? %>
+                    <%= product.category.find_by(product_id: product.id).name %>
+                  <% else %>
+                    <%= link_to("Add a category", new_category_path) %>
+                  <% end %>
+                </td>
+                <td></td>
+                <td>
+                  <%= link_to edit_product_path(product) do %>
+                    <span class="glyphicon glyphicon-pencil"></span>
+                  <% end %>
+                </td>
+                <td>
+                  <%= link_to(product_path(product), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
+                    <span class="glyphicon glyphicon-remove"></span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+    <%= link_to("Add part", new_product_path, :class => 'btn btn-mini btn-primary') %>
+  </div>
