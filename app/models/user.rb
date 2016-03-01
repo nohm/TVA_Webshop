@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
 	attr_accessor :remember_token
+  #has_one :role
 	before_save { email.downcase! }
 	validates :name, 	presence: true, length: { maximum: 74 }
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
@@ -37,5 +38,21 @@ class User < ActiveRecord::Base
   # Forgets a user.
   def forget
     update_attribute(:remember_digest, nil)
+  end
+
+  def admin?
+    role.name == "Admin"
+  end
+
+  def manager?
+    role.name == "Manager" || admin?
+  end
+
+  def client?
+    role.name == "Client" || manager?
+  end
+
+  def role
+    Role.find(role_id)
   end
 end

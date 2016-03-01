@@ -7,43 +7,49 @@
       </p>
     <% else %>
       <div class="table-responsive">
-        <table class="table table-striped table-hover">
+        <table class="table table-hover">
           <thead>
             <tr>
-              <th><%= "Product id" %></th>
-              <th><%= "Device name" %></th>
+              <th class="small-col"><%= "Id" %></th>
               <th><%= "Name" %></th>
+              <th><%= "Image" %></th>
               <th class="small-col"></th>
-              <th class="small-col"></th>
-              <th class="small-col"></th>
+              <% if current_user.manager? %>
+                <th class="small-col"></th>
+                <th class="small-col"></th>
+              <% end %>
             </tr>
           </thead>
           <tbody>
             <% @categories.each do |category| %>
               <tr>
-                <td><%= category.product_id %></td>
-                <td><%= category.product.device.name.titleize %></td>
+                <td><%= category.id %></td>
                 <td><%= category.name %></td>
+                <td><%= image_tag category.cimg.url(:thumb) %></td>
                 <td>
                   <%= link_to device_product_category_parts_path(params[:device_id], params[:product_id], category) do %>
                     <span class="glyphicon glyphicon-search"></span>
                   <% end %>
                 </td>
-                <td>
-                  <%= link_to edit_device_product_category_path(params[:device_id], params[:product_id], category) do %>
-                    <span class="glyphicon glyphicon-pencil"></span>
-                  <% end %>
-                </td>
-                <td>
-                  <%= link_to device_product_category_path(params[:device_id], params[:product_id], category), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
-                    <span class="glyphicon glyphicon-remove"></span>
-                  <% end %>
-                </td>
+                <% if current_user.manager? %>
+                  <td>
+                    <%= link_to edit_device_product_category_path(params[:device_id], params[:product_id], category) do %>
+                      <span class="glyphicon glyphicon-pencil"></span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <%= link_to device_product_category_path(params[:device_id], params[:product_id], category), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                      <span class="glyphicon glyphicon-remove"></span>
+                    <% end %>
+                  </td>
+                <% end %>
               </tr>
             <% end %>
           </tbody>
         </table>
       </div>
     <% end %>
-    <%= link_to("Add category", new_device_product_category_path, :class => 'btn btn-mini btn-primary') %>
+    <% if current_user.manager? %>
+      <%= link_to("Add category", new_device_product_category_path, :class => 'btn btn-mini btn-primary') %>
+    <% end %>
   </div>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160301080359) do
+ActiveRecord::Schema.define(version: 20160301144318) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,8 +19,17 @@ ActiveRecord::Schema.define(version: 20160301080359) do
   create_table "categories", force: :cascade do |t|
     t.integer  "product_id"
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.string   "cimg_file_name"
+    t.string   "cimg_content_type"
+    t.integer  "cimg_file_size"
+    t.datetime "cimg_updated_at"
+  end
+
+  create_table "device_parts", force: :cascade do |t|
+    t.integer "device_id"
+    t.integer "part_id"
   end
 
   create_table "devices", force: :cascade do |t|
@@ -38,6 +47,8 @@ ActiveRecord::Schema.define(version: 20160301080359) do
     t.string   "name"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.string   "condition"
+    t.string   "warranty"
   end
 
   create_table "products", force: :cascade do |t|
@@ -49,6 +60,10 @@ ActiveRecord::Schema.define(version: 20160301080359) do
     t.integer  "device_id"
   end
 
+  create_table "roles", force: :cascade do |t|
+    t.string "name"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "name"
     t.string   "email"
@@ -56,6 +71,7 @@ ActiveRecord::Schema.define(version: 20160301080359) do
     t.datetime "updated_at",      null: false
     t.string   "password_digest"
     t.string   "remember_digest"
+    t.integer  "role_id"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

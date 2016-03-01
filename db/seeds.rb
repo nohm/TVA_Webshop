@@ -32,4 +32,6 @@ Category.create!(product_id: 1,
 				 name: "HDD")
 
 Part.create!(category_id: 1,
-			 name: "2TB")
+			 name: "2TB"
+			 condition: "Good",
+			 warranty: "3 months")

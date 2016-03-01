@@ -10,40 +10,48 @@
         <table class="table table-striped table-hover">
           <thead>
             <tr>
-              <th><%= "Category id" %></th>
-              <th><%= "Category name" %></th>
+              <th class="small-col"><%= "Id" %></th>
               <th><%= "Name" %></th>
+              <th><%= "Condition" %></th>
+              <th><%= "Warranty" %></th>
               <th class="small-col"></th>
-              <th class="small-col"></th>
-              <th class="small-col"></th>
+              <% if current_user.manager? %>
+                <th class="small-col"></th>
+                <th class="small-col"></th>
+              <% end %>
             </tr>
           </thead>
           <tbody>
             <% @parts.each do |part| %>
               <tr>
-                <td><%= part.category_id %></td>
-                <td><%= part.category.name %></td>
+                <td><%= part.id %></td>
                 <td><%= part.name %></td>
+                <td><%= part.condition %></td>
+                <td><%= part.warranty %></td>
                 <td>
                   <%= link_to device_product_category_part_partdescriptions_path(params[:device_id], params[:product_id], params[:category_id], part) do %>
                     <span class="glyphicon glyphicon-search"></span>
                   <% end %>
                 </td>
-                <td>
-                  <%= link_to edit_device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], part.id) do %>
-                    <span class="glyphicon glyphicon-pencil"></span>
-                  <% end %>
-                </td>
-                <td>
-                  <%= link_to device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], part.id), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
-                    <span class="glyphicon glyphicon-remove"></span>
-                  <% end %>
-                </td>
+                <% if current_user.manager? %>
+                  <td>
+                    <%= link_to edit_device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], part.id) do %>
+                      <span class="glyphicon glyphicon-pencil"></span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <%= link_to device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], part.id), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                      <span class="glyphicon glyphicon-remove"></span>
+                    <% end %>
+                  </td>
+                <% end %>
               </tr>
             <% end %>
           </tbody>
         </table>
       </div>
     <% end %>
-    <%= link_to("Add part", new_device_product_category_part_path, :class => 'btn btn-mini btn-primary') %>
+    <% if current_user.manager? %>
+      <%= link_to("Add part", new_device_product_category_part_path, :class => 'btn btn-mini btn-primary') %>
+    <% end %>
   </div>

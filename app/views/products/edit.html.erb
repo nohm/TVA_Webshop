@@ -13,7 +13,7 @@
 
       <%= f.submit "Edit product", class: "btn btn-primary" %>
       <br><br>
-      <%= link_to("Cancel", device_products_path(params[:device_id]), class: "btn btn-primary") %>
+      <%= link_to("Cancel", :back, class: "btn btn-primary") %>
     <% end %>
   </div>
 </div>

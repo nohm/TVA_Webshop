@@ -6,6 +6,7 @@
               <th class="small-col"><%= "Id" %></th>
               <th><%= "Naam" %></th>
               <th><%= "Email" %></th>
+              <th><%= "Role" %></th>
               <th class="small-col"></th>
             </tr>
           </thead>
@@ -15,6 +16,7 @@
                 <td><%= user.id %></td>
                 <td><%= user.name %></td>
                 <td><%= user.email %></td>
+                <td><%= user.role.name %></td>
                 <td>
                   <% if !current_user?(user) %>
                     <%= link_to(user_path(user), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>

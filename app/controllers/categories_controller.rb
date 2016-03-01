@@ -4,10 +4,12 @@ class CategoriesController < ApplicationController
   end
 
 	def new
+    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
 		@category = Category.new
 	end
 
 	def create
+    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
 		params[:category][:product_id] = params[:product_id]
 
     @category = Category.new(category_params)
@@ -20,6 +22,7 @@ class CategoriesController < ApplicationController
   end
 
   def destroy
+    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
     category = Category.find(params[:id])
     category.destroy
     redirect_to device_product_categories_path(params[:device_id], params[:product_id])
@@ -27,10 +30,12 @@ class CategoriesController < ApplicationController
   end
 
   def edit
+    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
     @category = Category.find(params[:id])
   end
 
   def update
+    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
     @category = Category.find(params[:id])
     if @category.update(category_params)
       redirect_to device_product_categories_path(params[:device_id], params[:product_id])
@@ -43,6 +48,6 @@ class CategoriesController < ApplicationController
   private
 
 	def category_params
-	  params.require(:category).permit(:product_id, :name)
+	  params.require(:category).permit(:product_id, :name, :cimg)
 	end
 end

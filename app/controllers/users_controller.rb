@@ -1,9 +1,11 @@
 class UsersController < ApplicationController
   def index
+    redirect_to root_path, :alert => "Unauthorized"   unless current_user.admin?
     @users = User.all.page(params[:page]).per(25).order('id ASC')
   end
 
   def show
+    redirect_to root_path, :alert => "Unauthorized" unless current_user.id == params[:id].to_i
     @user = User.find(params[:id])
   end
 
@@ -12,10 +14,12 @@ class UsersController < ApplicationController
   end
 
   def edit
+    redirect_to root_path, :alert => "Unauthorized" unless current_user.id == params[:id].to_i
     @user = User.find(params[:id])
   end
 
   def update
+    redirect_to root_path, :alert => "Unauthorized" unless current_user.id == params[:id].to_i
     @user = User.find(params[:id])
     if @user.update(user_params)
       redirect_to users_path
@@ -27,6 +31,7 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+    @user.role_id = 3
     if @user.save
       log_in @user
       flash[:success] = "Welcome to the Webshop!"
@@ -47,6 +52,6 @@ class UsersController < ApplicationController
 
     def user_params
       params.require(:user).permit(:name, :email, :password,
-                                   :password_confirmation)
+                                   :password_confirmation, :role_id)
     end
 end

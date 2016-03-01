@@ -4,10 +4,12 @@ class PartsController < ApplicationController
   end
 
   def new
+    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
     @part = Part.new
   end
 
   def create
+    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
     params[:part][:category_id] = params[:category_id]
     @part = Part.new(part_params)
     if @part.save
@@ -19,6 +21,7 @@ class PartsController < ApplicationController
   end
 
   def destroy
+    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
     part = Part.find(params[:id])
     part.destroy
     redirect_to device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])
@@ -26,10 +29,12 @@ class PartsController < ApplicationController
   end
 
   def edit
+    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
     @part = Part.find(params[:id])
   end
 
   def update
+    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
     @part = Part.find(params[:id])
     if @part.update(part_params)
       redirect_to device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])
@@ -42,6 +47,6 @@ class PartsController < ApplicationController
   private
 
   def part_params
-    params.require(:part).permit(:category_id, :name)
+    params.require(:part).permit(:category_id, :name, :condition, :warranty)
   end
 end
