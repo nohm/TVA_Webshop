@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-  get 'products/new'
-
   get 'sessions/new'
 
     root                'static_pages#home'
@@ -12,8 +10,15 @@ Rails.application.routes.draw do
     delete 'logout'  => 'sessions#destroy'
     
     resources :users
-    resources :products
-    resources :categories
+    resources :devices do
+      resources :products do
+        resources :categories do
+          resources :parts do
+            resources :partdescriptions
+          end
+        end
+      end
+    end
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase

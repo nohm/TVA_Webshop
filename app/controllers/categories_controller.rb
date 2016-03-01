@@ -1,6 +1,6 @@
 class CategoriesController < ApplicationController
 	def index
-    @categories = Category.all.page(params[:page]).per(25).order('product_id ASC')
+    @categories = Category.where(product_id: params[:product_id]).page(params[:page]).per(25).order('product_id ASC')
   end
 
 	def new
@@ -8,9 +8,11 @@ class CategoriesController < ApplicationController
 	end
 
 	def create
+		params[:category][:product_id] = params[:product_id]
+
     @category = Category.new(category_params)
     if @category.save
-      redirect_to categories_path
+      redirect_to device_product_categories_path(params[:device_id], params[:product_id])
       flash[:success] = "Category added"
     else
       render 'new'
@@ -20,7 +22,7 @@ class CategoriesController < ApplicationController
   def destroy
     category = Category.find(params[:id])
     category.destroy
-    redirect_to categories_path
+    redirect_to device_product_categories_path(params[:device_id], params[:product_id])
     flash[:success] = "Category deleted"
   end
 
@@ -31,7 +33,7 @@ class CategoriesController < ApplicationController
   def update
     @category = Category.find(params[:id])
     if @category.update(category_params)
-      redirect_to categories_path
+      redirect_to device_product_categories_path(params[:device_id], params[:product_id])
       flash[:success] = "Category updated"
     else
       render 'edit'

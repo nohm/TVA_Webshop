@@ -1,19 +1,47 @@
 class PartsController < ApplicationController
+  def index
+    @parts = Part.where(category_id: params[:category_id]).page(params[:page]).per(25)
+  end
+
   def new
     @part = Part.new
   end
 
   def create
+    params[:part][:category_id] = params[:category_id]
     @part = Part.new(part_params)
     if @part.save
-      redirect_to parts_path
+      redirect_to device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])
       flash[:success] = "Part added"
+    else
+      render 'new'
+    end
+  end
+
+  def destroy
+    part = Part.find(params[:id])
+    part.destroy
+    redirect_to device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])
+    flash[:success] = "Part deleted"
+  end
+
+  def edit
+    @part = Part.find(params[:id])
+  end
+
+  def update
+    @part = Part.find(params[:id])
+    if @part.update(part_params)
+      redirect_to device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])
+      flash[:success] = "Part updated"
+    else
+      render 'edit'
     end
   end
 
   private
 
   def part_params
-    params.require(:part).permit()
+    params.require(:part).permit(:category_id, :name)
   end
 end

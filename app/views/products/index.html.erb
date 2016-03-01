@@ -1,5 +1,5 @@
 <% provide(:title, "Products") %>
-
+<h2>Products</h2>
   <div class="panel-body panel-table">
     <% if @products.length == 0 %>
       <p class="empty_list">
@@ -10,13 +10,12 @@
         <table class="table table-striped table-hover">
           <thead>
             <tr>
-              <th class="small-col"><%= "Id" %></th>
-              <th><%= "Device" %></th>
-              <th><%= "Brand" %></th>
-              <th><%= "Model" %></th>
-              <th><%= "Model Serial" %></th>
-              <th><%= "Categories" %></th>
-              <th><%= "Parts" %></th>
+              <th class="small-col"><%= sortable "id" %></th>
+              <th><%= sortable "device" %></th>
+              <th><%= sortable "brand" %></th>
+              <th><%= sortable "model" %></th>
+              <th><%= sortable "model_serial", "Model serial" %></th>
+              <th class="small-col"></th>
               <th class="small-col"></th>
               <th class="small-col"></th>
             </tr>
@@ -25,25 +24,22 @@
             <% @products.each do |product| %>
               <tr>
                 <td><%= product.id %></td>
-                <td><%= product.device %></td>
+                <td><%= product.device.name.titleize %></td>
                 <td><%= product.brand %></td>
                 <td><%= product.model %></td>
                 <td><%= product.model_serial %></td>
                 <td>
-                  <% if !product.category.find_by(product_id: product.id).nil? %>
-                    <%= product.category.find_by(product_id: product.id).name %>
-                  <% else %>
-                    <%= link_to("Add a category", new_category_path) %>
+                  <%= link_to device_product_categories_path(product.device, product) do %>
+                    <span class="glyphicon glyphicon-search"></span>
                   <% end %>
                 </td>
-                <td></td>
                 <td>
-                  <%= link_to edit_product_path(product) do %>
+                  <%= link_to edit_device_product_path(product.device, product) do %>
                     <span class="glyphicon glyphicon-pencil"></span>
                   <% end %>
                 </td>
                 <td>
-                  <%= link_to(product_path(product), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
+                  <%= link_to(device_product_path(product.device, product), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
                     <span class="glyphicon glyphicon-remove"></span>
                   <% end %>
                 </td>
@@ -53,5 +49,5 @@
         </table>
       </div>
     <% end %>
-    <%= link_to("Add part", new_product_path, :class => 'btn btn-mini btn-primary') %>
+    <%= link_to("Add product", new_device_product_path, :class => 'btn btn-mini btn-primary') %>
   </div>

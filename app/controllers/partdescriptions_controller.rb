@@ -1,2 +1,47 @@
-class PartDescriptionsController < ApplicationController
+class PartdescriptionsController < ApplicationController
+	def index
+    @partdescriptions = Partdescription.where(part_id: params[:part_id]).page(params[:page]).per(25)
+  end
+
+  def new
+    @partdescription = Partdescription.new
+  end
+
+  def create
+    params[:partdescription][:part_id] = params[:part_id]
+    @partdescription = Partdescription.new(partdescription_params)
+    if @partdescription.save
+      redirect_to device_product_category_part_partdescriptions_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])
+      flash[:success] = "Partdescription added"
+    else
+      render 'new'
+    end
+  end
+
+  def destroy
+    partdescription = Partdescription.find(params[:id])
+    partdescription.destroy
+    redirect_to device_product_category_part_partdescriptions_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])
+    flash[:success] = "Partdescription deleted"
+  end
+
+  def edit
+    @partdescription = Partdescription.find(params[:id])
+  end
+
+  def update
+    @partdescription = Partdescription.find(params[:id])
+    if @partdescription.update(partdescription_params)
+      redirect_to device_product_category_part_partdescriptions_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])
+      flash[:success] = "Partdescription updated"
+    else
+      render 'edit'
+    end
+  end
+
+  private
+
+  def partdescription_params
+    params.require(:partdescription).permit(:part_id, :title, :value)
+  end
 end

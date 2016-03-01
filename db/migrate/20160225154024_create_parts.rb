@@ -1,5 +1,5 @@
-class CreateProducts < ActiveRecord::Migration
-	def self.up
+class CreateParts < ActiveRecord::Migration
+	def change
     create_table :parts do |t|
 			t.integer :category_id
 			t.string :name
@@ -12,10 +12,5 @@ class CreateProducts < ActiveRecord::Migration
 	  	t.string :title
 	  	t.string :value
 	  end
-  end
-
-  def self.down
-    drop_table :parts
-    drop_table :partdescriptions
   end
 end
