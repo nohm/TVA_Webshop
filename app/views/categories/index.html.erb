@@ -25,17 +25,17 @@
                 <td><%= category.product.device.name.titleize %></td>
                 <td><%= category.name %></td>
                 <td>
-                  <%= link_to device_product_category_parts_path(category.product.device, category.product, category) do %>
+                  <%= link_to device_product_category_parts_path(params[:device_id], params[:product_id], category) do %>
                     <span class="glyphicon glyphicon-search"></span>
                   <% end %>
                 </td>
                 <td>
-                  <%= link_to edit_device_product_category_path(category.product.device_id, category.product_id, category.id) do %>
+                  <%= link_to edit_device_product_category_path(params[:device_id], params[:product_id], category) do %>
                     <span class="glyphicon glyphicon-pencil"></span>
                   <% end %>
                 </td>
                 <td>
-                  <%= link_to device_product_category_path(category.product.device_id, category.product_id, category.id), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                  <%= link_to device_product_category_path(params[:device_id], params[:product_id], category), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
                     <span class="glyphicon glyphicon-remove"></span>
                   <% end %>
                 </td>

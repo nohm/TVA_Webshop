@@ -29,17 +29,17 @@
                 <td><%= product.model %></td>
                 <td><%= product.model_serial %></td>
                 <td>
-                  <%= link_to device_product_categories_path(product.device, product) do %>
+                  <%= link_to device_product_categories_path(params[:device_id], product) do %>
                     <span class="glyphicon glyphicon-search"></span>
                   <% end %>
                 </td>
                 <td>
-                  <%= link_to edit_device_product_path(product.device, product) do %>
+                  <%= link_to edit_device_product_path(params[:device_id], product) do %>
                     <span class="glyphicon glyphicon-pencil"></span>
                   <% end %>
                 </td>
                 <td>
-                  <%= link_to(device_product_path(product.device, product), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
+                  <%= link_to(device_product_path(params[:device_id], product), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
                     <span class="glyphicon glyphicon-remove"></span>
                   <% end %>
                 </td>
