@@ -8,12 +8,12 @@ class PartimagesController < ApplicationController
 	end
 	
 	def new
-    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
+    redirect_to root_path, :alert => "Unauthorized" and return unless current_user.manager?
     @partimage = Partimage.new
   end
 
   def create
-    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
+    redirect_to root_path, :alert => "Unauthorized" and return unless current_user.manager?
     params[:partimage][:part_id] = params[:part_id]
     @partimage = Partimage.new(partimage_params)
     if @partimage.save
@@ -25,12 +25,12 @@ class PartimagesController < ApplicationController
   end
 
   def edit
-    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
+    redirect_to root_path, :alert => "Unauthorized" and return unless current_user.manager?
     @partimage = Partimage.find(params[:id])
   end
 
   def update
-    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
+    redirect_to root_path, :alert => "Unauthorized" and return unless current_user.manager?
     @partimage = Partimage.find(params[:id])
     if @partimage.update(partimage_params)
       redirect_to device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])
@@ -38,6 +38,14 @@ class PartimagesController < ApplicationController
     else
       render 'edit'
     end
+  end
+
+  def destroy
+    redirect_to root_path, :alert => "Unauthorized" and return unless current_user.manager?
+    partimage = Partimage.find(params[:id])
+    partimage.destroy
+    redirect_to device_product_category_part_partimages_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])
+    flash[:success] = "Part deleted"
   end
 
   private

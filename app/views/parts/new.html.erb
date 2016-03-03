@@ -10,9 +10,9 @@
       <%= f.text_field    :warranty %>
       <%= f.number_field  :stock %>
       <%= f.text_field    :price_ex, prepend: '€', placeholder: '0.00' %>
+      <%= f.file_field :partimagefull, class: "big", label: "Placeholder image" %>
 
       <%= f.submit "Add part", class: "btn btn-primary" %>
-      <br><br>
       <%= link_to("Cancel", device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id]), class: "btn btn-primary") %>
     <% end %>
   </div>

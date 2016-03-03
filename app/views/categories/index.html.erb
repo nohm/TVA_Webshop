@@ -8,7 +8,7 @@
     <% else %>
       <div class="overview-row row">
         <% @categories.each do |category| %>
-          <div class="col-md-3 overview-tab category-tab" data-category-id="<%= category.id %>">
+          <div class="col-sm-3 overview-tab category-tab" data-category-id="<%= category.id %>">
             <div class="thumbnail">
               <%= link_to device_product_category_parts_path(params[:device_id], params[:product_id], category) do %>
                 <%= image_tag category.cimg.url(:medium) %>
@@ -34,4 +34,5 @@
     <% if current_user.manager? %>
       <%= link_to("Add category", new_device_product_category_path, :class => 'btn btn-mini btn-primary') %>
     <% end %>
+    <%= link_to("Back", device_products_path(params[:device_id]), class: "btn btn-primary") %>
   </div>

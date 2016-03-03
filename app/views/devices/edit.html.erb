@@ -8,8 +8,7 @@
       <%= f.text_field :name, label: 'Device' %>
 
       <%= f.submit "Edit device", class: "btn btn-primary" %>
-      <br><br>
-      <%= link_to("Cancel", :back, class: "btn btn-primary") %>
+      <%= link_to("Cancel", devices_path, class: "btn btn-primary") %>
     <% end %>
   </div>
 </div>

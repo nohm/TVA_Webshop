@@ -8,8 +8,7 @@
       <%= f.file_field :pimg, class: "big", label: "Part image" %>
 
       <%= f.submit "Edit image", class: "btn btn-primary" %>
-      <br><br>
-      <%= link_to("Cancel", device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id]), class: "btn btn-primary") %>
+      <%= link_to("Cancel", device_product_category_part_partimages_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id]), class: "btn btn-primary") %>
     <% end %>
   </div>
 </div>

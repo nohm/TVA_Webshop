@@ -9,7 +9,6 @@
       <%= f.file_field :cimg, class: "big", label: "Placeholder image" %>
 
       <%= f.submit "Add category", class: "btn btn-primary" %>
-      <br><br>
       <%= link_to("Cancel", device_product_categories_path(params[:device_id], params[:product_id]), class: "btn btn-primary") %>
     <% end %>
   </div>

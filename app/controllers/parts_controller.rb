@@ -3,6 +3,10 @@ class PartsController < ApplicationController
     @parts = Part.where(category_id: params[:category_id]).page(params[:page]).per(25).order('id ASC')
   end
 
+  def show
+    @part = Part.find(params[:id])
+  end
+
   def new
     redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
     @part = Part.new
@@ -47,6 +51,6 @@ class PartsController < ApplicationController
   private
 
   def part_params
-    params.require(:part).permit(:category_id, :name, :condition, :warranty, :price_ex, :stock)
+    params.require(:part).permit(:category_id, :name, :condition, :warranty, :price_ex, :stock, :partimagefull)
   end
 end

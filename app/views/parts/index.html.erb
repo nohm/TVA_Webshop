@@ -10,9 +10,8 @@
         <table class="table table-striped table-hover">
           <thead>
             <tr>
-              <th><%= "Name" %></th>
-              <th><%= "Condition" %></th>
-              <th><%= "Warranty" %></th>
+              <th><%= "Description" %></th>
+              <th></th>
               <th><%= "Stock" %></th>
               <th><%= "Price" %></th>
               <% if current_user.manager? %>
@@ -27,9 +26,22 @@
           <tbody>
             <% @parts.each do |part| %>
               <tr>
-                <td><%= part.name %></td>
-                <td><%= part.condition %></td>
-                <td><%= part.warranty %></td>
+                <td class="col-lg-4 col-md-5">
+                  <div class="title"><b><%= part.name %></b></div>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td style="padding-right: 20px;"><small>Condition: </small></td>
+                        <td><small><%= part.condition %></small></td>
+                      </tr>
+                      <tr>
+                        <td><small>Warranty: </small></td>
+                        <td><small><%= part.warranty %></small></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td><%= image_tag part.partimagefull.url(:thumb) %></td>
                 <% if part.stock == 0 %>
                   <td><%= "Out of stock" %></td>
                 <% else %>
@@ -74,4 +86,5 @@
     <% if current_user.manager? %>
       <%= link_to("Add part", new_device_product_category_part_path, :class => 'btn btn-mini btn-primary') %>
     <% end %>
+    <%= link_to("Back", device_product_categories_path(params[:device_id], params[:product_id]), class: "btn btn-primary") %>
   </div>

@@ -25,7 +25,7 @@
                 <td><%= image_tag partimage.pimg.url(:thumb) %></td>
                 <% if current_user.manager? %>
                   <td>
-                    <%= link_to edit_device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partimage.id) do %>
+                    <%= link_to edit_device_product_category_part_partimage_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partimage.id) do %>
                       <span class="glyphicon glyphicon-pencil"></span>
                     <% end %>
                   </td>
@@ -46,4 +46,5 @@
     <% if current_user.manager? %>
       <%= link_to("Add image", new_device_product_category_part_partimage_path, :class => 'btn btn-mini btn-primary') %>
     <% end %>
+    <%= link_to("Back", device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id]), class: "btn btn-primary") %>
   </div>
