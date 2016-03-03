@@ -15,3 +15,10 @@
 //= require bootstrap
 //= require turbolinks
 //= require_tree .
+
+
+$(document).on('ready page:load', function () {
+	$(".SmallImg").mouseover(function() {
+		$(".BigImg").attr('src', $(this).data('hover'));
+	})
+});

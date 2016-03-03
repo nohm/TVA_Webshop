@@ -5,6 +5,8 @@ class PartsController < ApplicationController
 
   def show
     @part = Part.find(params[:id])
+    @partimages = Partimage.where(part_id: params[:id])
+    @partdescriptions = Partdescription.where(part_id: params[:id])
   end
 
   def new

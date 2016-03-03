@@ -24,5 +24,6 @@ module TVAWebshop
     config.active_record.raise_in_transactional_callbacks = true
 
     config.lograge.enabled = true
+    config.autoload_paths += %W["#{config.root}/app/validators/"]
   end
 end

@@ -13,6 +13,7 @@ class PartimagesController < ApplicationController
   end
 
   def create
+    redirect_to new_device_product_category_part_partimage_path and return if params[:partimage].nil?
     redirect_to root_path, :alert => "Unauthorized" and return unless current_user.manager?
     params[:partimage][:part_id] = params[:part_id]
     @partimage = Partimage.new(partimage_params)
@@ -30,6 +31,7 @@ class PartimagesController < ApplicationController
   end
 
   def update
+    redirect_to edit_device_product_category_part_partimage_path and return if params[:partimage].nil?
     redirect_to root_path, :alert => "Unauthorized" and return unless current_user.manager?
     @partimage = Partimage.find(params[:id])
     if @partimage.update(partimage_params)
