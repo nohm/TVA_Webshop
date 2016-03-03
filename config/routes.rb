@@ -15,6 +15,7 @@ Rails.application.routes.draw do
         resources :categories do
           resources :parts do
             resources :partdescriptions
+            resources :partimages
           end
         end
       end

@@ -1,6 +1,6 @@
 <% provide(:title, "Parts") %>
-<h2>Parts</h2>
   <div class="panel-body panel-table">
+    <h2>Parts for <%= Category.find_by(id: params[:category_id]).name %></h2>
     <% if @parts.length == 0 %>
       <p class="empty_list">
         <%= "De lijst is leeg" %>
@@ -10,12 +10,15 @@
         <table class="table table-striped table-hover">
           <thead>
             <tr>
-              <th class="small-col"><%= "Id" %></th>
               <th><%= "Name" %></th>
               <th><%= "Condition" %></th>
               <th><%= "Warranty" %></th>
-              <th class="small-col"></th>
+              <th><%= "Stock" %></th>
+              <th><%= "Price" %></th>
               <% if current_user.manager? %>
+                <th class="small-col"></th>
+                <th class="small-col"></th>
+                <th class="small-col"></th>
                 <th class="small-col"></th>
                 <th class="small-col"></th>
               <% end %>
@@ -24,16 +27,31 @@
           <tbody>
             <% @parts.each do |part| %>
               <tr>
-                <td><%= part.id %></td>
                 <td><%= part.name %></td>
                 <td><%= part.condition %></td>
                 <td><%= part.warranty %></td>
-                <td>
-                  <%= link_to device_product_category_part_partdescriptions_path(params[:device_id], params[:product_id], params[:category_id], part) do %>
-                    <span class="glyphicon glyphicon-search"></span>
-                  <% end %>
-                </td>
+                <% if part.stock == 0 %>
+                  <td><%= "Out of stock" %></td>
+                <% else %>
+                  <td><%= part.stock %></td>
+                <% end %>
+                <td><%= number_to_currency(part.price_ex, unit: "€") %></td>
                 <% if current_user.manager? %>
+                  <td>
+                    <%= link_to device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], part) do %>
+                      <span class="glyphicon glyphicon-search"></span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <%= link_to device_product_category_part_partdescriptions_path(params[:device_id], params[:product_id], params[:category_id], part) do %>
+                      <span class="glyphicon glyphicon-text-color"></span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <%= link_to device_product_category_part_partimages_path(params[:device_id], params[:product_id], params[:category_id], part.id) do %>
+                      <span class="glyphicon glyphicon-picture"></span>
+                    <% end %>
+                  </td>
                   <td>
                     <%= link_to edit_device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], part.id) do %>
                       <span class="glyphicon glyphicon-pencil"></span>
@@ -51,6 +69,8 @@
         </table>
       </div>
     <% end %>
+  </div>
+  <div class="panel-footer">
     <% if current_user.manager? %>
       <%= link_to("Add part", new_device_product_category_part_path, :class => 'btn btn-mini btn-primary') %>
     <% end %>

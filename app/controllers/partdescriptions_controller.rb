@@ -4,12 +4,12 @@ class PartdescriptionsController < ApplicationController
   end
 
   def new
-    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
+    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
     @partdescription = Partdescription.new
   end
 
   def create
-    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
+    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
     params[:partdescription][:part_id] = params[:part_id]
     @partdescription = Partdescription.new(partdescription_params)
     if @partdescription.save
@@ -20,21 +20,13 @@ class PartdescriptionsController < ApplicationController
     end
   end
 
-  def destroy
-    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
-    partdescription = Partdescription.find(params[:id])
-    partdescription.destroy
-    redirect_to device_product_category_part_partdescriptions_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])
-    flash[:success] = "Partdescription deleted"
-  end
-
   def edit
-    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
+    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
     @partdescription = Partdescription.find(params[:id])
   end
 
   def update
-    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
+    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
     @partdescription = Partdescription.find(params[:id])
     if @partdescription.update(partdescription_params)
       redirect_to device_product_category_part_partdescriptions_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])
@@ -42,6 +34,14 @@ class PartdescriptionsController < ApplicationController
     else
       render 'edit'
     end
+  end
+
+  def destroy
+    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
+    partdescription = Partdescription.find(params[:id])
+    partdescription.destroy
+    redirect_to device_product_category_part_partdescriptions_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])
+    flash[:success] = "Partdescription deleted"
   end
 
   private

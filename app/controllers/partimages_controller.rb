@@ -1,0 +1,48 @@
+class PartimagesController < ApplicationController
+	def index
+		redirect_to root_path, :alert => "Unauthorized" and return unless current_user.manager?
+		@partimages = Partimage.all
+	end
+
+	def show
+	end
+	
+	def new
+    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
+    @partimage = Partimage.new
+  end
+
+  def create
+    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
+    params[:partimage][:part_id] = params[:part_id]
+    @partimage = Partimage.new(partimage_params)
+    if @partimage.save
+      redirect_to device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])
+      flash[:success] = "Part image added"
+    else
+      render 'new'
+    end
+  end
+
+  def edit
+    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
+    @partimage = Partimage.find(params[:id])
+  end
+
+  def update
+    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
+    @partimage = Partimage.find(params[:id])
+    if @partimage.update(partimage_params)
+      redirect_to device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])
+      flash[:success] = "Partdescription updated"
+    else
+      render 'edit'
+    end
+  end
+
+  private
+
+  def partimage_params
+		params.require(:partimage).permit(:part_id, :pimg)
+	end
+end

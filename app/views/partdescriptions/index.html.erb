@@ -1,6 +1,6 @@
-<% provide(:title, "Partdescriptions") %>
-<h2>Part descriptions</h2>
+<% provide(:title, "Descriptions") %>
   <div class="panel-body panel-table">
+    <h2>Descriptions for <%= Part.find_by(id: params[:part_id]).name %></h2>
     <% if @partdescriptions.length == 0 %>
       <p class="empty_list">
         <%= "De lijst is leeg" %>
@@ -42,7 +42,9 @@
           </tbody>
         </table>
       </div>
-    <% end %>
+    <% end %> 
+  </div>
+  <div class="panel-footer">
     <% if current_user.manager? %>
       <%= link_to("Add part", new_device_product_category_part_partdescription_path, :class => 'btn btn-mini btn-primary') %>
     <% end %>

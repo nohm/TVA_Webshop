@@ -2,20 +2,16 @@ class ProductsController < ApplicationController
 	helper_method :sort_column, :sort_direction
 
 	def index
-    @products = Product.where(device_id: params[:device_id]).page(params[:page]).per(25).order(sort_column + ' ' + sort_direction)
-  end
-
-  def show
-    @product = Product.find(params[:id])
+    @products = Product.where(device_id: params[:device_id]).page(params[:page]).per(25).order('id')
   end
 
   def new
-    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
+    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
     @product = Product.new
   end
 
   def create
-    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
+    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
     params[:product][:device_id] = params[:device_id]
     
     @product = Product.new(product_params)
@@ -40,12 +36,12 @@ class ProductsController < ApplicationController
   end
 
   def edit
-    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
+    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
     @product = Product.find(params[:id])
   end
 
   def update
-    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
+    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
     @product = Product.find(params[:id])
     if @product.update(product_params)
       redirect_to device_products_path(params[:device_id])
@@ -56,7 +52,7 @@ class ProductsController < ApplicationController
   end
 
   def destroy
-    redirect_to root_path, :alert => "Unauthorized"   unless current_user.manager?
+    redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
     product = Product.find(params[:id])
     product.destroy
     redirect_to device_products_path(params[:device_id])
@@ -68,12 +64,4 @@ class ProductsController < ApplicationController
   def product_params
     params.require(:product).permit(:device_id, :brand, :model, :model_serial, :product)
   end
-
-	def sort_column
-	  Product.column_names.include?(params[:sort]) ? params[:sort] : "id"
-	end
- 
-	def sort_direction
-	  %w[asc desc].include?(params[:direction]) ?  params[:direction] : "asc"
-	end
 end

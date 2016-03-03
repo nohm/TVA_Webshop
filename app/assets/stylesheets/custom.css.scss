@@ -124,7 +124,7 @@ footer {
 
 input, textarea, select, .uneditable-input {
   border: 1px solid #bbb;
-  width: 100%;
+  width: 25%;
   margin-bottom: 15px;
   @include box_sizing;
 }
@@ -201,5 +201,140 @@ aside {
 
 .small-col {
   width: 17px;
+}
+
+.overview-tab {
+  padding: 5px 15px;
+  .glyphicon {
+    margin-right: 5px;
+  }
+}
+
+.overview-tab-0,
+.overview-tab.success {
+  background-color: lighten($brand-success, 30%);
+}
+
+.overview-tab-1,
+.overview-tab.danger {
+  background-color: lighten($brand-danger, 30%);
+}
+
+.overview-tab-2,
+.overview-tab.warning {
+  background-color: lighten($brand-warning, 30%);
+}
+
+.overview-tab-0:hover,
+.overview-tab.success:hover {
+  background-color: lighten($brand-success, 20%);
+}
+
+.overview-tab-1:hover,
+.overview-tab.danger:hover {
+  background-color: lighten($brand-danger, 20%);
+}
+
+.overview-tab-2:hover,
+.overview-tab.warning:hover {
+  background-color: lighten($brand-warning, 15%);
+}
+
+.overview-row {
+  margin: 15px 0;
+}
+
+.overview-sub-row {
+  margin: 0;
+}
+
+.overview-tab.thumbnail {
+  margin: 0;
+  padding: 0;
+  padding-top: 9px;
+  border: none;
+  border-radius: 0;
+}
+
+.category-tab {
+  position: relative;
+  .caption {
+    padding: 0;
+  }
+  .glyphicon {
+    margin-top: 10px;
+  }
+}
+
+.panel {
+  margin-bottom: 0;
+  border: 0;
+  border-radius: 0;
+  //border-bottom: 2px solid darken(#FFF, 10%);
+  box-shadow: none;
+  background-color: #FFF !important;
+}
+
+.panel-heading {
+  padding: 0;
+  margin-bottom: 15px;
+  color: #FFF;
+  border: 0;
+}
+
+.panel-title {
+  line-height: 40px;
+  padding: 15px;
+  font-weight: 300;
+  font-size: 24px;
+  margin: 0;
+  color: #FFF;
+}
+
+.panel-body {
+  padding: 15px 15px 10px 15px;
+}
+
+.panel-footer {
+  border: 0;
+  background-color: #FFF !important;
+  .btn {
+    margin-bottom: 5px;
+    @media (max-width: 767px) {
+      width: 100%;
+    }
+  }
+}
+
+.panel-table {
+  //padding-top: 15px;
+  padding: 0 0 10px 0;
+  .table {
+    margin-bottom: 0;
+  }
+  .table > thead > tr > th {
+    border-bottom-width: 1px;
+    line-height: 33px;
+    font-size: 16px;
+    font-weight: 300;
+  }
+  .table > tbody > tr:first-child > td {
+    border-top: 0;
+  }
+}
+
+.panel-dual {
+  padding: 0 15px;
+}
+.panel-dual > .row > .col-md-6 {
+  padding: 0;
+}
+
+.panel-home {
+  padding: 0;
+}
+
+.big {
+  width: 100% !important;
 }
 

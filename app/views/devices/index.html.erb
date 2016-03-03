@@ -47,6 +47,8 @@
         </table>
       </div>
     <% end %>
+  </div>
+  <div class="panel-footer">
     <% if current_user.manager? %>
       <%= link_to("Add device", new_device_path, :class => 'btn btn-mini btn-primary') %>
     <% end %>

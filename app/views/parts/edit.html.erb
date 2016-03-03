@@ -5,9 +5,11 @@
     <%= bootstrap_form_for(@part, :url => device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], params[:id])) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
 
-      <%= f.text_field :name %>
-      <%= f.text_field :condition %>
-      <%= f.text_field :warranty %>
+      <%= f.text_field    :name %>
+      <%= f.text_field    :condition %>
+      <%= f.text_field    :warranty %>
+      <%= f.number_field  :stock %>
+      <%= f.text_field    :price_ex, prepend: '€', placeholder: '0.00' %>
 
       <%= f.submit "Edit category", class: "btn btn-primary" %>
       <br><br>

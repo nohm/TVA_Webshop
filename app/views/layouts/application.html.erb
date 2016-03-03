@@ -11,9 +11,16 @@
   <body>
     <%= render 'layouts/header' %>
     <div class="container">
-      <%= render 'layouts/messages' %>
-      <%= yield %>
-      <%= render 'layouts/footer' %>
+      <div class="content" id="page-content">
+        <div class="row page-content-row">
+          <div class="col-lg-12 page-content-col">
+            <div class="panel panel-default">
+              <%= render 'layouts/messages' %>
+              <%= yield %>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
 </html>
