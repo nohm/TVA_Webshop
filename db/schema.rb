@@ -11,10 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160303105031) do
+ActiveRecord::Schema.define(version: 20160308142002) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "carts", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "part_id"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.integer  "amount"
+    t.boolean  "purchased",  default: false
+  end
 
   create_table "categories", force: :cascade do |t|
     t.integer  "product_id"
@@ -25,11 +34,7 @@ ActiveRecord::Schema.define(version: 20160303105031) do
     t.string   "cimg_content_type"
     t.integer  "cimg_file_size"
     t.datetime "cimg_updated_at"
-  end
-
-  create_table "device_parts", force: :cascade do |t|
-    t.integer "device_id"
-    t.integer "part_id"
+    t.integer  "device_id"
   end
 
   create_table "devices", force: :cascade do |t|
@@ -53,22 +58,23 @@ ActiveRecord::Schema.define(version: 20160303105031) do
   create_table "parts", force: :cascade do |t|
     t.integer  "category_id"
     t.string   "name"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
     t.string   "condition"
     t.string   "warranty"
     t.integer  "stock"
-    t.decimal  "price_ex"
+    t.decimal  "price_ex",                   precision: 10, scale: 2
     t.string   "partimagefull_file_name"
     t.string   "partimagefull_content_type"
     t.integer  "partimagefull_file_size"
     t.datetime "partimagefull_updated_at"
+    t.integer  "device_id"
+    t.string   "brand"
   end
 
   create_table "products", force: :cascade do |t|
     t.string   "brand"
-    t.string   "model"
-    t.string   "model_serial"
+    t.string   "type_number"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "device_id"

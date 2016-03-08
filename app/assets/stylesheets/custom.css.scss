@@ -34,7 +34,7 @@ textarea {
 
 /* typography */
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h4, h5, h6 {
   line-height: 1;
 }
 
@@ -52,18 +52,28 @@ h2 {
   text-align: center;
 }
 
+h4 {
+  padding-left: 0px;
+}
+
 h3 {
-  font-size: 1.2em;
-  letter-spacing: -1px;
-  margin-bottom: 30px;
-  text-align: center;
-  font-weight: normal;
+  font-size: 0.9em;
   color: $gray-light;
+  margin: 0px;
+}
+
+h5 {
+  font-size: 1.2em;
+  font-weight: bold;
 }
 
 p {
   font-size: 1.1em;
   line-height: 1.7em;
+}
+
+.Title {
+  font-size: 1.25em;
 }
 
 
@@ -210,36 +220,6 @@ aside {
   }
 }
 
-.overview-tab-0,
-.overview-tab.success {
-  background-color: lighten($brand-success, 30%);
-}
-
-.overview-tab-1,
-.overview-tab.danger {
-  background-color: lighten($brand-danger, 30%);
-}
-
-.overview-tab-2,
-.overview-tab.warning {
-  background-color: lighten($brand-warning, 30%);
-}
-
-.overview-tab-0:hover,
-.overview-tab.success:hover {
-  background-color: lighten($brand-success, 20%);
-}
-
-.overview-tab-1:hover,
-.overview-tab.danger:hover {
-  background-color: lighten($brand-danger, 20%);
-}
-
-.overview-tab-2:hover,
-.overview-tab.warning:hover {
-  background-color: lighten($brand-warning, 15%);
-}
-
 .overview-row {
   margin: 15px 0;
 }
@@ -335,8 +315,57 @@ aside {
   width: 100% !important;
 }
 
+.Small {
+  margin-right: 14px !important;
+}
+
+.BigImg {
+  border: 1px solid;
+}
+
 .SmallImg {
-  margin-bottom: 4px !important;
-  padding: 1px !important;
-  display: inline !important;
+  border: 1px solid;
+}
+
+.BigImage {
+  padding-left: 0px !important;
+}
+
+.SmallImgContainer {
+  padding-top: 5px;
+  padding-left: 0px;
+  padding-right: 5px;
+  position: relative;
+  min-height: 1px;
+  float: left;
+}
+
+.PrijsTable {
+  width: 50%;
+  float: right;
+}
+
+.Right {
+  text-align: right !important;
+}
+
+.noPadding {
+  padding: 0px;
+}
+
+.table > tbody > tr > td {
+     vertical-align: middle;
+}
+
+.table > tfoot > tr > td {
+     vertical-align: middle;
+}
+
+.Borderless { 
+     border-top: none !important; 
+}
+
+.table > thead > tr > th {
+  line-height: 20px !important;
+  font-size: 14px !important;
 }

@@ -1,6 +1,6 @@
 class CategoriesController < ApplicationController
 	def index
-    @categories = Category.where(product_id: params[:product_id]).page(params[:page]).per(25).order('id ASC')
+    @categories = Category.where(device_id: params[:device_id]).page(params[:page]).per(25).order('id ASC')
   end
 
 	def new
@@ -11,6 +11,7 @@ class CategoriesController < ApplicationController
 	def create
     redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
 		params[:category][:product_id] = params[:product_id]
+    params[:category][:device_id] = params[:device_id]
 
     @category = Category.new(category_params)
     if @category.save
@@ -48,6 +49,6 @@ class CategoriesController < ApplicationController
   private
 
 	def category_params
-	  params.require(:category).permit(:product_id, :name, :cimg)
+	  params.require(:category).permit(:product_id, :device_id, :name, :cimg)
 	end
 end

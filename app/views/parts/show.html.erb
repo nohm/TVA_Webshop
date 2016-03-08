@@ -1,23 +1,106 @@
-<% provide(:title, @part.name) %>
-  <div class="panel-body">
-    <div class="row">
-      <div class="BigImage col-sm-12">
-       <%= image_tag @partimages.first.pimg.url(:large), :class => "BigImg", :title => @part.name %>
-      </div>
-      <div class="SmallImages">
-        <% @partimages.each do |image| %>
-          <div class="col-xs-3 col-sm-2 col-md-1">
-          <%= image_tag image.pimg.url(:thumb), :data => {:hover => image.pimg.url(:large)}, :class => "SmallImg thumbnail" %>
+  <% provide(:title, @part.name) %>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-sm-6 ImageContainer" style="padding-left: 0px">
+          <h4 style="max-width: 300px"><%= @part.name %></h4>
+          <div class="BigImage col-sm-12">
+            <% if @partimages.first.nil? %>
+              <%= image_tag "MissingLarge.png" %>
+            <% else %>
+              <a href="#">
+                <%= image_tag @partimages.first.pimg.url(:large), :class => "BigImg", :title => @part.name %>
+              </a>
+            <% end %>
           </div>
-        <% end %>
+          <% @partimages.each do |image| %>
+            <div class="SmallImgContainer">
+
+              <%= image_tag image.pimg.url(:thumb), :data => {:hover => image.pimg.url(:large)}, :class => "SmallImg" %>
+            </div>
+          <% end %>
+          <div style="clear: both;"></div> 
+        </div>
+        <br>
+        <div class="col-sm-6" style="padding-right: 0px">
+          <div class="Prijsbox">
+            <table class="table table-bordered PrijsTable">
+              <thead>
+                <tr>
+                  <th class="Right">Prijs</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="Right"><%= number_to_currency(@part.price_ex, unit: "€") %></td>
+                </tr>
+                <tr>
+                  <td class="Right">Excl 21% BTW</td>
+                </tr>
+              </tbody>
+            </table>
+            <div style="clear: both;"></div> 
+            <div class="col-xs-6 col-sm-offset-6 noPadding">
+            <%= bootstrap_form_for(@cart, :url => carts_path) do |f| %>
+              <%= f.number_field :amount, min: 1, max: @part.stock, :value => 1 %>
+              <%= f.hidden_field :user_id, :value => current_user.id %>
+              <%= f.hidden_field :part_id, :value => @part.id %>
+
+              <%= f.submit "Add to cart", class: "btn btn-primary big" %>
+            <% end %>
+            </div>
+            
+          </div>
+        </div>
       </div>
-    </div>
-    <br>
-    <% @partdescriptions.each do |description| %>
-      <%= description.title %>:
-      <%= description.value %>
       <br>
-    <% end %>
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <tbody>
+            <% if @partdescriptions.length > 0 %>
+              <tr class="info">
+                <th class="Title">Specificaties</th>
+                <th></th>
+              </tr>
+              <% @partdescriptions.each do |description| %>
+                <tr>
+                  <th><%= description.title %>:</th>
+                  <td><%= description.value %></td>
+                </tr>
+              <% end %>
+            <% end %>
+
+            <tr class="info">
+              <th class="Title">Categorisering</th>
+              <td></td>
+            </tr>
+            <tr>
+              <th>Categorie:</th>
+              <td><%= @part.category.name %></td>
+            </tr>
+            <tr>
+              <th>Toepassing:</th>
+              <td><%= @part.category.product.device.name.titleize %></td>
+            </tr>
+
+            <tr class="info">
+              <th class="Title">Algemene specificaties</th>
+              <td></td>
+            </tr>
+            <tr>
+              <th>Merk:</th>
+              <td><%= @part.brand %></td>
+            </tr>
+            <tr>
+              <th>Conditie:</th>
+              <td><%= @part.condition %></td>
+            </tr>
+            <tr>
+              <th>Garantie:</th>
+              <td><%= @part.warranty %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
   </div>
   <div class="panel-footer">
   </div>

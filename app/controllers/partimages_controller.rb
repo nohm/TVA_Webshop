@@ -1,7 +1,7 @@
 class PartimagesController < ApplicationController
 	def index
 		redirect_to root_path, :alert => "Unauthorized" and return unless current_user.manager?
-		@partimages = Partimage.all
+		@partimages = Partimage.where(part_id: params[:part_id]).page(params[:page]).per(25).order('id ASC')
 	end
 
 	def show

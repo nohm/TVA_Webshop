@@ -1,6 +1,4 @@
 class ProductsController < ApplicationController
-	helper_method :sort_column, :sort_direction
-
 	def index
     @products = Product.where(device_id: params[:device_id]).page(params[:page]).per(25).order('id')
   end
@@ -13,19 +11,12 @@ class ProductsController < ApplicationController
   def create
     redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
     params[:product][:device_id] = params[:device_id]
-    
     @product = Product.new(product_params)
     brand = params[:product][:brand]
     brand_select = params[:product][:brand_select]
-    model = params[:product][:model]
-    model_select = params[:product][:model_select]
-    
 
-    render 'new', :alert => "Only choose one brand" and return if (brand.blank? && brand_select.blank?) or (!brand.blank? && !brand_select.blank?)
+    render 'new', :alert => "Choose one brand" and return if (brand.blank? && brand_select.blank?) or (!brand.blank? && !brand_select.blank?)
     @product.brand = brand_select if brand.blank?
-    
-    render 'new', :alert => "Only choose one model" and return if (model.blank? && model_select.blank?) or (!model.blank? && !model_select.blank?)
-    @product.model = model_select if model.blank?
 
     if @product.save
       redirect_to device_products_path(params[:device_id])
@@ -62,6 +53,6 @@ class ProductsController < ApplicationController
   private
 
   def product_params
-    params.require(:product).permit(:device_id, :brand, :model, :model_serial, :product)
+    params.require(:product).permit(:device_id, :brand, :type_number)
   end
 end

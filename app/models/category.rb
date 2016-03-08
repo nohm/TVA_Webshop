@@ -1,11 +1,15 @@
 class Category < ActiveRecord::Base
 	belongs_to :product
+	belongs_to :device
 	has_many :parts, dependent: :destroy
 
-	has_attached_file :cimg, styles: { medium: "200x200#", thumb: "64x64#" }, default_url: "/images/missing.png"
+	has_attached_file :cimg, styles: { large: "300x300#", medium: "200x200#", thumb: "64x64#" }, default_url: "/images/missing.png"
 	validates_attachment_content_type :cimg, content_type: /\Aimage\/.*\Z/
 	validates_attachment_file_name :cimg, matches: [/png\Z/, /jpe?g\Z/, /gif\Z/]
-	validates :product_id, 			presence: true
-	validates :name, 				presence: true
+	validates :cimg, :dimensions => { :width => 300, :height => 300 }, :on => :create
 	validates :cimg, attachment_presence: true
+
+	validates :device_id, 	presence: true
+	validates :product_id, 	presence: true
+	validates :name, 				presence: true
 end

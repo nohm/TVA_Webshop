@@ -46,7 +46,7 @@
   </div>
   <div class="panel-footer">
     <% if current_user.manager? %>
-      <%= link_to("Add part", new_device_product_category_part_partdescription_path, :class => 'btn btn-mini btn-primary') %>
+      <%= link_to("Add description", new_device_product_category_part_partdescription_path, :class => 'btn btn-mini btn-primary') %>
     <% end %>
     <%= link_to("Back", device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id]), class: "btn btn-primary") %>
   </div>

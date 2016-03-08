@@ -1,0 +1,78 @@
+<% provide(:title, "Shopping Cart") %>
+  <div class="panel-body panel-table">
+    <% if @carts.length == 0 %>
+      <p class="empty_list">
+        <%= "U heeft geen items in uw winkelwagen" %>
+      </p>
+    <% else %>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr class="active">
+              <th style="width: 60%"><%= "Description" %></th>
+              <th style="width: 10%"><%= "Amount" %></th>
+              <th class="small-col"></th>
+              <th style="width: 10%"><%= "Price" %></th>
+              <th style="width: 10%" class="Right"><%= "Total" %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @carts.each do |cart| %>
+              <tr>
+                <td>
+                  <%= link_to device_product_category_part_path(cart.part.category.product.device.id, cart.part.category.product.id,cart.part.category.id, cart.part.id) do %>
+                    <%= image_tag cart.part.partimagefull.url(:thumb) %>
+                    <b><%= cart.part.name %></b>
+                  <% end %>
+                </td>
+                <td><%= cart.amount %></td>
+                <td>
+                  <%= link_to cart_path(cart), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                    <span class="glyphicon glyphicon-remove"></span>
+                  <% end %>
+                </td>
+                <td><%= number_to_currency(cart.part.price_ex, unit: "€") %></td>
+                <td class="Right"><%= number_to_currency(cart.part.price_ex * cart.amount, unit: "€") %></td>
+              </tr>
+            <% end %>
+          </tbody>
+          <tfoot>
+            <tr name="Subtotal" class="active Borderless Right">
+              <td colspan="2"></td>
+              <td colspan="2">Subtotaal excl. BTW</td>
+              <% arr = Array.new(0) %>
+                <td colspan="1">
+                <% @carts.each do |cart| %>
+                  <% arr.push(cart.part.price_ex * cart.amount) %>
+                <% end %>
+                <%= number_to_currency(arr.sum, unit: "€") %>
+                </td>
+            </tr>
+            <tr class="Right">
+              <td colspan="2"></td>
+              <td colspan="2"><h3>Verzendkosten</h3></td>
+              <td colspan="1"><h3>€4.00</h3></td>
+            </tr>
+            <tr name="TotalNoBTW" class="Right">
+              <td colspan="2" class="Borderless"></td>
+              <td colspan="2">Totaal excl. BTW</td>
+              <td colspan="1"><%= number_to_currency(arr.sum + 4, unit: "€") %></td>
+            </tr>
+            <tr name="BTW" class="Right">
+              <td colspan="2" class="Borderless"></td>
+              <td colspan="2" class="Borderless"><h3>21% BTW</h3></td>
+              <td colspan="1" class="Borderless"><h3><%= number_to_currency((arr.sum + 4) * 0.21, unit: "€") %></h3></td>
+            </tr>
+            <tr class="Right">
+              <td colspan="2" class="Borderless"</td>
+              <td colspan="2">Totaal incl. BTW</td>
+              <td colspan="1"><%= number_to_currency((arr.sum + 4) * 1.21, unit: "€") %></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <button type="button" id="Afrekenen" class="btn btn-primary" style="float: right">Afrekeken</button>
+    <% end %>
+  </div>
+  <div class="panel-footer">
+  </div>

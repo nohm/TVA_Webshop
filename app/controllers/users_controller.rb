@@ -7,6 +7,7 @@ class UsersController < ApplicationController
   def show
     redirect_to root_path, :alert => "Unauthorized" and return unless current_user.id == params[:id].to_i || current_user.admin?
     @user = User.find(params[:id])
+    @carts = Cart.where(user_id: current_user.id, purchased: true).order('id ASC')
   end
 
   def new
@@ -19,10 +20,10 @@ class UsersController < ApplicationController
   end
 
   def update
-    redirect_to root_path, :alert => "Unauthorized" and return unless current_user.id == params[:id].to_i || current_user.admin?
+    redirect_to root_path, :alert => "Unauthorized" and return unless current_user.id == params[:id].to_i
     @user = User.find(params[:id])
     if @user.update(user_params)
-      redirect_to users_path
+      redirect_to root_path
       flash[:success] = "Settings updated"
     else
       render 'edit'

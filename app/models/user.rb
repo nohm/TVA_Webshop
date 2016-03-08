@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
 	attr_accessor :remember_token
+  has_many :cart
   belongs_to :role
 	before_save { email.downcase! }
 	validates :name, 	presence: true, length: { maximum: 74 }
@@ -51,8 +52,4 @@ class User < ActiveRecord::Base
   def client?
     role.name == "Client" || manager?
   end
-
-  #def role
-  # Role.find(role_id)
-  #end
 end

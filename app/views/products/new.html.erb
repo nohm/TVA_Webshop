@@ -7,9 +7,7 @@
 
       <%= f.text_field :brand, label: 'Brand <small>Only pick one</small>'.html_safe %>
       <%= f.select(:brand_select, Product.order('brand').uniq.pluck(:brand), { include_blank: true, hide_label: true}) %>
-      <%= f.text_field :model, label: 'Model <small>Only pick one</small>'.html_safe %>
-      <%= f.select(:model_select, Product.order('model').uniq.pluck(:model), { include_blank: true, hide_label: true }) %>
-      <%= f.text_field :model_serial %>
+      <%= f.text_field :type_number %>
 
       <%= f.submit "Add product", class: "btn btn-primary" %>
       <%= link_to("Cancel", device_products_path(params[:device_id]), class: "btn btn-primary") %>

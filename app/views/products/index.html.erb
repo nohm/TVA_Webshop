@@ -12,8 +12,7 @@
             <tr>
               <th class="small-col">Id</th>
               <th>Brand</th>
-              <th>Model</th>
-              <th>Model serial</th>
+              <th>Type</th>
               <th class="small-col"></th>
               <% if current_user.manager? %>
                 <th class="small-col"></th>
@@ -26,8 +25,7 @@
               <tr>
                 <td><%= product.id %></td>
                 <td><%= product.brand %></td>
-                <td><%= product.model %></td>
-                <td><%= product.model_serial %></td>
+                <td><%= product.type_number %></td>
                   <td>
                     <%= link_to device_product_categories_path(params[:device_id], product) do %>
                       <span class="glyphicon glyphicon-search"></span>
