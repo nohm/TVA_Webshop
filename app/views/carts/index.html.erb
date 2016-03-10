@@ -1,4 +1,5 @@
 <% provide(:title, "Shopping Cart") %>
+<% breadcrumb :carts, @carts %>
   <div class="panel-body panel-table">
     <% if @carts.length == 0 %>
       <p class="empty_list">
@@ -25,9 +26,9 @@
                     <b><%= cart.part.name %></b>
                   <% end %>
                 </td>
-                <td><%= cart.amount %></td>
+                <td><%= text_field_tag "amount-#{cart.part_id}", {}, min: 1, max: cart.part.stock, :value => cart.amount, :class => "halfWidth amount", :data => { :user => current_user.id, :part => cart.part_id, :id => cart.id } %></td>
                 <td>
-                  <%= link_to cart_path(cart), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                  <%= link_to cart_path(cart), :method => :delete do %>
                     <span class="glyphicon glyphicon-remove"></span>
                   <% end %>
                 </td>

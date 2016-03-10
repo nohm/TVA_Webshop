@@ -1,6 +1,6 @@
 <% provide(:title, "Products") %>
+<% breadcrumb :products, @products %>
   <div class="panel-body panel-table">
-  <h2>Products for <%= Device.find_by(id: params[:device_id]).name.titleize %></h2>
     <% if @products.length == 0 %>
       <p class="empty_list">
         <%= "De lijst is leeg" %>
@@ -12,7 +12,9 @@
             <tr>
               <th class="small-col">Id</th>
               <th>Brand</th>
+              <th>Model</th>
               <th>Type</th>
+              <th>Part number</th>
               <th class="small-col"></th>
               <% if current_user.manager? %>
                 <th class="small-col"></th>
@@ -25,7 +27,9 @@
               <tr>
                 <td><%= product.id %></td>
                 <td><%= product.brand %></td>
+                <td><%= product.model_extended %></td>
                 <td><%= product.type_number %></td>
+                <td><%= product.partnumber %></td>
                   <td>
                     <%= link_to device_product_categories_path(params[:device_id], product) do %>
                       <span class="glyphicon glyphicon-search"></span>

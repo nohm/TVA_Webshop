@@ -1,6 +1,7 @@
 <% provide(:title, "Parts") %>
+  <% breadcrumb :parts, @parts %>
   <div class="panel-body panel-table">
-    <h2>Parts for <%= Category.find_by(id: params[:category_id]).name %></h2>
+    
     <% if @parts.length == 0 %>
       <p class="empty_list">
         <%= "De lijst is leeg" %>
@@ -54,7 +55,7 @@
                   <% end %>
                 </td>
                 <% if part.stock == 0 %>
-                  <td><%= "Out of stock" %></td>
+                  <td><p style="color: red"><%= "Out of stock" %><p></td>
                 <% else %>
                   <td><%= part.stock %></td>
                 <% end %>

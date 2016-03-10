@@ -59,6 +59,10 @@ gem 'business_time'
 gem 'holidays'
 # Encrypt password
 gem 'bcrypt',        '3.1.7'
+# Breadcrumbs
+gem "gretel"
+# Rake
+gem 'rake', '11.0.1'
 
 group :assets do
   # Javascript engine

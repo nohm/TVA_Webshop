@@ -13,7 +13,6 @@ class CartsController < ApplicationController
 			@cart = Cart.new(cart_params)
 			if @cart.save
 	      redirect_to carts_path
-	      flash[:success] = "Item added"
 	    end
 	  end
 	end
@@ -22,10 +21,24 @@ class CartsController < ApplicationController
 		cart = Cart.find(params[:id])
     cart.destroy
     redirect_to carts_path
-    flash[:success] = "Item deleted"
 	end
 
 	def update
+		@cart = Cart.find(params[:id])
+		respond_to do |format|
+			if params[:cart][:amount].to_i <= @cart.part.stock
+	      if @cart.update_attributes(cart_params)
+	        format.html { render inline: "Geslaagd"}
+	        format.js
+	      else
+	      	format.html { render inline: "Gefaald"}
+	      	format.js
+	      end
+	    else
+	    	flash[:notice] = "Niet genoeg onderdelen er zijn nog maar " + @cart.part.stock.to_s + " onderdelen"
+	    	format.html { render inline: "Niet genoeg onderdelen"}
+	    end
+	  end
 	end
 
 	private

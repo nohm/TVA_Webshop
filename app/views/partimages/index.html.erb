@@ -1,6 +1,6 @@
 <% provide(:title, "Parts") %>
+<% breadcrumb :partimages, @partimages %>
   <div class="panel-body panel-table">
-    <h2>Images for <%= Part.find_by(id: params[:part_id]).name %></h2>
     <% if @partimages.length == 0 %>
       <p class="empty_list">
         <%= "De lijst is leeg" %>

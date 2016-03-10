@@ -1,3 +1,5 @@
+<% provide :title, "Users" %>
+<% breadcrumb :users, @users %>
 <div class="panel-body panel-table">
       <div class="table-responsive">
         <table class="table table-striped table-hover">
@@ -9,6 +11,7 @@
               <th><%= "Role" %></th>
               <th class="small-col"></th>
               <th class="small-col"></th>
+              <th class="small-col"></th>
             </tr>
           </thead>
           <tbody>
@@ -18,6 +21,11 @@
                 <td><%= user.name %></td>
                 <td><%= user.email %></td>
                 <td><%= user.role.name %></td>
+                <td>
+                  <%= link_to(user_path(user)) do %>
+                    <span class="glyphicon glyphicon-search"></span>
+                  <% end %>
+                </td>
                 <td>
                   <a href="#" data-toggle="modal" data-toggle="modal" data-target="#role-options-<%= user.id %>" type="button"><span class="glyphicon glyphicon-pencil"></span></a>
                   <div id="role-options-<%= user.id %>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalLabel-user-<%= user.id%>" aria-hidden="true">

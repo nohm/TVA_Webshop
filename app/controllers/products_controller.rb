@@ -53,6 +53,6 @@ class ProductsController < ApplicationController
   private
 
   def product_params
-    params.require(:product).permit(:device_id, :brand, :type_number)
+    params.require(:product).permit(:device_id, :brand, :type_number, :partnumber, :model, :model_extended)
   end
 end

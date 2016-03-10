@@ -1,6 +1,6 @@
 <% provide(:title, "Descriptions") %>
+<% breadcrumb :partdescriptions, @partdescriptions %>
   <div class="panel-body panel-table">
-    <h2>Descriptions for <%= Part.find_by(id: params[:part_id]).name %></h2>
     <% if @partdescriptions.length == 0 %>
       <p class="empty_list">
         <%= "De lijst is leeg" %>

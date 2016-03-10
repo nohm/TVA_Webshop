@@ -1,5 +1,5 @@
 <% provide(:title, 'Edit category') %>
-
+<% breadcrumb :categories, @categories %>
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     <%= bootstrap_form_for(@category, :url => device_product_category_path(params[:device_id], params[:product_id], params[:id])) do |f| %>

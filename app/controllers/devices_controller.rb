@@ -1,6 +1,6 @@
 class DevicesController < ApplicationController
 	def index
-		@device = Device.order('id').all.page(params[:page]).per(25)
+		@devices = Device.order('id').all.page(params[:page]).per(25)
 	end
 
 	def new

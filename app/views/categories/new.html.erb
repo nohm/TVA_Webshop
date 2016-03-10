@@ -1,11 +1,11 @@
 <% provide(:title, 'New category') %>
-
+<% breadcrumb :categories, @categories %>
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     <%= bootstrap_form_for(@category, :url => device_product_categories_path(params[:device_id], params[:product_id]), html: { multipart: true }) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
       
-      <%= f.text_field :name %>
+      <%= f.text_field :name, placeholder: "Accu" %>
       <%= f.file_field :cimg, class: "big", label: "Placeholder image" %>
 
       <%= f.submit "Add category", class: "btn btn-primary" %>

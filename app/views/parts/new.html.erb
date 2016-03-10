@@ -1,5 +1,5 @@
 <% provide(:title, 'New part') %>
-
+<% breadcrumb :parts, @parts %>
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     <%= bootstrap_form_for(@part, :url => device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])) do |f| %>
@@ -9,7 +9,7 @@
       <%= f.text_field    :brand %>
       <%= f.text_field    :condition %>
       <%= f.text_field    :warranty %>
-      <%= f.number_field  :stock %>
+      <%= f.number_field  :stock, :value => 0, min: 0 %>
       <%= f.text_field    :price_ex, prepend: '€', placeholder: '0.00' %>
       <%= f.file_field :partimagefull, class: "big", label: "Placeholder image" %>
 

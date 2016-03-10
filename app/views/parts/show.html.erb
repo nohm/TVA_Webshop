@@ -1,13 +1,14 @@
   <% provide(:title, @part.name) %>
+  <% breadcrumb :partshow, @parts %>
     <div class="panel-body">
       <div class="row">
         <div class="col-sm-6 ImageContainer" style="padding-left: 0px">
-          <h4 style="max-width: 300px"><%= @part.name %></h4>
+          <h4><%= @part.name %></h4>
           <div class="BigImage col-sm-12">
             <% if @partimages.first.nil? %>
               <%= image_tag "MissingLarge.png" %>
             <% else %>
-              <a href="#">
+              <a class="BigImgOriginal" href=<%= @partimages.first.pimg.url %>>
                 <%= image_tag @partimages.first.pimg.url(:large), :class => "BigImg", :title => @part.name %>
               </a>
             <% end %>
@@ -15,7 +16,7 @@
           <% @partimages.each do |image| %>
             <div class="SmallImgContainer">
 
-              <%= image_tag image.pimg.url(:thumb), :data => {:hover => image.pimg.url(:large)}, :class => "SmallImg" %>
+              <%= image_tag image.pimg.url(:thumb), :data => {:hover => image.pimg.url(:large), :url => image.pimg.url}, :class => "SmallImg" %>
             </div>
           <% end %>
           <div style="clear: both;"></div> 
@@ -26,7 +27,7 @@
             <table class="table table-bordered PrijsTable">
               <thead>
                 <tr>
-                  <th class="Right">Prijs</th>
+                  <th class="Right">Price</th>
                 </tr>
               </thead>
               <tbody>
@@ -58,7 +59,7 @@
           <tbody>
             <% if @partdescriptions.length > 0 %>
               <tr class="info">
-                <th class="Title">Specificaties</th>
+                <th class="Title">Specifications</th>
                 <th></th>
               </tr>
               <% @partdescriptions.each do |description| %>
@@ -70,15 +71,15 @@
             <% end %>
 
             <tr class="info">
-              <th class="Title">Categorisering</th>
+              <th class="Title">Categorization</th>
               <td></td>
             </tr>
             <tr>
-              <th>Categorie:</th>
+              <th>Category:</th>
               <td><%= @part.category.name %></td>
             </tr>
             <tr>
-              <th>Toepassing:</th>
+              <th>Application:</th>
               <td><%= @part.category.product.device.name.titleize %></td>
             </tr>
 
@@ -87,15 +88,15 @@
               <td></td>
             </tr>
             <tr>
-              <th>Merk:</th>
+              <th>Brand:</th>
               <td><%= @part.brand %></td>
             </tr>
             <tr>
-              <th>Conditie:</th>
+              <th>Condition:</th>
               <td><%= @part.condition %></td>
             </tr>
             <tr>
-              <th>Garantie:</th>
+              <th>Warranty:</th>
               <td><%= @part.warranty %></td>
             </tr>
           </tbody>

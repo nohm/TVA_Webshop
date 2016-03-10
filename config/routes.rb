@@ -9,6 +9,8 @@ Rails.application.routes.draw do
     post   'login'   => 'sessions#create'
     delete 'logout'  => 'sessions#destroy'
     
+    match 'search' => 'home#search', :as => :search, :via => :get
+
     resources :users
     resources :carts
     resources :devices do

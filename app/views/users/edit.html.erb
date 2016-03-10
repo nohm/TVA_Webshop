@@ -1,5 +1,5 @@
 <% provide(:title, 'Edit settings') %>
-
+<% breadcrumb :user, @user %>
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     <%= bootstrap_form_for(@user) do |f| %>
@@ -11,7 +11,6 @@
       <%= f.password_field :password_confirmation %>
 
       <%= f.submit "Edit settings", class: "btn btn-primary" %>
-      <br><br>
       <%= link_to("Cancel", root_path, class: "btn btn-primary") %>
     <% end %>
   </div>

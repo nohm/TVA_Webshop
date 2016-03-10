@@ -14,6 +14,7 @@ class CategoriesController < ApplicationController
     params[:category][:device_id] = params[:device_id]
 
     @category = Category.new(category_params)
+    @category.name = @category.product.device.name.titleize + ' ' + @category.name unless @category.name.include?(@category.product.device.name.titleize)
     if @category.save
       redirect_to device_product_categories_path(params[:device_id], params[:product_id])
       flash[:success] = "Category added"
@@ -31,6 +32,7 @@ class CategoriesController < ApplicationController
     redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
     @category = Category.find(params[:id])
     if @category.update(category_params)
+      @category.update_attribute(:name,  @category.product.device.name.titleize + ' ' + @category.name) unless @category.name.include?(@category.product.device.name.titleize)
       redirect_to device_product_categories_path(params[:device_id], params[:product_id])
       flash[:success] = "Category updated"
     else

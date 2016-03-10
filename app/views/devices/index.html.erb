@@ -1,7 +1,7 @@
 <% provide(:title, "Devices") %>
-<h2>Devices</h2>
+<% breadcrumb :devices, @devices %>
   <div class="panel-body panel-table">
-    <% if @device.length == 0 %>
+    <% if @devices.length == 0 %>
       <p class="empty_list">
         <%= "De lijst is leeg" %>
       </p>
@@ -20,7 +20,7 @@
             </tr>
           </thead>
           <tbody>
-            <% @device.each do |device| %>
+            <% @devices.each do |device| %>
               <tr>
                 <td><%= device.id %></td>
                 <td><%= device.name.titleize %></td>

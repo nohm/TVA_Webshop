@@ -1,4 +1,5 @@
 <% provide(:title, @user.name) %>
+<% breadcrumb :user, @user %>
 <div class="row">
   <aside class="col-md-12">
     <section class="user_info">
@@ -9,53 +10,35 @@
     </section>
   </aside>
   <h1 class="col-md-12" style="text-align: left; padding-left: 15px">Purchase history</h1>
-   <div class="table-responsive col-md-12">
-        <table class="table table-condensed">
-          <thead>
-            <tr class="active">
-            	<th class="small-col"></th>
-              <th><%= "Name" %></th>
-              <th><%= "Amount" %></th>
-              <th style="min-width: 120px"><%= "Price excl. BTW" %></th>
-              <th style="min-width: 120px"><%= "Price incl. BTW" %></th>
-              <th><%= "Purchased at" %></th>
-            </tr>
-          </thead>
-          <tbody>
-	          <% @carts.each do |cart| %>
-	          	<tr>
-	          		<td><%= image_tag cart.part.partimagefull.url(:thumb) %></td>
-	          		<td>
-	                <b><%= cart.part.name %></b>
-	              </td>
-	              <td><%= cart.amount %></td>
-	              <td><%= number_to_currency(cart.part.price_ex * cart.amount, unit: "€") %></td>
-	              <td><%= number_to_currency((cart.part.price_ex * cart.amount) * 1.21, unit: "€") %></td>
-	              <td><%= cart.updated_at %></td>
-	          	</tr>
-	          <% end %>
-	        </tbody>
-	        <tfoot>
-	        	<tr>
-	        		<td colspan="2"><h2> Total </h2></td>
-	        		<% arrAmount = Array.new(0) %>
-	        		<td>
-	        			<% @carts.each do |cart| %>
-                  <% arrAmount.push(cart.amount) %>
-                <% end %>
-                <b><%= arrAmount.sum %></b>
-	        		</td>
-	        		<% arrPriceEx = Array.new(0) %>
-	        		<td>
-	        			<% @carts.each do |cart| %>
-	        				<% arrPriceEx.push(cart.part.price_ex * cart.amount)%>
-	        			<% end %>
-	        			<b><%= number_to_currency(arrPriceEx.sum, unit: "€") %></b>
-	        		</td>
-	        		<td>
-	        			<b><%= number_to_currency(arrPriceEx.sum * 1.21, unit: "€") %></b>
-	        		</td>
-	        		<td></td>
-	        	</tr>
-	        </tfoot>
-</div>
+  <% if @carts.length == 0 %>
+    <p class="empty_list" style="padding-left: 15px">
+      <%= "There is no history to be found  " %>
+    </p>
+  <% else %>
+    <div class="table-responsive col-md-12">
+      <table class="table table-condensed">
+        <thead>
+          <tr class="active">
+            <th class="small-col"></th>
+            <th><%= "Name" %></th>
+            <th><%= "Amount" %></th>
+            <th style="min-width: 120px"><%= "Price excl. BTW" %></th>
+            <th style="min-width: 120px"><%= "Price incl. BTW" %></th>
+            <th><%= "Purchased at" %></th>
+          </tr>
+        </thead>
+        <tbody>
+	         <% @carts.each do |cart| %>
+	         	<tr>
+          		<td><%= image_tag cart.part.partimagefull.url(:thumb) %></td>
+	          	<td><b><%= cart.part.name %></b></td>
+	            <td><%= cart.amount %></td>
+	            <td><%= number_to_currency(cart.part.price_ex * cart.amount, unit: "€") %></td>
+	             <td><%= number_to_currency((cart.part.price_ex * cart.amount) * 1.21, unit: "€") %></td>
+	             <td><%= cart.updated_at %></td>
+	          </tr>
+	        <% end %>
+	      </tbody>
+      </table>
+    </div>
+  <% end %>        

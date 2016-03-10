@@ -1,0 +1,88 @@
+<% provide :title, "results for " + @query %>
+	<% if @part_results.length > 0 %>
+		<div class="col-md-9" style="border: 1px solid; margin-bottom: 15px;">
+		<p>Parts</p>
+		<div class="table-responsive">
+        <table class="table table-hover">
+          <tbody>
+            <% @part_results.each do |part_result| %>
+              <tr>
+                <td class="col-lg-4 col-md-5">
+                  <div class="title">
+                    <%= link_to device_product_category_part_path(part_result.category.product.device.id, part_result.category.product.id, part_result.category.id, part_result.id) do %>
+											<%= part_result.name %>
+										<% end %>
+                  </div>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td><small>Brand: </small></td>
+                        <td><small><%= part_result.brand %></small></td>
+                      </tr>
+                      <tr>
+                        <td style="padding-right: 20px;"><small>Condition: </small></td>
+                        <td><small><%= part_result.condition %></small></td>
+                      </tr>
+                      <tr>
+                        <td><small>Warranty: </small></td>
+                        <td><small><%= part_result.warranty %></small></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td>
+                  <%= link_to device_product_category_part_path(part_result.category.product.device.id, part_result.category.product.id, part_result.category.id, part_result.id) do %>
+                    <%= image_tag part_result.partimagefull.url(:thumb) %>
+                  <% end %>
+                </td>
+                <% if part_result.stock == 0 %>
+                  <td><p style="color: red"><%= "Out of stock" %><p></td>
+                <% else %>
+                  <td><%= part_result.stock %></td>
+                <% end %>
+                <td><%= number_to_currency(part_result.price_ex, unit: "€") %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+		</div>
+	<% end %>
+
+	<% if @category_results.length > 0 %>
+		<div class="col-md-3" style="border: 1px solid; border-left: 0px solid;  margin-bottom: 15px;">
+		<h4>Categories</h4>
+		<ol style="list-style-type:none; padding: 0px;">	
+			<% @category_results.each do |category_result| %>
+				<li>
+					<%= link_to device_product_category_parts_path(category_result.product.device.id, category_result.device.id, category_result.id) do %>
+						<%= category_result.name %>
+				</li>
+				<% end %>
+			<% end %>
+		</ol>
+		</div>
+	<% end %>
+
+	<% if @product_results.length > 0 %>
+		<div class="col-md-3" style="border: 1px solid; border-left: 0px solid; margin-bottom: 15px;">
+		<p>Products</p>
+		<ol style="list-style-type:none; padding: 0px;">
+			<% @product_results.each do |product_result| %>
+				<li>
+					<%= link_to device_product_categories_path(product_result.device.id, product_result.id) do %>
+						<% if !product_result.model_extended.blank? %>
+							<%= product_result.model_extended %>
+						<% else %>
+							<%= product_result.model %>
+						<% end %>
+					<% end %>
+				</li>
+			<% end %>
+		</ol>
+		</div>
+	<% end %>
+
+	
+
+			

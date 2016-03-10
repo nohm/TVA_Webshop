@@ -1,6 +1,6 @@
 <% provide(:title, "Categories") %>
+<% breadcrumb :categories, @categories %>
   <div class="panel-body panel-table">
-  <h2>Categories for <%= Device.find_by(id: params[:device_id]).name.titleize %></h2>
     <% if @categories.length == 0 %>
       <p class="empty_list">
         <%= "De lijst is leeg" %>

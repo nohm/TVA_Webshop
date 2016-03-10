@@ -20,6 +20,36 @@
 $(document).on('ready page:load', function () {
 	$(".SmallImg").mouseover(function() {
 		$(".BigImg").attr('src', $(this).data('hover'));
+		$(".BigImgOriginal").attr('href', $(this).data('url'))
+	})
+
+	$(".amount").blur(function() {
+	  var $this = $(this);
+	  var $row = $this.closest("tr");
+	  var $id = $this.data('id');
+	  var $user_id = $this.data('user');
+	  var $part_id = $this.data('part');
+	  var $amount = $this.val();
+
+	  var go = true
+	  $row.find("input.amount").each(function() {
+	    if (isNaN(this.value)) {
+	      go = false;
+	      $(this).css("border", "1px solid red");
+	    } else {
+	      $(this).css("border", "");
+	    }
+	  })
+	  console.log($user_id, $part_id, $amount);
+	  if (go) {
+		  $.ajax({
+			  method: "PUT",
+			  url: "/carts/" + $id,
+			  data: { cart: { user_id: $user_id, part_id: $part_id, amount: $amount } }
+			}).done(function() {
+				location.reload(true);
+			})
+		}
 	})
 
 	var Right = $(".Right");
@@ -39,12 +69,4 @@ $(document).on('ready page:load', function () {
   		RightAlign.css('float', 'right')
   	}
 	})
-
-	/*$("#Afrekenen").click(function() {
-		$.ajax({
-		  method: "POST",
-		  url: "/cart",
-		  data: 
-		})
-	})*/
 });
