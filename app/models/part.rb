@@ -1,8 +1,8 @@
 class Part < ActiveRecord::Base
 	belongs_to :category
-	has_many :carts
+	has_many :carts, 						dependent: :destroy
 	has_many :partdescriptions, dependent: :destroy
-	has_many :partimages, 		dependent: :destroy
+	has_many :partimages, 			dependent: :destroy
 
 	has_attached_file :partimagefull, styles: { medium: "200x200#", thumb: "64x64#" }, default_url: "/images/missing.png"
 	validates_attachment_content_type :partimagefull, content_type: /\Aimage\/.*\Z/

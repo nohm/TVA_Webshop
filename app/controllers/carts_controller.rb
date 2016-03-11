@@ -27,15 +27,20 @@ class CartsController < ApplicationController
 		@cart = Cart.find(params[:id])
 		respond_to do |format|
 			if params[:cart][:amount].to_i <= @cart.part.stock
-	      if @cart.update_attributes(cart_params)
-	        format.html { render inline: "Geslaagd"}
-	        format.js
-	      else
-	      	format.html { render inline: "Gefaald"}
-	      	format.js
-	      end
+				if params[:cart][:amount].to_i > 0	
+		      if @cart.update_attributes(cart_params)
+		        format.html { render inline: "Geslaagd"}
+		        format.js
+		      else
+		      	format.html { render inline: "Gefaald"}
+		      	format.js
+		      end
+		    else
+		     	flash[:notice] = "Uw aantal kan niet kleiner zijn dan 1"
+		     	format.html { render inline: "Aantal is niet geldig"}
+		    end
 	    else
-	    	flash[:notice] = "Niet genoeg onderdelen er zijn nog maar " + @cart.part.stock.to_s + " onderdelen"
+	    	flash[:notice] = "Er zijn nog maar " + @cart.part.stock.to_s + " onderdelen beschikbaar voor dit product"
 	    	format.html { render inline: "Niet genoeg onderdelen"}
 	    end
 	  end

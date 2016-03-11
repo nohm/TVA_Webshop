@@ -316,7 +316,7 @@ aside {
 }
 
 .Small {
-  width: 250px !important;
+  width: 150px !important;
   float: right !important;
 }
 
@@ -379,6 +379,7 @@ aside {
   width: 100% !important;
 }
 
-.MaxHeight {
-  height: 50px !important;
+.RemoveLink > a {
+    color: #333 !important;
+    text-decoration: underline !important;
 }

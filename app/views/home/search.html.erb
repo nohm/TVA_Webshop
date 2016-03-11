@@ -1,13 +1,25 @@
 <% provide :title, "results for " + @query %>
+<% if @part_results.length == 0 && @category_results.length == 0 && @product_results.length == 0 %>
+	<p>No results found</p>
+<% else %>
+	<h2>Showing search results for "<%= @query %>"</h2>
 	<% if @part_results.length > 0 %>
-		<div class="col-md-9" style="border: 1px solid; margin-bottom: 15px;">
-		<p>Parts</p>
+		<div class="col-sm-8" style="border: 1px solid; margin-bottom: 15px; margin-right: 15px;">
+		<h4><%= @part_results.length %> <%= "Part".pluralize(@part_results.length) %> found</h4>
 		<div class="table-responsive">
         <table class="table table-hover">
+        	<thead>
+            <th>Description</th>
+            <th></th>
+            <% if logged_in? %>
+	          	<th>Stock</th>
+	          	<th>Price</th>
+            <% end %>
+          </thead>
           <tbody>
             <% @part_results.each do |part_result| %>
               <tr>
-                <td class="col-lg-4 col-md-5">
+                <td class="col-sm-5">
                   <div class="title">
                     <%= link_to device_product_category_part_path(part_result.category.product.device.id, part_result.category.product.id, part_result.category.id, part_result.id) do %>
 											<%= part_result.name %>
@@ -20,7 +32,7 @@
                         <td><small><%= part_result.brand %></small></td>
                       </tr>
                       <tr>
-                        <td style="padding-right: 20px;"><small>Condition: </small></td>
+                        <td style="padding-right: 10px;"><small>Condition: </small></td>
                         <td><small><%= part_result.condition %></small></td>
                       </tr>
                       <tr>
@@ -31,16 +43,22 @@
                   </table>
                 </td>
                 <td>
-                  <%= link_to device_product_category_part_path(part_result.category.product.device.id, part_result.category.product.id, part_result.category.id, part_result.id) do %>
+                  <a 
+                  	<% if !part_result.partimagefull_file_name.nil? %> 
+                  		href=<%= part_result.partimagefull.url %>
+                  	<% end %>
+                  >
                     <%= image_tag part_result.partimagefull.url(:thumb) %>
-                  <% end %>
+                  </a>
                 </td>
-                <% if part_result.stock == 0 %>
-                  <td><p style="color: red"><%= "Out of stock" %><p></td>
-                <% else %>
-                  <td><%= part_result.stock %></td>
-                <% end %>
-                <td><%= number_to_currency(part_result.price_ex, unit: "€") %></td>
+                <% if logged_in? %>
+	                <% if part_result.stock == 0 %>
+	                  <td><p style="color: red"><%= "Out of stock" %><p></td>
+	                <% else %>
+	                  <td><%= part_result.stock %></td>
+	                <% end %>
+	                <td><%= number_to_currency(part_result.price_ex, unit: "€") %></td>
+	              <% end %>
               </tr>
             <% end %>
           </tbody>
@@ -50,38 +68,39 @@
 	<% end %>
 
 	<% if @category_results.length > 0 %>
-		<div class="col-md-3" style="border: 1px solid; border-left: 0px solid;  margin-bottom: 15px;">
-		<h4>Categories</h4>
-		<ol style="list-style-type:none; padding: 0px;">	
-			<% @category_results.each do |category_result| %>
-				<li>
-					<%= link_to device_product_category_parts_path(category_result.product.device.id, category_result.device.id, category_result.id) do %>
-						<%= category_result.name %>
-				</li>
+		<div class="col-sm-3" style="border: 1px solid; margin-bottom: 15px; margin-right: 15px;">
+			<h4><%= @category_results.length %> <%= "Category".pluralize(@category_results.length) %> found</h4>
+			<ol style="list-style-type:none; padding: 0px;">	
+				<% @category_results.each do |category_result| %>
+					<li>
+						<%= link_to device_product_category_parts_path(category_result.product.device.id, category_result.device.id, category_result.id) do %>
+							<%= category_result.name %>
+					</li>
+					<% end %>
 				<% end %>
-			<% end %>
-		</ol>
+			</ol>
 		</div>
 	<% end %>
 
 	<% if @product_results.length > 0 %>
-		<div class="col-md-3" style="border: 1px solid; border-left: 0px solid; margin-bottom: 15px;">
-		<p>Products</p>
-		<ol style="list-style-type:none; padding: 0px;">
-			<% @product_results.each do |product_result| %>
-				<li>
-					<%= link_to device_product_categories_path(product_result.device.id, product_result.id) do %>
-						<% if !product_result.model_extended.blank? %>
-							<%= product_result.model_extended %>
-						<% else %>
-							<%= product_result.model %>
+		<div class="col-sm-3" style=" border: 1px solid; margin-bottom: 15px; margin-right: 15px;">
+			<h4><%= @product_results.length %> <%= "Product".pluralize(@product_results.length) %> found</h4>
+			<ol style="list-style-type:none; padding: 0px;">
+				<% @product_results.each do |product_result| %>
+					<li>
+						<%= link_to device_product_categories_path(product_result.device.id, product_result.id) do %>
+							<% if !product_result.model_extended.blank? %>
+								<%= product_result.model_extended %>
+							<% else %>
+								<%= product_result.model %>
+							<% end %>
 						<% end %>
-					<% end %>
-				</li>
-			<% end %>
-		</ol>
+					</li>
+				<% end %>
+			</ol>
 		</div>
 	<% end %>
+<% end %>
 
 	
 

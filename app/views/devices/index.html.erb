@@ -13,7 +13,7 @@
               <th class="small-col"><%= "Id" %></th>
               <th><%= "Device name" %></th>
               <th class="small-col"></th>
-              <% if current_user.manager? %>
+              <% if logged_in? && current_user.manager? %>
                 <th class="small-col"></th>
                 <th class="small-col"></th>
               <% end %>
@@ -29,7 +29,7 @@
                     <span class="glyphicon glyphicon-search"></span>
                   <% end %>
                 </td>
-                <% if current_user.manager? %>
+                <% if logged_in? && current_user.manager? %>
                   <td>
                     <%= link_to edit_device_path(device) do %>
                       <span class="glyphicon glyphicon-pencil"></span>
@@ -49,7 +49,7 @@
     <% end %>
   </div>
   <div class="panel-footer">
-    <% if current_user.manager? %>
+    <% if logged_in? && current_user.manager? %>
       <%= link_to("Add device", new_device_path, :class => 'btn btn-mini btn-primary') %>
     <% end %>
   </div>

@@ -2,6 +2,7 @@
 <html>
   <head>
     <title><%= full_title(yield(:title)) %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%= stylesheet_link_tag 'application', media: 'all',
                                            'data-turbolinks-track' => true %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
@@ -11,8 +12,8 @@
   <body>
     <%= render 'layouts/header' %>
     <div class="container">
-      <%= breadcrumbs pretext: "You are here: ", separator: " &rsaquo; " %>
-      <br>
+      <%= breadcrumbs pretext: "You are here: ", separator: " &rsaquo; ", class: "RemoveLink" %>
+
       <div class="content" id="page-content">
         <div class="row page-content-row">
           <div class="col-lg-12 page-content-col">

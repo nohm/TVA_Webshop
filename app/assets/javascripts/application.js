@@ -55,13 +55,11 @@ $(document).on('ready page:load', function () {
 	var Right = $(".Right");
 	var Table = $(".PrijsTable");
 	var RightAlign = $(".RightAlign");
-	var Small = $(".Small");
 	$(window).resize(function() {
 		if ($(window).width() < 754) {
       Right.css('text-align', 'left');
       Table.css('width', '50%').css('float', 'left');
       RightAlign.css('float', 'left');
-      Small.css('margin-right', '0px').css('margin-left', '14px');
   	}
   	else {
   		Right.css('text-align', 'right');
@@ -69,4 +67,5 @@ $(document).on('ready page:load', function () {
   		RightAlign.css('float', 'right')
   	}
 	})
+	.trigger('resize');
 });

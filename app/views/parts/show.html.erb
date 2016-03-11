@@ -13,48 +13,51 @@
               </a>
             <% end %>
           </div>
-          <% @partimages.each do |image| %>
-            <div class="SmallImgContainer">
+          <div style="min-width: 284px; min-height: 71px; ">
+            <% @partimages.each do |image| %>
+              <div class="SmallImgContainer">
 
-              <%= image_tag image.pimg.url(:thumb), :data => {:hover => image.pimg.url(:large), :url => image.pimg.url}, :class => "SmallImg" %>
-            </div>
-          <% end %>
+                <%= image_tag image.pimg.url(:thumb), :data => {:hover => image.pimg.url(:large), :url => image.pimg.url}, :class => "SmallImg" %>
+              </div>
+            <% end %>
+          </div>
           <div style="clear: both;"></div> 
         </div>
-        <br>
-        <div class="col-sm-6" style="padding-right: 0px">
-          <div class="Prijsbox">
-            <table class="table table-bordered PrijsTable">
-              <thead>
-                <tr>
-                  <th class="Right">Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="Right"><%= number_to_currency(@part.price_ex, unit: "€") %></td>
-                </tr>
-                <tr>
-                  <td class="Right">Excl 21% BTW</td>
-                </tr>
-              </tbody>
-            </table>
-            <div style="clear: both;"></div> 
-            <div class="col-xs-6 col-sm-offset-6 noPadding">
-            <%= bootstrap_form_for(@cart, :url => carts_path) do |f| %>
-              <%= f.number_field :amount, min: 1, max: @part.stock, :value => 1 %>
-              <%= f.hidden_field :user_id, :value => current_user.id %>
-              <%= f.hidden_field :part_id, :value => @part.id %>
+        <% if logged_in? %>
+          <br>
+          <div class="col-sm-6" style="padding: 0px; ">
+            <div class="Prijsbox">
+              <table class="table table-bordered PrijsTable">
+                <thead>
+                  <tr>
+                    <th class="Right">Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="Right"><%= number_to_currency(@part.price_ex, unit: "€") %></td>
+                  </tr>
+                  <tr>
+                    <td class="Right">Excl 21% BTW</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div style="clear: both;"></div> 
+              <div class="col-xs-6 col-sm-offset-6 noPadding">
+              <%= bootstrap_form_for(@cart, :url => carts_path) do |f| %>
+                <%= f.number_field :amount, min: 1, max: @part.stock, :value => 1 %>
+                <%= f.hidden_field :user_id, :value => current_user.id %>
+                <%= f.hidden_field :part_id, :value => @part.id %>
 
-              <%= f.submit "Add to cart", class: "btn btn-primary big" %>
-            <% end %>
+                <%= f.submit "Add to cart", class: "btn btn-primary big" %>
+              <% end %>
+              </div>
             </div>
-            
           </div>
-        </div>
+        <% end %>
       </div>
       <br>
-      <div class="table-responsive">
+      <div class="table-responsive" style="padding: 0px; border: 1px solid #ddd">
         <table class="table table-hover">
           <tbody>
             <% if @partdescriptions.length > 0 %>
@@ -84,7 +87,7 @@
             </tr>
 
             <tr class="info">
-              <th class="Title">Algemene specificaties</th>
+              <th class="Title">General specifications</th>
               <td></td>
             </tr>
             <tr>
