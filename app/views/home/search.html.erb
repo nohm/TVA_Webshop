@@ -1,11 +1,17 @@
 <% provide :title, "results for " + @query %>
-<% if @part_results.length == 0 && @category_results.length == 0 && @product_results.length == 0 %>
+<% breadcrumb :search %>
+<% if @part_results.count == 0 && @category_results.count == 0 && @product_results.count == 0 %>
 	<p>No results found</p>
 <% else %>
-	<h2>Showing search results for "<%= @query %>"</h2>
-	<% if @part_results.length > 0 %>
-		<div class="col-sm-8" style="border: 1px solid; margin-bottom: 15px; margin-right: 15px;">
-		<h4><%= @part_results.length %> <%= "Part".pluralize(@part_results.length) %> found</h4>
+		<h2>Showing search results for "<%= @query %>"</h2>
+	<% if @part_results.total_count == 0 %>
+		<div class="col-sm-12 col-md-8 BorderBlack" >
+			<h4><%= @part_results.total_count %> <%= "Part".pluralize(@part_results.total_count) %> found</h4>
+			<p>No results found</p>
+		</div>
+	<% else %>
+		<div class="col-sm-12 col-md-8 BorderBlack" >
+		<h4><%= @part_results.total_count %> <%= "Part".pluralize(@part_results.total_count) %> found</h4>
 		<div class="table-responsive">
         <table class="table table-hover">
         	<thead>
@@ -48,7 +54,12 @@
                   		href=<%= part_result.partimagefull.url %>
                   	<% end %>
                   >
-                    <%= image_tag part_result.partimagefull.url(:thumb) %>
+                  	<div class="col-md-6 noPadding" style="width: 66px;">
+	                    <%= image_tag part_result.partimagefull.url(:thumb), class: "BorderGray" %>
+	                  	<% if !part_result.partimagefull_file_name.nil? %>
+                        <div class="BottomRight"><span class="glyphicon glyphicon-search"></span></div>
+                      <% end %>
+                  	</div>
                   </a>
                 </td>
                 <% if logged_in? %>
@@ -64,43 +75,68 @@
           </tbody>
         </table>
       </div>
+      <% unless @part_results.total_count == 0 %>
+      <%= paginate @part_results, :window => 2, :param_name => :part_page %>
+    <% end %>
 		</div>
 	<% end %>
 
-	<% if @category_results.length > 0 %>
-		<div class="col-sm-3" style="border: 1px solid; margin-bottom: 15px; margin-right: 15px;">
-			<h4><%= @category_results.length %> <%= "Category".pluralize(@category_results.length) %> found</h4>
-			<ol style="list-style-type:none; padding: 0px;">	
-				<% @category_results.each do |category_result| %>
-					<li>
-						<%= link_to device_product_category_parts_path(category_result.product.device.id, category_result.device.id, category_result.id) do %>
-							<%= category_result.name %>
-					</li>
-					<% end %>
-				<% end %>
-			</ol>
-		</div>
-	<% end %>
-
-	<% if @product_results.length > 0 %>
-		<div class="col-sm-3" style=" border: 1px solid; margin-bottom: 15px; margin-right: 15px;">
-			<h4><%= @product_results.length %> <%= "Product".pluralize(@product_results.length) %> found</h4>
-			<ol style="list-style-type:none; padding: 0px;">
-				<% @product_results.each do |product_result| %>
-					<li>
-						<%= link_to device_product_categories_path(product_result.device.id, product_result.id) do %>
-							<% if !product_result.model_extended.blank? %>
-								<%= product_result.model_extended %>
-							<% else %>
-								<%= product_result.model %>
+	<div class="col-md-3 col-md-offset-1">
+		<div class="row">
+			<% if @category_results.total_count == 0 %>
+				<div class="col-sm-12 BorderBlack" >
+					<h4><%= @category_results.total_count %> <%= "Category".pluralize(@category_results.total_count) %> found</h4>
+					<p>No results found</p>
+				</div>
+			<% else %>
+				<div class="col-sm-12 BorderBlack" >
+					<h4><%= @category_results.total_count %> <%= "Category".pluralize(@category_results.total_count) %> found</h4>
+					<ol style="list-style-type:none; padding: 0px;">	
+						<% @category_results.each do |category_result| %>
+							<li>
+								<%= link_to parts_path(:category_id => category_result.id) do %>
+									<%= category_result.name %>
+							</li>
 							<% end %>
 						<% end %>
-					</li>
-				<% end %>
-			</ol>
+					</ol>
+					<% unless @category_results.total_count == 0 %>
+      			<%= paginate @category_results, :window => 2, :param_name => :category_page %>
+    			<% end %>
+				</div>
+			<% end %>
 		</div>
-	<% end %>
+
+		<div class="row">
+			<% if @product_results.total_count == 0 %>
+				<div class="col-sm-12 BorderBlack" >
+					<h4><%= @product_results.total_count %> <%= "Product".pluralize(@product_results.total_count) %> found</h4>
+					<p>No results found</p>
+				</div>
+			<% else %>
+				<div class="col-sm-12 BorderBlack" >
+					<h4><%= @product_results.total_count %> <%= "Product".pluralize(@product_results.total_count) %> found</h4>
+					<ol style="list-style-type:none; padding: 0px;">
+						<% @product_results.each do |product_result| %>
+							<li>
+								<%= link_to device_product_categories_path(product_result.device.id, product_result.id) do %>
+									<% if !product_result.model_extended.blank? %>
+										<%= product_result.model_extended %>
+									<% else %>
+										<%= product_result.model %>
+									<% end %>
+								<% end %>
+							</li>
+						<% end %>
+					</ol>
+					<% unless @product_results.total_count == 0 %>
+      			<%= paginate @product_results, :window => 2, :param_name => :product_page %>
+    			<% end %>
+				</div>
+			<% end %>
+		</div>
 <% end %>
+	
 
 	
 

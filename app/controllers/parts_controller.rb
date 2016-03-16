@@ -1,6 +1,7 @@
 class PartsController < ApplicationController
   def index
-    @parts = Part.where(category_id: params[:category_id]).page(params[:page]).per(25).order('id ASC')
+    @parts_products = PartsProduct.where(product_id: params[:product_id]).page(params[:page]).per(25).order('id ASC')
+    @parts = Part.where(category_id: params[:category_id])
   end
 
   def show
@@ -22,6 +23,7 @@ class PartsController < ApplicationController
     params[:part][:price_ex] = params[:part][:price_ex].to_s.gsub(',', '.').to_f
     @part = Part.new(part_params)
     if @part.save
+      PartsProduct.create(part_id: @part.id, product_id: params[:product_id])
       redirect_to device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])
       flash[:success] = "Part added"
     else

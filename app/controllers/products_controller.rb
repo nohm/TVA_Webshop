@@ -34,6 +34,7 @@ class ProductsController < ApplicationController
   def update
     redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
     @product = Product.find(params[:id])
+
     if @product.update(product_params)
       redirect_to device_products_path(params[:device_id])
       flash[:success] = "Product updated"

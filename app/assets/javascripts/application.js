@@ -18,11 +18,79 @@
 
 
 $(document).on('ready page:load', function () {
+	// Mouseover fuction for the thumbnails in part#show.
 	$(".SmallImg").mouseover(function() {
 		$(".BigImg").attr('src', $(this).data('hover'));
 		$(".BigImgOriginal").attr('href', $(this).data('url'))
 	})
 
+	$("#device_select").change(function () {
+		var id = $(this).val();
+		$.ajax({
+      type: 'POST',
+      url: '/options_brand',
+      data: { id: id },
+      success: function(data){
+        $('#brand_select').html(data)
+        $('#brand_select').prop("disabled", false);
+      }
+    })
+	})
+
+	$("#brand_select").change(function () {
+		var brand = $(this).val();
+		var id = $("#device_select").val();
+		$.ajax({
+      type: 'POST',
+      url: '/options_model',
+      data: { brand: brand, id: id },
+      success: function(data){
+        $('#model_select').html(data)
+        $('#model_select').prop("disabled", false);
+      }
+    })
+	})
+
+	$("#model_select").change(function () {
+		var model = $(this).val();
+		var brand = $("#brand_select").val();
+		var device_id = $("#device_select").val();
+		var product_id = 4;
+		$.ajax({
+      type: 'POST',
+      url: '/options_model_extended',
+      data: { model: model, id: device_id, brand: brand },
+      success: function(data){
+        $('#model_extended_select').html(data)
+        $('#model_extended_select').prop("disabled", false);
+      }
+    })
+    $.ajax({
+    	type: 'GET',
+    	url: '/search_model',
+    	data: { model: model, id: device_id, brand: brand },
+    	success: function(data){
+    		location.href = '/devices/' + device_id + '/products/' + product_id + '/categories';
+    	}
+    })
+	})
+
+	$("#model_extended_select").change(function () {
+		var model_extended = $(this).val();
+		var model = $("#model_select").val();
+		var brand = $("#brand_select").val();
+		var id = $("#device_select").val();
+		$.ajax({
+			type: 'GET',
+			url: '/search_model_extended',
+			data: { model_extended: model_extended, model: model, brand: brand, id: id },
+			success: function(data){
+				location.href = '/devices/' + id + '/products/' + id + '/categories';
+			}
+		})
+	})
+
+	// AJAX PUT request for updating cart amount in cart.
 	$(".amount").blur(function() {
 	  var $this = $(this);
 	  var $row = $this.closest("tr");
@@ -40,7 +108,7 @@ $(document).on('ready page:load', function () {
 	      $(this).css("border", "");
 	    }
 	  })
-	  console.log($user_id, $part_id, $amount);
+
 	  if (go) {
 		  $.ajax({
 			  method: "PUT",
@@ -52,8 +120,9 @@ $(document).on('ready page:load', function () {
 		}
 	})
 
+	//Resize the price table at part#show on resize and load.
 	var Right = $(".Right");
-	var Table = $(".PrijsTable");
+	var Table = $(".PriceTable");
 	var RightAlign = $(".RightAlign");
 	$(window).resize(function() {
 		if ($(window).width() < 754) {

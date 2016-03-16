@@ -1,0 +1,16 @@
+<% provide(:title, 'Connect part to product') %>
+<% breadcrumb :parts, @parts %>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= bootstrap_form_for(@part_product, :url => device_product_category_part_parts_products_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])) do |f| %>
+      <%= f.alert_message "Please fix the errors below." %>
+      
+      <%= f.text_field :part_name, :value => Part.find_by(id: params[:part_id]).name, :disabled => "disabled" %>
+
+      <%= f.hidden_field :part_id, { :value => Part.find_by(id: params[:part_id]).id }%>
+      <%= f.text_field :product_id %>
+
+      <%= f.submit "Connect", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>

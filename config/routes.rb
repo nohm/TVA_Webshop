@@ -10,6 +10,12 @@ Rails.application.routes.draw do
     delete 'logout'  => 'sessions#destroy'
     
     match 'search' => 'home#search', :as => :search, :via => :get
+    match '/search_model' => 'home#search_model', :as => :search_model, :via => :get
+    match '/search_model_extended' => 'home#search_model_extended', :as => :search_model_extended, :via => :get
+    match 'parts' => 'home#all_parts', :as => :parts, :via => :get
+    match '/options_brand' => 'home#options_brand', :as => :options_brand, :via => :post
+    match '/options_model' => 'home#options_model', :as => :options_model, :via => :post
+    match '/options_model_extended' => 'home#options_model_extended', :as => :options_model_extendedl, :via => :post
 
     resources :users
     resources :carts
@@ -17,6 +23,7 @@ Rails.application.routes.draw do
       resources :products do
         resources :categories do
           resources :parts do
+            resources :parts_products
             resources :partdescriptions
             resources :partimages
           end

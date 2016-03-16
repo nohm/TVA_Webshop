@@ -1,4 +1,4 @@
-<div id="alert-box">
+<div id="alert-box" style="margin-top: 10px;">
   <% flash.each do |name, msg| %>
     <% if msg.is_a?(String) %>
         <div class="alert alert-<%= name == "success" ? "success" : "danger" %>">

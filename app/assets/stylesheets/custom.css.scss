@@ -14,7 +14,7 @@ $gray-medium-light: #eaeaea;
 /* universal */
 
 body {
-  padding-top: 60px;
+  padding-top: 90px;
 }
 
 section {
@@ -317,15 +317,8 @@ aside {
 
 .Small {
   width: 150px !important;
-  float: right !important;
-}
-
-.BigImg {
-  border: 1px solid;
-}
-
-.SmallImg {
-  border: 1px solid;
+  height: 34px;
+  margin-bottom: 0px;
 }
 
 .BigImage {
@@ -345,7 +338,7 @@ aside {
   width: 50%;
 }
 
-.PrijsTable {
+.PriceTable {
   width: 50%;
   float: right;
 }
@@ -356,6 +349,10 @@ aside {
 
 .noPadding {
   padding: 0px;
+}
+
+.table {
+  margin-bottom: 0px;
 }
 
 .table > tbody > tr > td {
@@ -382,4 +379,24 @@ aside {
 .RemoveLink > a {
     color: #333 !important;
     text-decoration: underline !important;
+}
+
+.BorderGray {
+  border: 1px #ddd solid;
+}
+
+.BorderBlack {
+  border: 1px #000 solid;
+  margin-bottom: 15px;
+}
+
+.BottomRight {
+  position: absolute;
+  bottom: 0;
+  right: 2px;
+}
+
+.test {
+  min-width: 150px;
+  max-width: 150px;
 }

@@ -1,5 +1,5 @@
 <% provide(:title, "Parts") %>
-  <% breadcrumb :parts, @parts %>
+  <% breadcrumb :parts, @parts_products %>
   <div class="panel-body panel-table">
     
     <% if @parts.length == 0 %>
@@ -8,7 +8,7 @@
       </p>
     <% else %>
       <div class="table-responsive">
-        <table class="table table-striped table-hover">
+        <table class="table table-hover">
           <thead>
             <tr>
               <th><%= "Description" %></th>
@@ -21,72 +21,89 @@
                   <th class="small-col"></th>
                   <th class="small-col"></th>
                   <th class="small-col"></th>
+                  <th class="small-col"></th>
                 <% end %>
               <% end %>
             </tr>
           </thead>
           <tbody>
-            <% @parts.each do |part| %>
+            <% @parts_products.each do |part_product| %>
+            <% if part_product.part.category_id == params[:category_id].to_i %>
               <tr>
                 <td class="col-lg-4 col-md-5">
                   <div class="title">
-                    <%= link_to device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], part) do %>
-                      <b><%= part.name %></b>
+                    <%= link_to device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], part_product.part) do %>
+                      <b><%= part_product.part.name %></b>
                     <% end %>
                   </div>
                   <table>
                     <tbody>
                       <tr>
                         <td><small>Brand: </small></td>
-                        <td><small><%= part.brand %></small></td>
+                        <td><small><%= part_product.part.brand %></small></td>
                       </tr>
                       <tr>
                         <td style="padding-right: 20px;"><small>Condition: </small></td>
-                        <td><small><%= part.condition %></small></td>
+                        <td><small><%= part_product.part.condition %></small></td>
                       </tr>
                       <tr>
                         <td><small>Warranty: </small></td>
-                        <td><small><%= part.warranty %></small></td>
+                        <td><small><%= part_product.part.warranty %></small></td>
                       </tr>
                     </tbody>
                   </table>
                 </td>
                 <td>
-                  <%= link_to device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], part) do %>
-                    <%= image_tag part.partimagefull.url(:thumb) %>
-                  <% end %>
+                  <a 
+                    <% if !part_product.part.partimagefull_file_name.nil? %> 
+                      href=<%= part_product.part.partimagefull.url %>
+                    <% end %>
+                  >
+                    <div class="col-md-6" style="width: 66px; padding: 0px">
+                      <%= image_tag part_product.part.partimagefull.url(:thumb), class: "BorderGray" %>
+                      <% if !part_product.part.partimagefull_file_name.nil? %>
+                        <div class="BottomRight"><span class="glyphicon glyphicon-search"></span></div>
+                      <% end %>
+                    </div>
+                  </a>
                 </td>
                 <% if logged_in? %>
-                  <% if part.stock == 0 %>
+                  <% if part_product.part.stock == 0 %>
                     <td><p style="color: red"><%= "Out of stock" %><p></td>
                   <% else %>
-                    <td><%= part.stock %></td>
+                    <td><%= part_product.part.stock %></td>
                   <% end %>
-                  <td><%= number_to_currency(part.price_ex, unit: "€") %></td>
+                  <td><%= number_to_currency(part_product.part.price_ex, unit: "€") %></td>
                   <% if current_user.manager? %>
                     <td>
-                      <%= link_to device_product_category_part_partdescriptions_path(params[:device_id], params[:product_id], params[:category_id], part) do %>
+                      <%= link_to new_device_product_category_part_parts_product_path(params[:device_id], params[:product_id], params[:category_id], part_product.part) do %>
+                        <span class="glyphicon glyphicon-sort"></span>
+                      <% end %>
+                    </td>
+                    <td>
+                      <%= link_to device_product_category_part_partdescriptions_path(params[:device_id], params[:product_id], params[:category_id], part_product.part) do %>
                         <span class="glyphicon glyphicon-text-color"></span>
                       <% end %>
                     </td>
                     <td>
-                      <%= link_to device_product_category_part_partimages_path(params[:device_id], params[:product_id], params[:category_id], part.id) do %>
+                      <%= link_to device_product_category_part_partimages_path(params[:device_id], params[:product_id], params[:category_id], part_product.part.id) do %>
                         <span class="glyphicon glyphicon-picture"></span>
                       <% end %>
                     </td>
                     <td>
-                      <%= link_to edit_device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], part.id) do %>
+                      <%= link_to edit_device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], part_product.part.id) do %>
                         <span class="glyphicon glyphicon-pencil"></span>
                       <% end %>
                     </td>
                     <td>
-                      <%= link_to device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], part.id), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                      <%= link_to device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], part_product.part.id), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
                         <span class="glyphicon glyphicon-remove"></span>
                       <% end %>
                     </td>
                   <% end %>
                 <% end %>
               </tr>
+            <% end %>
             <% end %>
           </tbody>
         </table>

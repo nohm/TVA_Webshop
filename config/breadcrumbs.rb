@@ -48,6 +48,15 @@ crumb :partdescriptions do
 	parent :parts
 end
 
+crumb :search do
+	link "Search", :back
+end
+
+crumb :all_parts do
+	link Category.find_by(id: params[:category_id]).name, parts_path(params[:category_id])
+	parent :search
+end
+
 # crumb :projects do
 #   link "Projects", projects_path
 # end

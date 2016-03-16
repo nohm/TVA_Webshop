@@ -10,18 +10,6 @@
     </div>
     <nav class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav navbar-right">
-      <li>
-          <%= bootstrap_form_tag(url: search_path, method: 'GET') do |f| %>
-            <div class="input-group">
-              <%= f.text_field :search_query, hide_label: true, class: "Small" %>
-              <div class="input-group-btn">
-                <button class="btn btn-default btn-search" type="submit">
-                  <span class="glyphicon glyphicon-search"></span>
-                </button>
-              </div>
-            </div>
-          <% end %>
-        </li>
         <li><%= link_to "Home", root_path %></li>
         <% if logged_in? %>
           <li><%= link_to "Devices", devices_path %></li>
@@ -48,4 +36,23 @@
       </ul>
     </nav>
   </div>
+  <%= bootstrap_form_tag url: search_path, method: 'GET', html: {class: "form-inline"} do |f| %>
+    <div class="input-group">
+      <%= f.select :product_device_id, options_for_select(Device.all.collect { |device| [device.name.titleize, device.id] }, 0), {:selected => params[:product_device_id], prompt: "Choose device", hide_label: true}, { id: 'device_select' } %>
+
+      <%= f.select :product_brand, "Nothing", {prompt: "Choose brand", hide_label: true}, { id: 'brand_select', disabled: "disabled"} %>
+
+      <%= f.select :product_model, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'model_select', disabled: "disabled"} %>
+
+      <%= f.select :product_model_extended, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'model_extended_select', disabled: "disabled"} %>
+    </div>
+    <div class="input-group">
+      <%= f.text_field :search_query, hide_label: true, class: "form-control Small" %>
+      <div class="input-group-btn">
+        <button class="btn btn-default btn-search" type="submit">
+          <span class="glyphicon glyphicon-search"></span>
+        </button>
+      </div>
+    </div>
+  <% end %>
 </header>

@@ -2,22 +2,24 @@
   <% breadcrumb :partshow, @parts %>
     <div class="panel-body">
       <div class="row">
-        <div class="col-sm-6 ImageContainer" style="padding-left: 0px">
+        <div class="col-sm-6 ImageContainer noPadding">
           <h4><%= @part.name %></h4>
-          <div class="BigImage col-sm-12">
+          <div class="BigImage col-sm-1 noPadding" style="width: 302px;">
             <% if @partimages.first.nil? %>
               <%= image_tag "MissingLarge.png" %>
             <% else %>
-              <a class="BigImgOriginal" href=<%= @partimages.first.pimg.url %>>
-                <%= image_tag @partimages.first.pimg.url(:large), :class => "BigImg", :title => @part.name %>
+              <a class="BigImgOriginal" style="display: inline-block;" href=<%= @partimages.first.pimg.url %>>
+                <%= image_tag @partimages.first.pimg.url(:large), :class => "BigImg BorderGray", :title => @part.name %>
+                <div class="BottomRight"><span class="glyphicon glyphicon-search"></span></div>
               </a>
             <% end %>
           </div>
+          <div style="clear: both;"></div> 
           <div style="min-width: 284px; min-height: 71px; ">
             <% @partimages.each do |image| %>
               <div class="SmallImgContainer">
 
-                <%= image_tag image.pimg.url(:thumb), :data => {:hover => image.pimg.url(:large), :url => image.pimg.url}, :class => "SmallImg" %>
+                <%= image_tag image.pimg.url(:thumb), :data => {:hover => image.pimg.url(:large), :url => image.pimg.url}, :class => "SmallImg BorderGray" %>
               </div>
             <% end %>
           </div>
@@ -25,9 +27,9 @@
         </div>
         <% if logged_in? %>
           <br>
-          <div class="col-sm-6" style="padding: 0px; ">
+          <div class="col-sm-6 noPadding">
             <div class="Prijsbox">
-              <table class="table table-bordered PrijsTable">
+              <table class="table table-bordered PriceTable">
                 <thead>
                   <tr>
                     <th class="Right">Price</th>
@@ -56,9 +58,8 @@
           </div>
         <% end %>
       </div>
-      <br>
-      <div class="table-responsive" style="padding: 0px; border: 1px solid #ddd">
-        <table class="table table-hover">
+      <div class="table-responsive noPadding BorderGray" style="margin: 15px -15px">
+        <table class="table table-hover ">
           <tbody>
             <% if @partdescriptions.length > 0 %>
               <tr class="info">
@@ -105,6 +106,5 @@
           </tbody>
         </table>
       </div>
-  </div>
-  <div class="panel-footer">
-  </div>
+    </div>
+

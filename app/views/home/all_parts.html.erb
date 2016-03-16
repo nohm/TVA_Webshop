@@ -1,0 +1,79 @@
+<% provide(:title, "Parts") %>
+<% breadcrumb :all_parts, @all_parts %>
+  <div class="panel-body panel-table">
+    
+    <% if @all_parts.length == 0 %>
+      No parts found for this category
+    <% else %>
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th><%= "Description" %></th>
+              <th></th>
+              <% if logged_in? %>
+                <th><%= "Stock" %></th>
+                <th><%= "Price" %></th>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody>
+            <% @all_parts.each do |part| %>
+              <tr>
+                <td class="col-lg-4 col-md-5">
+                  <div class="title">
+                    <%= link_to device_product_category_part_path(part.category.product.device.id, part.category.product.id, part.category.id, part) do %>
+                      <b><%= part.name %></b>
+                    <% end %>
+                  </div>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td><small>Brand: </small></td>
+                        <td><small><%= part.brand %></small></td>
+                      </tr>
+                      <tr>
+                        <td style="padding-right: 20px;"><small>Condition: </small></td>
+                        <td><small><%= part.condition %></small></td>
+                      </tr>
+                      <tr>
+                        <td><small>Warranty: </small></td>
+                        <td><small><%= part.warranty %></small></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td>
+                	<a 
+                    <% if !part.partimagefull_file_name.nil? %> 
+                      href=<%= part.partimagefull.url %>
+                    <% end %>
+                  >
+                    <div class="col-md-6" style="width: 66px; padding: 0px">
+                      <%= image_tag part.partimagefull.url(:thumb), class: "BorderGray" %>
+                      <% if !part.partimagefull_file_name.nil? %>
+                        <div class="BottomRight"><span class="glyphicon glyphicon-search"></span></div>
+                      <% end %>
+                    </div>
+                  </a>
+                </td>
+                <% if logged_in? %>
+                  <% if part.stock == 0 %>
+                    <td><p style="color: red"><%= "Out of stock" %><p></td>
+                  <% else %>
+                    <td><%= part.stock %></td>
+                  <% end %>
+                  <td><%= number_to_currency(part.price_ex, unit: "€") %></td>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  </div>
+  <div class="panel-footer">
+  	<% unless @all_parts.length == 0 %>
+      <%= paginate @all_parts %>
+    <% end %>
+  </div>
