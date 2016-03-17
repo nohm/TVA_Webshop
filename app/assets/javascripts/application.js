@@ -10,6 +10,7 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap
@@ -55,7 +56,9 @@ $(document).on('ready page:load', function () {
 		var model = $(this).val();
 		var brand = $("#brand_select").val();
 		var device_id = $("#device_select").val();
-		var product_id = 4;
+		console.log(model);
+		console.log(brand);
+		console.log(device_id);
 		$.ajax({
       type: 'POST',
       url: '/options_model_extended',
@@ -70,7 +73,7 @@ $(document).on('ready page:load', function () {
     	url: '/search_model',
     	data: { model: model, id: device_id, brand: brand },
     	success: function(data){
-    		location.href = '/devices/' + device_id + '/products/' + product_id + '/categories';
+    		location.href = '/devices/' + device_id + '/products/' + model + '/categories';
     	}
     })
 	})
@@ -80,12 +83,16 @@ $(document).on('ready page:load', function () {
 		var model = $("#model_select").val();
 		var brand = $("#brand_select").val();
 		var id = $("#device_select").val();
+		console.log(model_extended);
+		console.log(model);
+		console.log(brand);
+		console.log(id);
 		$.ajax({
 			type: 'GET',
 			url: '/search_model_extended',
 			data: { model_extended: model_extended, model: model, brand: brand, id: id },
 			success: function(data){
-				location.href = '/devices/' + id + '/products/' + id + '/categories';
+				location.href = '/devices/' + id + '/products/' + model + '/categories';
 			}
 		})
 	})

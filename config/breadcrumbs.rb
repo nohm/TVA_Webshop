@@ -57,6 +57,11 @@ crumb :all_parts do
 	parent :search
 end
 
+crumb :parts_products do
+	link "Part connections", device_product_category_part_parts_products_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])
+	parent :parts
+end
+
 # crumb :projects do
 #   link "Projects", projects_path
 # end

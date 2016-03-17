@@ -1,5 +1,5 @@
 <% provide(:title, "Parts") %>
-  <% breadcrumb :parts, @parts_products %>
+<% breadcrumb :parts, @parts_products %>
   <div class="panel-body panel-table">
     
     <% if @parts.length == 0 %>
@@ -76,7 +76,7 @@
                   <td><%= number_to_currency(part_product.part.price_ex, unit: "€") %></td>
                   <% if current_user.manager? %>
                     <td>
-                      <%= link_to new_device_product_category_part_parts_product_path(params[:device_id], params[:product_id], params[:category_id], part_product.part) do %>
+                      <%= link_to device_product_category_part_parts_products_path(params[:device_id], params[:product_id], params[:category_id], part_product.part) do %>
                         <span class="glyphicon glyphicon-sort"></span>
                       <% end %>
                     </td>

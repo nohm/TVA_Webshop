@@ -26,7 +26,8 @@ class HomeController < ApplicationController
 	def search_model
     id = params[:id]
 		brand = params[:brand]
-		model = params[:model]
+		model_id = params[:model]
+		model = Product.find_by(id: model_id).model
 		if !model.blank? && !Product.where(model: model, device_id: id).pluck(:model_extended).any?
 			# Products search through model
 			product = Product.find_by(device_id: id, brand: brand, model: model)
@@ -40,11 +41,13 @@ class HomeController < ApplicationController
 	def search_model_extended
 		id = params[:id]
 		brand = params[:brand]
-		model = params[:model]
-		model_extended = params[:model_extended]
+		model_id = params[:model]
+		model_extended_id = params[:model_extended]
+		model = Product.find_by(id: model_id).model
+		model_extended = Product.find_by(id: model_extended_id).model_extended
 		if !model_extended.blank?
 			# Products search through model_extended
-			product = Product.find_by(device_id: id, brand: brand, model: model, model_extended: model_extended)
+			product = Product.find_by(device_id: id, brand: brand, model_extended: model_extended)
 			unless product.blank?
 				redirect_to device_product_categories_path(product.device_id, product)
 				return
@@ -65,15 +68,17 @@ class HomeController < ApplicationController
 	def options_model
 		id = params[:id]
 		brand = params[:brand]
-		@product = Product.where(device_id: id, brand: brand).pluck(:model).uniq
+		@product = Product.where(device_id: id, brand: brand).pluck(:model, :id)
 		render :partial => 'options_model'
 	end
 
 	def options_model_extended
 		id = params[:id]
 		brand = params[:brand]
-		model = params[:model]
-		@product = Product.where(device_id: id, brand: brand, model: model).pluck(:model_extended).uniq
+		model_id = params[:model]
+		model = Product.find_by(id: model_id).model
+		@product = Product.where(device_id: id, brand: brand, model: model).pluck(:model_extended, :id)
 		render :partial => 'options_model_extended'
 	end
 end
+

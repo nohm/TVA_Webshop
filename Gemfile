@@ -63,6 +63,8 @@ gem 'bcrypt',        '3.1.7'
 gem "gretel"
 # Rake
 gem 'rake', '11.0.1'
+# Rails variables in JS
+gem 'client_variable' 
 
 group :assets do
   # Javascript engine
