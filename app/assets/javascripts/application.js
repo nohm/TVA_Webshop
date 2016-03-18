@@ -25,6 +25,9 @@ $(document).on('ready page:load', function () {
 		$(".BigImgOriginal").attr('href', $(this).data('url'))
 	})
 
+
+
+	//Dynamic search
 	$("#device_select").change(function () {
 		var id = $(this).val();
 		$.ajax({
@@ -32,8 +35,14 @@ $(document).on('ready page:load', function () {
       url: '/options_brand',
       data: { id: id },
       success: function(data){
-        $('#brand_select').html(data)
-        $('#brand_select').prop("disabled", false);
+        $('#brand_select').prop("disabled", false).html(data);
+        $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+        $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+      },
+      error: function(data){
+      	$('#brand_select').prop("disabled", true).html('<option value="">Choose brand</option>');
+        $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+        $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
       }
     })
 	})
@@ -46,8 +55,12 @@ $(document).on('ready page:load', function () {
       url: '/options_model',
       data: { brand: brand, id: id },
       success: function(data){
-        $('#model_select').html(data)
-        $('#model_select').prop("disabled", false);
+        $('#model_select').prop("disabled", false).html(data);
+        $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');;
+      },
+      error: function(data){
+        $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+        $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
       }
     })
 	})
@@ -56,46 +69,32 @@ $(document).on('ready page:load', function () {
 		var model = $(this).val();
 		var brand = $("#brand_select").val();
 		var device_id = $("#device_select").val();
-		console.log(model);
-		console.log(brand);
-		console.log(device_id);
 		$.ajax({
       type: 'POST',
       url: '/options_model_extended',
       data: { model: model, id: device_id, brand: brand },
       success: function(data){
-        $('#model_extended_select').html(data)
-        $('#model_extended_select').prop("disabled", false);
+        $('#model_extended_select').prop("disabled", false).html(data);
+      },
+      error: function(data){
+        $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
       }
     })
-    $.ajax({
-    	type: 'GET',
-    	url: '/search_model',
-    	data: { model: model, id: device_id, brand: brand },
-    	success: function(data){
-    		location.href = '/devices/' + device_id + '/products/' + model + '/categories';
-    	}
-    })
+    
 	})
 
 	$("#model_extended_select").change(function () {
 		var model_extended = $(this).val();
-		var model = $("#model_select").val();
 		var brand = $("#brand_select").val();
 		var id = $("#device_select").val();
-		console.log(model_extended);
-		console.log(model);
-		console.log(brand);
-		console.log(id);
 		$.ajax({
-			type: 'GET',
+			type: 'POST',
 			url: '/search_model_extended',
-			data: { model_extended: model_extended, model: model, brand: brand, id: id },
-			success: function(data){
-				location.href = '/devices/' + id + '/products/' + model + '/categories';
-			}
+			data: { model_extended: model_extended, brand: brand, id: id },
 		})
 	})
+
+
 
 	// AJAX PUT request for updating cart amount in cart.
 	$(".amount").blur(function() {
@@ -126,6 +125,8 @@ $(document).on('ready page:load', function () {
 			})
 		}
 	})
+
+
 
 	//Resize the price table at part#show on resize and load.
 	var Right = $(".Right");
