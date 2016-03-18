@@ -2,6 +2,7 @@ class PartsController < ApplicationController
   def index
     @parts_products = PartsProduct.where(product_id: params[:product_id]).page(params[:page]).per(25).order('id ASC')
     @parts = Part.where(category_id: params[:category_id])
+    @cart = Cart.new
   end
 
   def show

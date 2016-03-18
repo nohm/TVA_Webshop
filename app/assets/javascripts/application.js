@@ -27,6 +27,73 @@ $(document).on('ready page:load', function () {
 
 
 
+	//Dynamic search for id in parts_products#new
+	$("#connection_device_select").change(function () {
+		var id = $(this).val();
+		$.ajax({
+      type: 'POST',
+      url: '/connect_brand',
+      data: { id: id },
+      success: function(data){
+        $('#connection_brand_select').prop("disabled", false).html(data);
+        $('#connection_model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+        $('#connection_model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+      },
+      error: function(data){
+      	$('#connection_brand_select').prop("disabled", true).html('<option value="">Choose brand</option>');
+        $('#connection_model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+        $('#connection_model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+      }
+    })
+	})
+
+	$("#connection_brand_select").change(function () {
+		var brand = $(this).val();
+		var id = $("#connection_device_select").val();
+		$.ajax({
+      type: 'POST',
+      url: '/connect_model',
+      data: { brand: brand, id: id },
+      success: function(data){
+        $('#connection_model_select').prop("disabled", false).html(data);
+        $('#connection_model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');;
+      },
+      error: function(data){
+        $('#connection_model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+        $('#connection_model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+      }
+    })
+	})
+
+	$("#connection_model_select").change(function () {
+		var model = $(this).val();
+		var brand = $("#connection_brand_select").val();
+		var device_id = $("#connection_device_select").val();
+		$("#product_id").attr('value', model);
+		$.ajax({
+      type: 'POST',
+      url: '/connect_model_extended',
+      data: { model: model, id: device_id, brand: brand },
+      success: function(data){
+      	if (data == "No model_extended") {
+      		$('#connection_model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+      	}
+      	else {
+        	$('#connection_model_extended_select').prop("disabled", false).html(data);
+        	$('#Submit_connect').prop("disabled", true)
+      	}
+      }
+    })
+	})
+
+	$("#connection_model_extended_select").change(function () {
+		var model = $(this).val();
+		$("#product_id").attr('value', model);
+		$('#Submit_connect').prop("disabled", false)
+	})
+
+
+
 	//Dynamic search
 	$("#device_select").change(function () {
 		var id = $(this).val();
@@ -80,7 +147,6 @@ $(document).on('ready page:load', function () {
         $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
       }
     })
-    
 	})
 
 	$("#model_extended_select").change(function () {

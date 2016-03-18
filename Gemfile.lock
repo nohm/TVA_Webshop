@@ -72,7 +72,6 @@ GEM
       capybara (>= 2.3.0, < 2.7.0)
       json
     chronic (0.10.2)
-    client_variable (0.0.8)
     climate_control (0.0.3)
       activesupport (>= 3.0)
     cocaine (0.5.8)
@@ -302,7 +301,6 @@ DEPENDENCIES
   business_time
   cancancan
   capybara-webkit (>= 1.2.0)
-  client_variable
   coffee-rails
   database_cleaner
   devise

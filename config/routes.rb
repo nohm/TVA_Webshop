@@ -15,7 +15,11 @@ Rails.application.routes.draw do
     match 'parts' => 'home#all_parts', :as => :parts, :via => :get
     match '/options_brand' => 'home#options_brand', :as => :options_brand, :via => :post
     match '/options_model' => 'home#options_model', :as => :options_model, :via => :post
-    match '/options_model_extended' => 'home#options_model_extended', :as => :options_model_extendedl, :via => :post
+    match '/options_model_extended' => 'home#options_model_extended', :as => :options_model_extended, :via => :post
+
+    match '/connect_brand' => 'parts_products#connect_brand', :as => :connect_brand, :via => :post
+    match '/connect_model' => 'parts_products#connect_model', :as => :connect_model, :via => :post
+    match '/connect_model_extended' => 'parts_products#connect_model_extended', :as => :connect_model_extended, :via => :post
 
     resources :users
     resources :carts
