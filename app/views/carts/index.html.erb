@@ -26,7 +26,8 @@
                     <b><%= cart.part.name %></b>
                   <% end %>
                 </td>
-                <td><%= text_field_tag "amount-#{cart.part_id}", {}, min: 1, max: cart.part.stock, :value => cart.amount, :class => "halfWidth amount", :data => { :user => current_user.id, :part => cart.part_id, :id => cart.id } %></td>
+                <td>
+                  <%= text_field_tag "amount-#{cart.part_id}", {}, min: 1, max: cart.part.stock, :value => cart.amount, :class => "halfWidth amount", :data => { :user => current_user.id, :part => cart.part_id, :id => cart.id, :url => carts_path } %></td>
                 <td>
                   <%= link_to cart_path(cart), :method => :delete do %>
                     <span class="glyphicon glyphicon-remove"></span>
@@ -72,7 +73,7 @@
           </tfoot>
         </table>
       </div>
-      <button type="button" id="Afrekenen" class="btn btn-primary" style="float: right">Afrekeken</button>
+      <button type="button" id="purchase" class="btn btn-primary" style="float: right">Purchase</button>
     <% end %>
   </div>
   <div class="panel-footer">

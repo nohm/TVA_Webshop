@@ -16,7 +16,7 @@
               <% if logged_in? %>
                 <th><%= "Stock" %></th>
                 <th><%= "Price" %></th>
-                <th></th>
+                <th class="col-sm-2"></th>
                 <% if current_user.manager? %>
                   <th class="small-col"></th>
                   <th class="small-col"></th>
@@ -76,28 +76,7 @@
                   <% end %>
                   <td><%= number_to_currency(part_product.part.price_ex, unit: "€") %></td>
                   <td>
-                    <a href="#" data-toggle="modal" data-target="#add-to-cart-<%= part_product.part.id %>" type="button"><span class="glyphicon glyphicon-pencil"></span></a>
-                    <div id="add-to-cart-<%= part_product.part.id %>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalLabel-part-<%= part_product.part.id %>" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <%= bootstrap_form_for @cart, :url => carts_path, :html => { :class => 'form-horizontal' } do |f| %>
-                            <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                              <h4 class="modal-title" id="modalLabel-part-<%= part_product.part.id %>">Add to cart</h4>
-                            </div>
-                            <div class="modal-body">
-                              <%= f.number_field :amount, min: 1, max: part_product.part.stock, :value => 1 %>
-                              <%= f.hidden_field :user_id, :value => current_user.id %>
-                              <%= f.hidden_field :part_id, :value => part_product.part.id %>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal"><%= "Close" %></button>
-                              <%= f.submit "Add to cart", class: "btn btn-primary btn-sm" %>
-                            </div>
-                          <% end %>
-                        </div>
-                      </div>
-                    </div>
+                    <%= render :partial => "cart_modal", :locals => {:part_product => part_product}%>
                   </td>
                   <% if current_user.manager? %>
                     <td>

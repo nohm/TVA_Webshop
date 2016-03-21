@@ -22,6 +22,7 @@ Rails.application.routes.draw do
 
     resources :users
     resources :carts
+    resources :invoices
     resources :devices do
       resources :products do
         resources :categories do

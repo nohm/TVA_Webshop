@@ -1,21 +1,11 @@
-<% provide(:title, @user.name) %>
-<% breadcrumb :user, @user %>
-<div class="row">
-  <aside class="col-md-12">
-    <section class="user_info">
-      <h1>
-        <%= gravatar_for @user %>
-        <%= @user.name %>
-      </h1>
-    </section>
-  </aside>
-  <h1 class="col-md-12" style="text-align: left; padding-left: 15px">Purchase history</h1>
-  <% if @carts.length == 0 %>
-    <p class="empty_list" style="padding-left: 15px">
-      <%= "There is no history to be found  " %>
-    </p>
-  <% else %>
-    <table class="table table-striped table-hover">
+<% provide(:title, "Invoices") %>
+<% breadcrumb :invoices, @invoices %>
+
+  <div class="panel-body panel-table">
+    <% if @invoices.length == 0 %>
+      <p class="empty_list">De lijst is leeg</p>
+    <% else %>
+      <table class="table table-striped table-hover">
         <thead>
           <tr>
             <th class="small-col">Id</th>
@@ -55,4 +45,10 @@
           <% end %>
         </tbody>
       </table>
-  <% end %>        
+    <% end %>
+  </div>
+  <div class="panel-footer">
+    <% unless @invoices.length == 0 %>
+      <%= paginate @invoices %>
+    <% end %>
+  </div>

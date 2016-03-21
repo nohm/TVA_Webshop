@@ -14,7 +14,7 @@ $gray-medium-light: #eaeaea;
 /* universal */
 
 body {
-  padding-top: 90px;
+  padding-top: 60px;
 }
 
 section {
@@ -396,7 +396,17 @@ aside {
   right: 2px;
 }
 
-.test {
-  min-width: 150px;
-  max-width: 150px;
+.cursorDisabled {
+  cursor: not-allowed;
+}
+
+.smallNumber {
+  width: 75px !important;
+  margin-bottom: 0px !important;
+  margin-top: 20px !important;
+  margin-left: 12px !important;
+}
+
+.btn-sm {
+  font-size: 14px !important;
 }

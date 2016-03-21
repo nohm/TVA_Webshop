@@ -5,23 +5,23 @@
     <%= bootstrap_form_for(@part_product, :url => device_product_category_part_parts_products_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
       
-      <%= f.text_field :part_name, :value => Part.find_by(id: params[:part_id]).name, :disabled => "disabled" %>
-      <%= f.hidden_field :part_id, { :value => Part.find_by(id: params[:part_id]).id }%>
+      <%= f.text_field :part_id, :value => Part.find_by(id: params[:part_id]).name, :class => "cursorDisabled", :readonly => true %>
       
-      <%= f.text_field :product_id, :id => "product_id" %>
+      
+      <%= f.text_field :product_id, :value => @model, :id => "product_id", :class => "cursorDisabled", :readonly => true %>
 
       <%= f.submit "Connect", class: "btn btn-primary", id: "Submit_connect" %>
     <% end %>
 		<br>
     <%= bootstrap_form_tag url: root_path, method: 'GET', html: {class: "form-inline"} do |f| %>
     <div class="input-group">
-      <%= f.select :connection_device_id, options_for_select(Device.all.collect { |device| [device.name.titleize, device.id] }, 0), {:selected => params[:connection_device_id], prompt: "Choose device", hide_label: true}, { id: 'connection_device_select' } %>
+      <%= f.select :connection_device_id, options_for_select(Device.all.collect { |device| [device.name.titleize, device.id] }, 0), {:selected => params[:connection_device_id], prompt: "Choose device", hide_label: true}, { id: 'connection_device_select', data: { 'url' => connect_brand_path } } %>
 
-      <%= f.select :connection_brand, "Nothing", {prompt: "Choose brand", hide_label: true}, { id: 'connection_brand_select', disabled: "disabled"} %>
+      <%= f.select :connection_brand, "Nothing", {prompt: "Choose brand", hide_label: true}, { id: 'connection_brand_select', disabled: "disabled", data: { 'url' => connect_model_path } } %>
 
-      <%= f.select :connection_model, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'connection_model_select', disabled: "disabled"} %>
+      <%= f.select :connection_model, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'connection_model_select', disabled: "disabled", data: { 'url' => connect_model_extended_path } } %>
 
-      <%= f.select :connection_model_extended, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'connection_model_extended_select', disabled: "disabled"} %>
+      <%= f.select :connection_model_extended, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'connection_model_extended_select', disabled: "disabled" } %>
     </div>
   <% end %>
   </div>

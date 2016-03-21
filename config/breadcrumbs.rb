@@ -14,6 +14,15 @@ crumb :carts do
 	link "Cart", carts_path
 end
 
+crumb :invoices do
+	link "Invoices", invoices_path
+end
+
+crumb :invoice do
+	link "Invoice " + params[:id], invoice_path(params[:id])
+	parent :invoices
+end 
+
 crumb :devices do
 	link "Devices", devices_path
 end

@@ -14,12 +14,12 @@ class PartsProductsController < ApplicationController
 	def create
 		redirect_to root_path, :alert => "Unauthorized" and return unless current_user.manager?
 		@part_product = PartsProduct.new
-		model = params[:parts_product][:product_id]
-		part_id = params[:parts_product][:part_id]
-		if !Product.find_by(model: model).nil? && !Product.find_by(model: model).model_extended.blank?
-			product_id = Product.find_by(model: model).id
+		@model = params[:parts_product][:product_id]
+		part_id = Part.find_by(name: params[:parts_product][:part_id]).id
+		if !Product.find_by(model: @model).nil? && !Product.find_by(model: @model).model_extended.blank?
+			product_id = Product.find_by(model: @model).id
 		else
-			product_id = Product.find_by(model_extended: model).id
+			product_id = Product.find_by(model_extended: @model).id
 		end
 		@part_product = PartsProduct.new(part_id: part_id, product_id: product_id)
 		if @part_product.save

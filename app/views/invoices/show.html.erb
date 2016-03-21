@@ -1,0 +1,68 @@
+<% provide(:title, "Invoice") %>
+<% breadcrumb :invoice, @invoice %>
+
+<div class="well well-large">
+  <div class="row">
+    <div class="col-xs-6 col-md-4 col-md-offset-2">
+      <strong>Sender</strong>
+      <p>
+        TVA Service Center<br>
+		    Twentelaan 2<br>
+		    7609 RE Almelo<br>
+		    The Netherlands<br>
+		    +31 546 851212
+      </p>
+    </div>
+    <div class="col-xs-6 col-md-4 col-md-offset-2">
+      <strong>Addressee</strong>
+      <p>
+        TVA Service Center<br>
+		    Twentelaan 2<br>
+		    7609 RE Almelo<br>
+		    The Netherlands<br>
+		    +31 546 851212
+      </p>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-xs-6 col-sm-6 col-md-4">
+      <dl class="dl-horizontal dl-misc">
+        <dt>Date</dt>
+        <dd><%= @invoice.created_at.to_date %></dd>
+      </dl>
+    </div>
+  </div>
+
+  <hr>
+
+  
+
+</div>
+
+<% if params[:type] == 'slip' %>
+  <div class="well well-large">
+    <div class="row">
+    <table class="table table-striped">
+        <thead>
+        </thead>
+        <tbody>
+          <div class="col-xs-6 col-md-4 col-md-offset-2">
+            <strong>Signature sender</strong>
+            <p style="margin-top:50px">
+              ____________________
+            </p>
+          </div>
+          <div class="col-xs-6 col-md-4 col-md-offset-2">
+            <strong>Signature addressee</strong>
+            <p style="margin-top:50px">
+              ____________________
+            </p>
+          </div>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %>

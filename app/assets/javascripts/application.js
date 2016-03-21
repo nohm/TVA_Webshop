@@ -30,9 +30,10 @@ $(document).on('ready page:load', function () {
 	//Dynamic search for id in parts_products#new
 	$("#connection_device_select").change(function () {
 		var id = $(this).val();
+		var url = $(this).data('url');
 		$.ajax({
       type: 'POST',
-      url: '/connect_brand',
+      url: url,
       data: { id: id },
       success: function(data){
         $('#connection_brand_select').prop("disabled", false).html(data);
@@ -50,9 +51,10 @@ $(document).on('ready page:load', function () {
 	$("#connection_brand_select").change(function () {
 		var brand = $(this).val();
 		var id = $("#connection_device_select").val();
+		var url = $(this).data('url');
 		$.ajax({
       type: 'POST',
-      url: '/connect_model',
+      url: url,
       data: { brand: brand, id: id },
       success: function(data){
         $('#connection_model_select').prop("disabled", false).html(data);
@@ -69,10 +71,11 @@ $(document).on('ready page:load', function () {
 		var model = $(this).val();
 		var brand = $("#connection_brand_select").val();
 		var device_id = $("#connection_device_select").val();
+		var url = $(this).data('url');
 		$("#product_id").attr('value', model);
 		$.ajax({
       type: 'POST',
-      url: '/connect_model_extended',
+      url: url,
       data: { model: model, id: device_id, brand: brand },
       success: function(data){
       	if (data == "No model_extended") {
@@ -169,14 +172,15 @@ $(document).on('ready page:load', function () {
 	// AJAX PUT request for updating cart amount in cart.
 	$(".amount").blur(function() {
 	  var $this = $(this);
-	  var $row = $this.closest("tr");
-	  var $id = $this.data('id');
-	  var $user_id = $this.data('user');
-	  var $part_id = $this.data('part');
-	  var $amount = $this.val();
+	  var row = $this.closest("tr");
+	  var id = $this.data('id');
+	  var user_id = $this.data('user');
+	  var part_id = $this.data('part');
+	  var url = $this.data('url');
+	  var amount = $this.val();
 
 	  var go = true
-	  $row.find("input.amount").each(function() {
+	  row.find("input.amount").each(function() {
 	    if (isNaN(this.value)) {
 	      go = false;
 	      $(this).css("border", "1px solid red");
@@ -188,8 +192,8 @@ $(document).on('ready page:load', function () {
 	  if (go) {
 		  $.ajax({
 			  method: "PUT",
-			  url: "/carts/" + $id,
-			  data: { cart: { user_id: $user_id, part_id: $part_id, amount: $amount } }
+			  url: url + "/" + id,
+			  data: { cart: { user_id: user_id, part_id: part_id, amount: amount } }
 			}).done(function() {
 				location.reload(true);
 			})

@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
 	attr_accessor :remember_token
   has_many :cart
+  has_many :invoices
   belongs_to :role
 	before_save { email.downcase! }
 	validates :name, 	presence: true, length: { maximum: 74 }
