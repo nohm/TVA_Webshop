@@ -31,11 +31,7 @@ class HomeController < ApplicationController
 		# Products search through model_extended
 		if !model_extended.blank?
 			product = Product.find_by(device_id: id, brand: brand, model_extended: model_extended)
-			unless product.blank?
 				render :js => "window.location = '#{device_product_categories_path(product.device_id, product)}'"
-				return
-				return
-			end
 		end
 	end
 

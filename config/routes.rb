@@ -10,7 +10,6 @@ Rails.application.routes.draw do
     delete 'logout'  => 'sessions#destroy'
     
     match 'search' => 'home#search', :as => :search, :via => :get
-    match '/search_model' => 'home#search_model', :as => :search_model, :via => :post
     match '/search_model_extended' => 'home#search_model_extended', :as => :search_model_extended, :via => :post
     match 'parts' => 'home#all_parts', :as => :parts, :via => :get
     match '/options_brand' => 'home#options_brand', :as => :options_brand, :via => :post

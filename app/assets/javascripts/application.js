@@ -97,9 +97,10 @@ $(document).on('ready page:load', function () {
 	//Dynamic search
 	$("#device_select").change(function () {
 		var id = $(this).val();
+		var url = $(this).data('url');
 		$.ajax({
       type: 'POST',
-      url: '/options_brand',
+      url: url,
       data: { id: id },
       success: function(data){
         $('#brand_select').prop("disabled", false).html(data);
@@ -117,9 +118,10 @@ $(document).on('ready page:load', function () {
 	$("#brand_select").change(function () {
 		var brand = $(this).val();
 		var id = $("#device_select").val();
+		var url = $(this).data('url');
 		$.ajax({
       type: 'POST',
-      url: '/options_model',
+      url: url,
       data: { brand: brand, id: id },
       success: function(data){
         $('#model_select').prop("disabled", false).html(data);
@@ -136,9 +138,10 @@ $(document).on('ready page:load', function () {
 		var model = $(this).val();
 		var brand = $("#brand_select").val();
 		var device_id = $("#device_select").val();
+		var url = $(this).data('url');
 		$.ajax({
       type: 'POST',
-      url: '/options_model_extended',
+      url: url,
       data: { model: model, id: device_id, brand: brand },
       success: function(data){
         $('#model_extended_select').prop("disabled", false).html(data);
@@ -153,9 +156,10 @@ $(document).on('ready page:load', function () {
 		var model_extended = $(this).val();
 		var brand = $("#brand_select").val();
 		var id = $("#device_select").val();
+		var url = $(this).data('url');
 		$.ajax({
 			type: 'POST',
-			url: '/search_model_extended',
+			url: url,
 			data: { model_extended: model_extended, brand: brand, id: id },
 		})
 	})
