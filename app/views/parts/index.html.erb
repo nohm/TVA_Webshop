@@ -44,7 +44,7 @@
                         <td><small><%= part_product.part.brand %></small></td>
                       </tr>
                       <tr>
-                        <td style="padding-right: 20px;"><small>Condition: </small></td>
+                        <td class="paddingR20"><small>Condition: </small></td>
                         <td><small><%= part_product.part.condition %></small></td>
                       </tr>
                       <tr>
@@ -60,17 +60,17 @@
                       href=<%= part_product.part.partimagefull.url %>
                     <% end %>
                   >
-                    <div class="col-md-6" style="width: 66px; padding: 0px">
-                      <%= image_tag part_product.part.partimagefull.url(:thumb), class: "BorderGray" %>
+                    <div class="col-md-6 width66px noPadding">
+                      <%= image_tag part_product.part.partimagefull.url(:thumb), class: "borderGray" %>
                       <% if !part_product.part.partimagefull_file_name.nil? %>
-                        <div class="BottomRight"><span class="glyphicon glyphicon-search"></span></div>
+                        <div class="bottomRight"><span class="glyphicon glyphicon-search"></span></div>
                       <% end %>
                     </div>
                   </a>
                 </td>
                 <% if logged_in? %>
                   <% if part_product.part.stock == 0 %>
-                    <td><p style="color: red"><%= "Out of stock" %><p></td>
+                    <td><p class="red"><%= "Out of stock" %><p></td>
                   <% else %>
                     <td><%= part_product.part.stock %></td>
                   <% end %>

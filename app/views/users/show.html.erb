@@ -10,7 +10,7 @@
     </section>
   </aside>
   <h1 class="col-md-12" style="text-align: left; padding-left: 15px">Purchase history</h1>
-  <% if @carts.length == 0 %>
+  <% if @invoices.length == 0 %>
     <p class="empty_list" style="padding-left: 15px">
       <%= "There is no history to be found  " %>
     </p>
@@ -23,34 +23,34 @@
             <th>Purchase date</th>
             <th class="small-col"></th>
             <th class="small-col"></th>
-            <th class="small-col"></th>
+            <% if current_user.manager? %>
+              <th class="small-col"></th>
+            <% end %>
           </tr>
         </thead>
         <tbody>
           <% @invoices.each do |invoice| %>
             <tr>
               <td><%= invoice.id %></td>
+              <td><%= invoice.user.name %></td>
+              <td><%= invoice.created_at %></td>
               <td>
-                <%= link_to user_path(invoice.user_id) do %>
-                  <%= invoice.user.name %>
-                <% end %>
-              </td>
-              <td><%= invoice.created_at.to_date %></td>
-              <td>
-                <%= link_to invoice_path(invoice, :type => 'slip') do %>
+                <%= link_to user_invoice_path(@user, invoice, :type => 'slip') do %>
                   <span class="glyphicon glyphicon-send"></span>
                 <% end %>
               </td>
               <td>
-                <%= link_to invoice_path(invoice) do %>
+                <%= link_to user_invoice_path(@user, invoice) do %>
                   <span class="glyphicon glyphicon-euro"></span>
                 <% end %>
               </td>
-              <td>
-                <%= link_to invoice_path(invoice), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
-                  <span class="glyphicon glyphicon-remove"></span>
-                <% end %>
-              </td>
+              <% if current_user.manager? %>
+                <td>
+                  <%= link_to user_invoice_path(@user, invoice), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                    <span class="glyphicon glyphicon-remove"></span>
+                  <% end %>
+                </td>
+              <% end %>
             </tr>
           <% end %>
         </tbody>

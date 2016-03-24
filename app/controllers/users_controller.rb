@@ -8,8 +8,7 @@ class UsersController < ApplicationController
   def show
     redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.id == params[:id].to_i || logged_in? && current_user.admin?
     @user = User.find(params[:id])
-    @carts = Cart.where(user_id: @user.id, purchased: true).page(params[:page]).per(25).order('id ASC')
-    @invoices = Invoice.where(user_id: @user.id)
+    @invoices = Invoice.where(user_id: @user.id).page(params[:page]).per(25)
   end
 
   def new
@@ -55,6 +54,6 @@ class UsersController < ApplicationController
   private
 
     def user_params
-      params.require(:user).permit(:name, :email, :password, :password_confirmation, :role_id)
+      params.require(:user).permit(:name, :email, :street, :city, :province, :country, :postal_code, :phone_number, :password, :password_confirmation, :role_id)
     end
 end

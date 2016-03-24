@@ -10,11 +10,11 @@
         <table class="table">
           <thead>
             <tr class="active">
-              <th style="width: 60%"><%= "Description" %></th>
-              <th style="width: 10%"><%= "Amount" %></th>
+              <th class="width60"><%= "Description" %></th>
+              <th class="width10"><%= "Amount" %></th>
               <th class="small-col"></th>
-              <th style="width: 10%"><%= "Price" %></th>
-              <th style="width: 10%" class="Right"><%= "Total" %></th>
+              <th class="width10"><%= "Price" %></th>
+              <th class="right width10"><%= "Total" %></th>
             </tr>
           </thead>
           <tbody>
@@ -34,12 +34,12 @@
                   <% end %>
                 </td>
                 <td><%= number_to_currency(cart.part.price_ex, unit: "€") %></td>
-                <td class="Right"><%= number_to_currency(cart.part.price_ex * cart.amount, unit: "€") %></td>
+                <td class="right"><%= number_to_currency(cart.part.price_ex * cart.amount, unit: "€") %></td>
               </tr>
             <% end %>
           </tbody>
           <tfoot>
-            <tr name="Subtotal" class="active Borderless Right">
+            <tr name="Subtotal" class="active borderless right">
               <td colspan="2"></td>
               <td colspan="2">Subtotaal excl. BTW</td>
               <% arr = Array.new(0) %>
@@ -50,30 +50,30 @@
                 <%= number_to_currency(arr.sum, unit: "€") %>
                 </td>
             </tr>
-            <tr class="Right">
+            <tr class="right">
               <td colspan="2"></td>
               <td colspan="2"><h3>Verzendkosten</h3></td>
               <td colspan="1"><h3>€4.00</h3></td>
             </tr>
-            <tr name="TotalNoBTW" class="Right">
-              <td colspan="2" class="Borderless"></td>
+            <tr name="TotalNoBTW" class="right">
+              <td colspan="2" class="borderless"></td>
               <td colspan="2">Totaal excl. BTW</td>
               <td colspan="1"><%= number_to_currency(arr.sum + 4, unit: "€") %></td>
             </tr>
-            <tr name="BTW" class="Right">
-              <td colspan="2" class="Borderless"></td>
-              <td colspan="2" class="Borderless"><h3>21% BTW</h3></td>
-              <td colspan="1" class="Borderless"><h3><%= number_to_currency((arr.sum + 4) * 0.21, unit: "€") %></h3></td>
+            <tr name="BTW" class="right">
+              <td colspan="2" class="borderless"></td>
+              <td colspan="2" class="borderless"><h3>21% BTW</h3></td>
+              <td colspan="1" class="borderless"><h3><%= number_to_currency((arr.sum + 4) * 0.21, unit: "€") %></h3></td>
             </tr>
-            <tr class="Right">
-              <td colspan="2" class="Borderless"</td>
+            <tr class="right">
+              <td colspan="2" class="borderless"</td>
               <td colspan="2">Totaal incl. BTW</td>
               <td colspan="1"><%= number_to_currency((arr.sum + 4) * 1.21, unit: "€") %></td>
             </tr>
           </tfoot>
         </table>
       </div>
-      <button type="button" id="purchase" class="btn btn-primary" style="float: right">Purchase</button>
+      <button type="button" id="purchase" class="btn btn-primary" data-user-id="<%= current_user.id %>" data-cart-ids="<%= @carts.ids %>" data-url="purchase" style="float: right">Purchase</button>
     <% end %>
   </div>
   <div class="panel-footer">

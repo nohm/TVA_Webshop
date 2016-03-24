@@ -3,7 +3,7 @@ crumb :root do
 end
 
 crumb :user do
-	link User.find_by(id: params[:id]).name, user_path(current_user.id)
+	link User.find_by(id: params[:user_id] || params[:id]).name, user_path(current_user.id)
 end
 
 crumb :users do
@@ -19,8 +19,8 @@ crumb :invoices do
 end
 
 crumb :invoice do
-	link "Invoice " + params[:id], invoice_path(params[:id])
-	parent :invoices
+	link "Invoice " + params[:id], user_invoice_path(params[:user_id], params[:id])
+	parent :user
 end 
 
 crumb :devices do

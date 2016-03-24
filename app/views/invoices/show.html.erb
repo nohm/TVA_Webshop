@@ -16,11 +16,11 @@
     <div class="col-xs-6 col-md-4 col-md-offset-2">
       <strong>Addressee</strong>
       <p>
-        TVA Service Center<br>
-		    Twentelaan 2<br>
-		    7609 RE Almelo<br>
-		    The Netherlands<br>
-		    +31 546 851212
+        <%= @user.name %><br>
+		    <%= @user.street %><br>
+		    <%= @user.postal_code + " " + @user.city %><br>
+        <%= @country.name %><br>
+		    <%= @user.phone_number %>
       </p>
     </div>
   </div>
@@ -38,8 +38,57 @@
 
   <hr>
 
-  
-
+  <div class="row">
+    <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <% if params[:type] != "slip" %>
+              <th>Price</th>
+              <th>Amount</th>
+            <% end %>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% if params[:type] == "slip" %>
+          <% @carts.each do |cart| %>
+            <tr>
+              <td><%= cart.part.name %></td>
+              <td><%= cart.amount.to_s + "x" %></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <% @carts.each do |cart| %>
+            <tr>
+              <td class="width40"><%= cart.part.name %></td>
+              <td class="width20"><%= number_to_currency(cart.part.price_ex, unit: '€') %></td>
+              <td class="width20"><%= cart.amount.to_s + "x" %></td>
+              <td class="width20"><%= number_to_currency(cart.amount * cart.part.price_ex, unit: '€') %></td>
+            </tr>
+          <% end %>
+        <% end %>
+        <tr>
+          <td colspan="4" style="height: 38px;"></td>
+        </tr>
+          <% if params[:type] != "slip" %>
+            <tr>
+              <td colspan="3">21% BTW</td>
+              <td><%= number_to_currency(@cart_price_total * 0.21, unit: '€') %></td>
+            </tr>
+          <% end %>
+          <tr>
+          <% if params[:type] == "slip" %>
+            <td>Total</td>
+            <td><%= @cart_amount_total.to_s + "x" %></td>
+          <% else %>
+            <td colspan="3"><b>Total</b></td>
+            <td><%= number_to_currency(@cart_price_total, unit: '€') %></td>
+          <% end %>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 </div>
 
 <% if params[:type] == 'slip' %>

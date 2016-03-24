@@ -315,17 +315,17 @@ aside {
   width: 100% !important;
 }
 
-.Small {
+.small {
   width: 150px !important;
   height: 34px;
   margin-bottom: 0px;
 }
 
-.BigImage {
+.bigImage {
   padding-left: 0px !important;
 }
 
-.SmallImgContainer {
+.smallImgContainer {
   padding-top: 5px;
   padding-left: 0px;
   padding-right: 5px;
@@ -338,17 +338,21 @@ aside {
   width: 50%;
 }
 
-.PriceTable {
+.priceTable {
   width: 50%;
   float: right;
 }
 
-.Right {
+.right {
   text-align: right !important;
 }
 
 .noPadding {
   padding: 0px;
+}
+
+.paddingR20 {
+  padding-right: 20px;
 }
 
 .table {
@@ -363,7 +367,7 @@ aside {
      vertical-align: middle;
 }
 
-.Borderless { 
+.borderless { 
      border-top: none !important; 
 }
 
@@ -376,21 +380,21 @@ aside {
   width: 100% !important;
 }
 
-.RemoveLink > a {
+.removeLink > a {
     color: #333 !important;
     text-decoration: underline !important;
 }
 
-.BorderGray {
+.borderGray {
   border: 1px #ddd solid;
 }
 
-.BorderBlack {
+.borderBlack {
   border: 1px #000 solid;
   margin-bottom: 15px;
 }
 
-.BottomRight {
+.bottomRight {
   position: absolute;
   bottom: 0;
   right: 2px;
@@ -410,3 +414,29 @@ aside {
 .btn-sm {
   font-size: 14px !important;
 }
+
+.red {
+  color: red;
+}
+
+.width10 {
+  width: 10%;
+}
+
+.width20 {
+  width: 20%;
+}
+
+.width40 {
+  width: 40%;
+}
+
+.width60 {
+  width: 60%;
+}
+
+.width66px {
+  width: 66px;
+}
+
+

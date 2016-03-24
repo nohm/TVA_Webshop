@@ -9,6 +9,8 @@ Rails.application.routes.draw do
     post   'login'   => 'sessions#create'
     delete 'logout'  => 'sessions#destroy'
     
+    get '/invoices' => 'home#invoices', :as => :invoices
+
     match 'search' => 'home#search', :as => :search, :via => :get
     match '/search_model_extended' => 'home#search_model_extended', :as => :search_model_extended, :via => :post
     match 'parts' => 'home#all_parts', :as => :parts, :via => :get
@@ -20,9 +22,14 @@ Rails.application.routes.draw do
     match '/connect_model' => 'parts_products#connect_model', :as => :connect_model, :via => :post
     match '/connect_model_extended' => 'parts_products#connect_model_extended', :as => :connect_model_extended, :via => :post
 
-    resources :users
+    match '/purchase' => 'carts#purchase', :as => :purchase, :via => :post
+
     resources :carts
-    resources :invoices
+    
+    resources :users do
+      resources :invoices
+    end
+
     resources :devices do
       resources :products do
         resources :categories do

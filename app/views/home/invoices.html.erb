@@ -27,17 +27,17 @@
               </td>
               <td><%= invoice.created_at.to_date %></td>
               <td>
-                <%= link_to user_invoice_path(params[:user_id], invoice, :type => 'slip') do %>
+                <%= link_to user_invoice_path(invoice.user.id, invoice, :type => 'slip') do %>
                   <span class="glyphicon glyphicon-send"></span>
                 <% end %>
               </td>
               <td>
-                <%= link_to user_invoice_path(params[:user_id], invoice) do %>
+                <%= link_to user_invoice_path(invoice.user.id, invoice) do %>
                   <span class="glyphicon glyphicon-euro"></span>
                 <% end %>
               </td>
               <td>
-                <%= link_to user_invoice_path(params[:user_id], invoice), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                <%= link_to user_invoice_path(invoice.user.id, invoice), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
                   <span class="glyphicon glyphicon-remove"></span>
                 <% end %>
               </td>

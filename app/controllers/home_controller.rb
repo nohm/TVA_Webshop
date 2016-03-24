@@ -39,6 +39,11 @@ class HomeController < ApplicationController
 		@all_parts = Part.where(category_id: params[:category_id]).page(params[:page]).per(20).order('id ASC')
 	end
 
+	def invoices
+		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+		@invoices = Invoice.all.page(params[:page]).per(25)
+	end
+
 	def options_brand
     id = params[:id]
 

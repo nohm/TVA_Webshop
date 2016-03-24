@@ -10,6 +10,11 @@ class User < ActiveRecord::Base
 										format: { with: VALID_EMAIL_REGEX },
 										uniqueness: { case_sensitive: false }
 	has_secure_password
+  validates :street, presence: true
+  validates :city, presence: true
+  validates :province, presence: true
+  validates :country, presence: true
+  validates :postal_code, presence: true
 	validates :password, presence: true, length: { minimum: 6 }, :on => :create
   validates :password_confirmation, presence: true, :on => :create
 

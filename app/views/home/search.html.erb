@@ -5,12 +5,12 @@
 <% else %>
 		<h2>Showing search results for "<%= @query %>"</h2>
 	<% if @part_results.total_count == 0 %>
-		<div class="col-sm-12 col-md-8 BorderBlack" >
+		<div class="col-sm-12 col-md-8 borderBlack" >
 			<h4><%= @part_results.total_count %> <%= "Part".pluralize(@part_results.total_count) %> found</h4>
 			<p>No results found</p>
 		</div>
 	<% else %>
-		<div class="col-sm-12 col-md-8 BorderBlack" >
+		<div class="col-sm-12 col-md-8 borderBlack" >
 		<h4><%= @part_results.total_count %> <%= "Part".pluralize(@part_results.total_count) %> found</h4>
 		<div class="table-responsive">
         <table class="table table-hover">
@@ -38,7 +38,7 @@
                         <td><small><%= part_result.brand %></small></td>
                       </tr>
                       <tr>
-                        <td style="padding-right: 10px;"><small>Condition: </small></td>
+                        <td class="paddingR20"><small>Condition: </small></td>
                         <td><small><%= part_result.condition %></small></td>
                       </tr>
                       <tr>
@@ -54,17 +54,17 @@
                   		href=<%= part_result.partimagefull.url %>
                   	<% end %>
                   >
-                  	<div class="col-md-6 noPadding" style="width: 66px;">
-	                    <%= image_tag part_result.partimagefull.url(:thumb), class: "BorderGray" %>
+                  	<div class="col-md-6 width66px noPadding">
+	                    <%= image_tag part_result.partimagefull.url(:thumb), class: "borderGray" %>
 	                  	<% if !part_result.partimagefull_file_name.nil? %>
-                        <div class="BottomRight"><span class="glyphicon glyphicon-search"></span></div>
+                        <div class="bottomRight"><span class="glyphicon glyphicon-search"></span></div>
                       <% end %>
                   	</div>
                   </a>
                 </td>
                 <% if logged_in? %>
 	                <% if part_result.stock == 0 %>
-	                  <td><p style="color: red"><%= "Out of stock" %><p></td>
+	                  <td><p class="red"><%= "Out of stock" %><p></td>
 	                <% else %>
 	                  <td><%= part_result.stock %></td>
 	                <% end %>
@@ -84,14 +84,14 @@
 	<div class="col-md-3 col-md-offset-1">
 		<div class="row">
 			<% if @category_results.total_count == 0 %>
-				<div class="col-sm-12 BorderBlack" >
+				<div class="col-sm-12 borderBlack" >
 					<h4><%= @category_results.total_count %> <%= "Category".pluralize(@category_results.total_count) %> found</h4>
 					<p>No results found</p>
 				</div>
 			<% else %>
-				<div class="col-sm-12 BorderBlack" >
+				<div class="col-sm-12 borderBlack" >
 					<h4><%= @category_results.total_count %> <%= "Category".pluralize(@category_results.total_count) %> found</h4>
-					<ol style="list-style-type:none; padding: 0px;">	
+					<ol class="noPadding" style="list-style-type:none;">	
 						<% @category_results.each do |category_result| %>
 							<li>
 								<%= link_to parts_path(:category_id => category_result.id) do %>
@@ -109,14 +109,14 @@
 
 		<div class="row">
 			<% if @product_results.total_count == 0 %>
-				<div class="col-sm-12 BorderBlack" >
+				<div class="col-sm-12 borderBlack" >
 					<h4><%= @product_results.total_count %> <%= "Product".pluralize(@product_results.total_count) %> found</h4>
 					<p>No results found</p>
 				</div>
 			<% else %>
-				<div class="col-sm-12 BorderBlack" >
+				<div class="col-sm-12 borderBlack" >
 					<h4><%= @product_results.total_count %> <%= "Product".pluralize(@product_results.total_count) %> found</h4>
-					<ol style="list-style-type:none; padding: 0px;">
+					<ol class="noPadding" style="list-style-type:none;">
 						<% @product_results.each do |product_result| %>
 							<li>
 								<%= link_to device_product_categories_path(product_result.device.id, product_result.id) do %>

@@ -4,22 +4,22 @@
       <div class="row">
         <div class="col-sm-6 ImageContainer noPadding">
           <h4><%= @part.name %></h4>
-          <div class="BigImage col-sm-1 noPadding" style="width: 302px;">
+          <div class="bigImage col-sm-1 noPadding" style="width: 302px;">
             <% if @partimages.first.nil? %>
               <%= image_tag "MissingLarge.png" %>
             <% else %>
               <a class="BigImgOriginal" style="display: inline-block;" href=<%= @partimages.first.pimg.url %>>
-                <%= image_tag @partimages.first.pimg.url(:large), :class => "BigImg BorderGray", :title => @part.name %>
-                <div class="BottomRight"><span class="glyphicon glyphicon-search"></span></div>
+                <%= image_tag @partimages.first.pimg.url(:large), :class => "BigImg borderGray", :title => @part.name %>
+                <div class="bottomRight"><span class="glyphicon glyphicon-search"></span></div>
               </a>
             <% end %>
           </div>
           <div style="clear: both;"></div> 
           <div style="min-width: 284px; min-height: 71px; ">
             <% @partimages.each do |image| %>
-              <div class="SmallImgContainer">
+              <div class="smallImgContainer">
 
-                <%= image_tag image.pimg.url(:thumb), :data => {:hover => image.pimg.url(:large), :url => image.pimg.url}, :class => "SmallImg BorderGray" %>
+                <%= image_tag image.pimg.url(:thumb), :data => {:hover => image.pimg.url(:large), :url => image.pimg.url}, :class => "SmallImg borderGray" %>
               </div>
             <% end %>
           </div>
@@ -29,18 +29,18 @@
           <br>
           <div class="col-sm-6 noPadding">
             <div class="Prijsbox">
-              <table class="table table-bordered PriceTable">
+              <table class="table table-bordered priceTable">
                 <thead>
                   <tr>
-                    <th class="Right">Price</th>
+                    <th class="right">Price</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td class="Right"><%= number_to_currency(@part.price_ex, unit: "€") %></td>
+                    <td class="right"><%= number_to_currency(@part.price_ex, unit: "€") %></td>
                   </tr>
                   <tr>
-                    <td class="Right">Excl 21% BTW</td>
+                    <td class="right">Excl 21% BTW</td>
                   </tr>
                 </tbody>
               </table>
@@ -58,7 +58,7 @@
           </div>
         <% end %>
       </div>
-      <div class="table-responsive noPadding BorderGray" style="margin: 15px -15px">
+      <div class="table-responsive noPadding borderGray" style="margin: 15px -15px">
         <table class="table table-hover ">
           <tbody>
             <% if @partdescriptions.length > 0 %>

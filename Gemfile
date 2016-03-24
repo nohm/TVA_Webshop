@@ -64,6 +64,8 @@ gem "gretel"
 # Rake
 gem 'rake', '11.0.1'
 
+gem 'country_select'
+
 group :assets do
   # Javascript engine
   gem 'therubyracer', platform: :ruby

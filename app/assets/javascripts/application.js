@@ -201,19 +201,33 @@ $(document).on('ready page:load', function () {
 	})
 
 
+	// Change cart after purchase.
+	$("#purchase").click(function () {
+		var cart_ids = $(this).data('cart-ids');
+		var user_id = $(this).data('user-id');
+		var url = $(this).data('url');
+
+		$.ajax({
+			method: "POST",
+			url: "/" + url,
+			data: { user_id: user_id, cart_ids: cart_ids }
+		})
+	})
+
+
 
 	//Resize the price table at part#show on resize and load.
-	var Right = $(".Right");
-	var Table = $(".PriceTable");
+	var right = $(".right");
+	var Table = $(".priceTable");
 	var RightAlign = $(".RightAlign");
 	$(window).resize(function() {
 		if ($(window).width() < 754) {
-      Right.css('text-align', 'left');
+      right.css('text-align', 'left');
       Table.css('width', '50%').css('float', 'left');
       RightAlign.css('float', 'left');
   	}
   	else {
-  		Right.css('text-align', 'right');
+  		right.css('text-align', 'right');
   		Table.css('width', '50%').css('float', 'right')
   		RightAlign.css('float', 'right')
   	}

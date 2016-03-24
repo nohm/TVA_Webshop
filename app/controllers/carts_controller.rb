@@ -46,6 +46,23 @@ class CartsController < ApplicationController
 	  end
 	end
 
+	def purchase
+		cart_ids = params[:cart_ids]
+		user = params[:user_id]
+		carts = Cart.where(id: cart_ids, user_id: user)
+		#invoice = Invoice.create(:user_id => current_user.id)
+		carts.each do |cart|
+			cart.purchased = true
+			part = Part.find(cart.part_id)
+			part.stock -= cart.amount
+			#Invoice_Items.create(invoice_id: invoice.id, cart_id: cart.id)
+			part.save
+			cart.save
+		end 
+		Invoice.create(user_id: current_user.id, cart_ids: cart_ids)
+		render :js => "window.location = location"
+	end
+
 	private
 
 	def cart_params
