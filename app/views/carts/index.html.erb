@@ -53,22 +53,22 @@
             <tr class="right">
               <td colspan="2"></td>
               <td colspan="2"><h3>Verzendkosten</h3></td>
-              <td colspan="1"><h3>€4.00</h3></td>
+              <td colspan="1"><h3><%= number_to_currency(@shipping_cost, unit: "€") %></h3></td>
             </tr>
             <tr name="TotalNoBTW" class="right">
               <td colspan="2" class="borderless"></td>
               <td colspan="2">Totaal excl. BTW</td>
-              <td colspan="1"><%= number_to_currency(arr.sum + 4, unit: "€") %></td>
+              <td colspan="1"><%= number_to_currency(arr.sum + @shipping_cost, unit: "€") %></td>
             </tr>
             <tr name="BTW" class="right">
               <td colspan="2" class="borderless"></td>
               <td colspan="2" class="borderless"><h3>21% BTW</h3></td>
-              <td colspan="1" class="borderless"><h3><%= number_to_currency((arr.sum + 4) * 0.21, unit: "€") %></h3></td>
+              <td colspan="1" class="borderless"><h3><%= number_to_currency((arr.sum + @shipping_cost) * 0.21, unit: "€") %></h3></td>
             </tr>
             <tr class="right">
               <td colspan="2" class="borderless"</td>
               <td colspan="2">Totaal incl. BTW</td>
-              <td colspan="1"><%= number_to_currency((arr.sum + 4) * 1.21, unit: "€") %></td>
+              <td colspan="1"><%= number_to_currency((arr.sum + @shipping_cost) * 1.21, unit: "€") %></td>
             </tr>
           </tfoot>
         </table>

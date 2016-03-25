@@ -157,13 +157,20 @@ $(document).on('ready page:load', function () {
 
 	$("#model_extended_select").change(function () {
 		var model_extended = $(this).val();
+		var model = $('#model_select').val();
 		var brand = $("#brand_select").val();
 		var id = $("#device_select").val();
 		var url = $(this).data('url');
 		$.ajax({
 			type: 'POST',
 			url: url,
-			data: { model_extended: model_extended, brand: brand, id: id },
+			data: { model_extended: model_extended, brand: brand, id: id, model: model },
+			success: function(data){
+				$('#device_select').value = id;
+				$('#brand_select').value = brand;
+				$('#model_select').value = model;
+				$('#model_extended_select').value = model_extended;
+			}
 		})
 	})
 

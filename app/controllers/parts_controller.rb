@@ -60,6 +60,6 @@ class PartsController < ApplicationController
   private
 
   def part_params
-    params.require(:part).permit(:category_id, :name, :condition, :warranty, :price_ex, :stock, :partimagefull, :brand)
+    params.require(:part).permit(:category_id, :name, :condition, :warranty, :price_ex, :stock, :partimagefull, :brand, :weight)
   end
 end

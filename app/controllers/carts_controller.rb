@@ -1,6 +1,24 @@
 class CartsController < ApplicationController
 	def index
 		@carts = Cart.where(user_id: current_user.id, purchased: false).order('id ASC')
+		weight_array = [0, 999, 1000, 1999, 2000, 2999, 3000, 3999, 4000, 4999, 5000, 5999]
+		shipping_array = [0.50, 1, 1.50, 2, 2.50, 3]
+		@shipping_cost = 0
+		@carts.each do |cart|
+			if cart.part.weight.between?(weight_array[0], weight_array[1])
+				@shipping_cost += cart.amount * shipping_array[0]
+			elsif cart.part.weight.between?(weight_array[2], weight_array[3])
+				@shipping_cost += cart.amount * shipping_array[1]
+			elsif cart.part.weight.between?(weight_array[4], weight_array[5])
+				@shipping_cost += cart.amount * shipping_array[2]
+			elsif cart.part.weight.between?(weight_array[6], weight_array[7])
+				@shipping_cost += cart.amount * shipping_array[3]
+			elsif cart.part.weight.between?(weight_array[8], weight_array[9])
+				@shipping_cost += cart.amount * shipping_array[4]
+			elsif cart.part.weight.between?(weight_array[10], weight_array[11])
+				@shipping_cost += cart.amount * shipping_array[5]
+			end
+		end 
 	end
 
 	def create

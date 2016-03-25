@@ -8,8 +8,7 @@ Rails.application.routes.draw do
     get    'login'   => 'sessions#new'
     post   'login'   => 'sessions#create'
     delete 'logout'  => 'sessions#destroy'
-    
-    get '/invoices' => 'home#invoices', :as => :invoices
+    get '/invoices' => 'home#invoices'
 
     match 'search' => 'home#search', :as => :search, :via => :get
     match '/search_model_extended' => 'home#search_model_extended', :as => :search_model_extended, :via => :post

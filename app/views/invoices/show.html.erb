@@ -73,8 +73,12 @@
         </tr>
           <% if params[:type] != "slip" %>
             <tr>
+              <td colspan="3">Shipping</td>
+              <td><%= number_to_currency(@shipping_cost, unit: '€') %></td>
+            </tr>
+            <tr>
               <td colspan="3">21% BTW</td>
-              <td><%= number_to_currency(@cart_price_total * 0.21, unit: '€') %></td>
+              <td><%= number_to_currency((@cart_price_total + @shipping_cost) * 0.21, unit: '€') %></td>
             </tr>
           <% end %>
           <tr>
@@ -83,7 +87,7 @@
             <td><%= @cart_amount_total.to_s + "x" %></td>
           <% else %>
             <td colspan="3"><b>Total</b></td>
-            <td><%= number_to_currency(@cart_price_total, unit: '€') %></td>
+            <td><%= number_to_currency((@cart_price_total + @shipping_cost) * 1.21, unit: '€') %></td>
           <% end %>
           </tr>
         </tbody>
