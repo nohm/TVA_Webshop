@@ -13,6 +13,7 @@ class Part < ActiveRecord::Base
 	validates :name, 				presence: true
 	validates :condition, 	presence: true
 	validates :warranty, 		presence: true
+	validates :weight, 			presence: true
 	validates :stock, 			presence: true
 	validates :price_ex, 		presence: true
 	validates :brand, 			presence: true

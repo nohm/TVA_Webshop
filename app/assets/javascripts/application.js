@@ -17,7 +17,9 @@
 //= require turbolinks
 //= require_tree .
 
-
+Brand();
+	Model();
+	Model_extended();
 $(document).on('ready page:load', function () {
 	// Mouseover fuction for the thumbnails in part#show.
 	$(".SmallImg").mouseover(function() {
@@ -26,6 +28,8 @@ $(document).on('ready page:load', function () {
 	})
 
 
+	
+	
 
 	//Dynamic search for id in parts_products#new
 	$("#connection_device_select").change(function () {
@@ -164,13 +168,7 @@ $(document).on('ready page:load', function () {
 		$.ajax({
 			type: 'POST',
 			url: url,
-			data: { model_extended: model_extended, brand: brand, id: id, model: model },
-			success: function(data){
-				$('#device_select').value = id;
-				$('#brand_select').value = brand;
-				$('#model_select').value = model;
-				$('#model_extended_select').value = model_extended;
-			}
+			data: { model_extended: model_extended, brand: brand, id: id, model: model }
 		})
 	})
 
@@ -216,7 +214,7 @@ $(document).on('ready page:load', function () {
 
 		$.ajax({
 			method: "POST",
-			url: "/" + url,
+			url: url,
 			data: { user_id: user_id, cart_ids: cart_ids }
 		})
 	})
@@ -241,3 +239,77 @@ $(document).on('ready page:load', function () {
 	})
 	.trigger('resize');
 });
+
+function Brand() {
+	var id = $("#device_select").val();
+	var url = $("#device_select").data('url');
+	if(id) {
+		$.ajax({
+	    type: 'POST',
+	    url: url,
+	    data: { id: id },
+	    success: function(data){
+	      $('#brand_select').prop("disabled", false).html(data);
+	      $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+	      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+	    },
+	    error: function(data){
+	    	$('#brand_select').prop("disabled", true).html('<option value="">Choose brand</option>');
+	      $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+	      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+	    }
+	  })
+	}
+}
+
+function Model() {
+	var brand = $("#brand_select").val();
+	var id = $("#device_select").val();
+	var url = $("#brand_select").data('url');
+	if(brand) {
+		$.ajax({
+	    type: 'POST',
+	    url: url,
+	    data: { brand: brand, id: id },
+	    success: function(data){
+	      $('#model_select').prop("disabled", false).html(data);
+	      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+	      $('#device_select').val(id);
+	      $('#brand_select').val(brand);
+	      $('#model_select').val(model);
+	    },
+	    error: function(data){
+	      $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+	      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+	    }
+	  })
+	}
+}
+
+function Model_extended() {
+	var extended = $("#model_extended_select").val();
+	var model = $("#model_select").val();
+	var brand = $("#brand_select").val();
+	var id = $("#device_select").val();
+	var url = $("#model_select").data('url');
+	if(model) {
+		$.ajax({
+	    type: 'POST',
+	    url: url,
+	    data: {model: model, id: id, brand: brand },
+	    success: function(data){
+	      $('#model_extended_select').prop("disabled", false).html(data);
+	      $('#device_select').val(id);
+	      $('#brand_select').val(brand);
+	      $('#model_select').val(model);
+	    },
+	    error: function(data){
+	      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+	    }
+	  })
+	}
+}
+
+$("#Category").on('ready', function () {
+	console.log("Category loaded")
+})

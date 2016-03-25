@@ -26,12 +26,13 @@ class HomeController < ApplicationController
 	def search_model_extended
 		id = params[:id]
 		brand = params[:brand]
+		model = params[:model]
 		model_extended = params[:model_extended]
 
 		# Products search through model_extended
 		if !model_extended.blank?
 			product = Product.find_by(device_id: id, brand: brand, model_extended: model_extended)
-				render :js => "window.location = '#{device_product_categories_path(product.device_id, product)}'"
+				render :js => "window.location = #{device_product_categories_path(product.device_id, product, :id => id, :brand => brand, :model => model, :model_extended => model_extended).to_json}"
 		end
 	end
 
@@ -74,7 +75,7 @@ class HomeController < ApplicationController
 		if !model.blank? && !Product.where(model: model, device_id: id).pluck(:model_extended).any?
 			product = Product.find_by(device_id: id, brand: brand, model: model)
 			unless product.blank?
-				render :js => "window.location = '#{device_product_categories_path(product.device_id, product)}'"
+				render :js => "window.location = #{device_product_categories_path(product.device_id, product, :id => id, :brand => brand, :model => model).to_json}"
 				return
 			end
 		end

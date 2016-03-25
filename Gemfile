@@ -63,7 +63,7 @@ gem 'bcrypt',        '3.1.7'
 gem "gretel"
 # Rake
 gem 'rake', '11.0.1'
-
+# List of countries
 gem 'country_select'
 
 group :assets do

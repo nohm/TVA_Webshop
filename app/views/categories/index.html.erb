@@ -1,6 +1,6 @@
 <% provide(:title, "Categories") %>
 <% breadcrumb :categories, @categories %>
-  <div class="panel-body panel-table">
+  <div class="panel-body panel-table" id="Category">
     <% if @categories.length == 0 %>
       <p class="empty_list">
         <%= "De lijst is leeg" %>
@@ -17,10 +17,10 @@
                 <p class="center"><b>Category: </b><%= category.name %></p>
                 <% if logged_in? && current_user.manager? %>
                   <%= link_to edit_device_product_category_path(params[:device_id], params[:product_id], category) do %>
-                    <span class="glyphicon glyphicon-pencil"></span>
+                    <span class="glyphicon glyphicon-pencil" title="Edit"></span>
                   <% end %>
                   <%= link_to device_product_category_path(params[:device_id], params[:product_id], category), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
-                    <span class="glyphicon glyphicon-remove"></span>
+                    <span class="glyphicon glyphicon-remove" title="Delete"></span>
                   <% end %>
                 <% end %>
               </div>

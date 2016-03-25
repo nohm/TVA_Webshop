@@ -47,11 +47,19 @@
               <div style="clear: both;"></div> 
               <div class="col-xs-6 col-sm-offset-6 noPadding">
               <%= bootstrap_form_for(@cart, :url => carts_path) do |f| %>
-                <%= f.number_field :amount, min: 1, max: @part.stock, :value => 1 %>
                 <%= f.hidden_field :user_id, :value => current_user.id %>
                 <%= f.hidden_field :part_id, :value => @part.id %>
-
-                <%= f.submit "Add to cart", class: "btn btn-primary big" %>
+                <% if @part.stock > 0 %>
+                  <%= f.number_field :amount, :min => 1, :max => @part.stock, :value => 1 %>
+                  <%= button_tag( :class => "btn btn-primary big") do %>
+                    <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
+                  <% end %>
+                <% else %>
+                  <%= f.number_field :amount, :min => 1, :max => @part.stock, class: "cursorDisabled", :disabled => "disabled", :placeholder => "Out of stock" %>
+                  <%= button_tag( :class => "btn btn-danger big cursorDisabled", :disabled => "disabled", :title => "Out of stock") do %>
+                    <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
+                  <% end %>
+                <% end %>
               <% end %>
               </div>
             </div>

@@ -25,7 +25,7 @@
               <td><%= part_product.product.partnumber %></td>
               <td>
                 <%= link_to(device_product_category_part_parts_product_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], part_product), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
-                  <span class="glyphicon glyphicon-remove"></span>
+                  <span class="glyphicon glyphicon-remove" title="Delete"></span>
                 <% end %>
               </td>
             </tr>

@@ -1,4 +1,12 @@
-<button href="#" data-toggle="modal" data-target="#add-to-cart-<%= part_product.part.id %>" type="button"><span class="glyphicon glyphicon-shopping-cart"></span>Add to cart</button>
+<% if part_product.part.stock > 0 %>
+  <%= button_tag( :href => "#", :type => "button",:class => "btn btn-primary small", :data => { :toggle => "modal", :target => "#add-to-cart-" + part_product.part.id.to_s}) do %>
+    <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
+  <% end %>
+<% else %>
+  <%= button_tag( :href => "#", :type => "button", :class => "btn btn-danger small cursorDisabled", :disabled => "disabled", :title => "Out of stock") do %>
+    <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
+  <% end %>
+<% end %>
 <div id="add-to-cart-<%= part_product.part.id %>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalLabel-part-<%= part_product.part.id %>" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -53,7 +61,9 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= "Close" %></button>
-          <%= f.submit "Add to cart", class: "btn btn-primary btn-sm" %>
+          <%= button_tag( :class => "btn btn-primary small") do %>
+            <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
+          <% end %>
         </div>
       <% end %>
     </div>

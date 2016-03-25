@@ -76,32 +76,32 @@
                   <% end %>
                   <td><%= number_to_currency(part_product.part.price_ex, unit: "€") %></td>
                   <td>
-                    <%= render :partial => "cart_modal", :locals => {:part_product => part_product}%>
+                      <%= render :partial => "cart_modal", :locals => {:part_product => part_product}%>
                   </td>
                   <% if current_user.manager? %>
                     <td>
                       <%= link_to device_product_category_part_parts_products_path(params[:device_id], params[:product_id], params[:category_id], part_product.part) do %>
-                        <span class="glyphicon glyphicon-sort"></span>
+                        <span class="glyphicon glyphicon-sort" title="Connections"></span>
                       <% end %>
                     </td>
                     <td>
                       <%= link_to device_product_category_part_partdescriptions_path(params[:device_id], params[:product_id], params[:category_id], part_product.part) do %>
-                        <span class="glyphicon glyphicon-text-color"></span>
+                        <span class="glyphicon glyphicon-text-color" title="Descriptions"></span>
                       <% end %>
                     </td>
                     <td>
                       <%= link_to device_product_category_part_partimages_path(params[:device_id], params[:product_id], params[:category_id], part_product.part.id) do %>
-                        <span class="glyphicon glyphicon-picture"></span>
+                        <span class="glyphicon glyphicon-picture" title="Images"></span>
                       <% end %>
                     </td>
                     <td>
                       <%= link_to edit_device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], part_product.part.id) do %>
-                        <span class="glyphicon glyphicon-pencil"></span>
+                        <span class="glyphicon glyphicon-pencil" title="Edit"></span>
                       <% end %>
                     </td>
                     <td>
                       <%= link_to device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], part_product.part.id), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
-                        <span class="glyphicon glyphicon-remove"></span>
+                        <span class="glyphicon glyphicon-remove" title="Delete"></span>
                       <% end %>
                     </td>
                   <% end %>
