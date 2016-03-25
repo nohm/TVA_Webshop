@@ -73,7 +73,7 @@
           </tfoot>
         </table>
       </div>
-      <button type="button" id="purchase" class="btn btn-primary" data-user-id="<%= current_user.id %>" data-cart-ids="<%= @carts.ids %>" data-url="purchase" style="float: right">Purchase</button>
+      <button type="button" id="purchase" class="btn btn-primary" data-user-id="<%= current_user.id %>" data-cart-ids="<%= @carts.ids %>" data-url="<%= purchase_path %>" style="float: right">Purchase</button>
     <% end %>
   </div>
   <div class="panel-footer">
