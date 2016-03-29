@@ -1,0 +1,3 @@
+<%= bootstrap_form_tag url: search_path, method: 'GET', html: {class: "form-inline"} do |f| %>
+	<%= f.select :product_device_id, options_for_select(Device.all.collect { |device| [device.name, device.id] }), { prompt: "Choose device", hide_label: true, :selected => 2}, { id: 'device_select' } %> 
+<% end %>

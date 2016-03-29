@@ -7,4 +7,8 @@ module ApplicationHelper
       page_title + " | " + base_title
     end
   end
+
+  def current_path
+  	return request.path
+  end
 end

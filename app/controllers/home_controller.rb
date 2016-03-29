@@ -32,7 +32,7 @@ class HomeController < ApplicationController
 		# Products search through model_extended
 		if !model_extended.blank?
 			product = Product.find_by(device_id: id, brand: brand, model_extended: model_extended)
-				render :js => "window.location = #{device_product_categories_path(product.device_id, product, :id => id, :brand => brand, :model => model, :model_extended => model_extended).to_json}"
+				render :js => "window.location = '#{device_product_categories_path(product.device_id, product)}'"
 		end
 	end
 
@@ -45,45 +45,98 @@ class HomeController < ApplicationController
 		@invoices = Invoice.all.page(params[:page]).per(25)
 	end
 
-	def options_brand
-    id = params[:id]
+	def options_device
+		if !params[:id].blank?
+	    id = params[:id]
 
-    # Fill in #brand_select
-    if !id.blank?
-	    @product = Product.where(device_id: id).pluck(:brand).uniq
-	    render :partial => 'options_brand'
+ 		    if !id.blank?
+		    @devices = Device.where(id: id).pluck(:id, :name)
+		    render :partial => 'options_device'
+			end
+		else
+			id = params[:p_id]
+
+	    if !id.blank?
+	    	product = Product.find(id)
+	    	@device = Device.find(product.device_id)
+		    @devices = Device.where(id: @device.id).pluck(:id, :name)
+		    render :partial => 'options_device'
+			end
+		end
+	end
+
+	def options_brand
+		if !params[:id].blank?
+	    id = params[:id]
+
+	    # Fill in #brand_select
+	    if !id.blank?
+		    @products = Product.where(device_id: id).pluck(:brand).uniq
+		    render :partial => 'options_brand'
+			end
+		else
+			id = params[:p_id]
+
+			# Fill in #brand_select
+	    if !id.blank?
+	    	@product = Product.find(id)
+		    @products = Product.where(device_id: @product.device_id).pluck(:brand).uniq
+		    render :partial => 'options_brand'
+			end
 		end
 	end
 
 	def options_model
-		id = params[:id]
-		brand = params[:brand]
+		if !params[:id].blank?	
+			id = params[:id]
+			brand = params[:brand]
 
-		# Fill in #model_select
-		if !brand.blank?
-			@product = Product.where(device_id: id, brand: brand).pluck(:model).uniq
-			render :partial => 'options_model'
+			# Fill in #model_select
+			if !brand.blank?
+				@products = Product.where(device_id: id, brand: brand).pluck(:model).uniq
+				render :partial => 'options_model'
+			end
+		else
+			id = params[:p_id]
+			
+			# Fill in #model_select
+			if !id.blank?
+				@product = Product.find(id)
+				@products = Product.where(device_id: @product.device_id, brand: @product.brand).pluck(:model).uniq
+				render :partial => 'options_model'
+			end
 		end
 	end
 
 	def options_model_extended
-		id = params[:id]
-		brand = params[:brand]
-		model = params[:model]
+		if !params[:id].blank?
+			id = params[:id]
+			brand = params[:brand]
+			model = params[:model]
 
-		# Products search through model
-		if !model.blank? && !Product.where(model: model, device_id: id).pluck(:model_extended).any?
-			product = Product.find_by(device_id: id, brand: brand, model: model)
-			unless product.blank?
-				render :js => "window.location = #{device_product_categories_path(product.device_id, product, :id => id, :brand => brand, :model => model).to_json}"
-				return
+			# Products search through model
+			if !model.blank? && !Product.where(model: model, device_id: id).pluck(:model_extended).any?
+				product = Product.find_by(device_id: id, brand: brand, model: model)
+				unless product.blank?
+					render :js => "window.location = '#{device_product_categories_path(product.device_id, product)}'"
+					return
+				end
 			end
-		end
 
-		# Fill in #model_extended_select
-		if !model.blank?
-			@product = Product.where(device_id: id, brand: brand, model: model).pluck(:model_extended).uniq
-			render :partial => 'options_model_extended'
+			# Fill in #model_extended_select
+			if !model.blank?
+				@products = Product.where(device_id: id, brand: brand, model: model).pluck(:model_extended).uniq
+				render :partial => 'options_model_extended'
+			end
+		else
+			id = params[:p_id]
+
+			# Fill in #model_extended_select
+			if !id.blank?
+				@product = Product.find(id)
+				@products = Product.where(device_id: @product.device_id, brand: @product.brand, model: @product.model).pluck(:model_extended).uniq
+				render :partial => 'options_model_extended'
+			end
 		end
 	end
 end

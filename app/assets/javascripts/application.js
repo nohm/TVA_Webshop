@@ -15,12 +15,16 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require turbolinks
-//= require_tree .
+//= require_tree .	
 
-Brand();
-	Model();
-	Model_extended();
 $(document).on('ready page:load', function () {
+	Device();
+	Brand();
+	Model();
+	Model_extended();	
+
+
+
 	// Mouseover fuction for the thumbnails in part#show.
 	$(".SmallImg").mouseover(function() {
 		$(".BigImg").attr('src', $(this).data('hover'));
@@ -28,8 +32,6 @@ $(document).on('ready page:load', function () {
 	})
 
 
-	
-	
 
 	//Dynamic search for id in parts_products#new
 	$("#connection_device_select").change(function () {
@@ -206,6 +208,7 @@ $(document).on('ready page:load', function () {
 	})
 
 
+
 	// Change cart after purchase.
 	$("#purchase").click(function () {
 		var cart_ids = $(this).data('cart-ids');
@@ -240,14 +243,28 @@ $(document).on('ready page:load', function () {
 	.trigger('resize');
 });
 
-function Brand() {
-	var id = $("#device_select").val();
-	var url = $("#device_select").data('url');
-	if(id) {
+function Device() {
+	var path = window.location.pathname.toString().split("/");
+	var p_id = path[4];
+	var url = $("#device_select").data('urlself');
+	if(p_id) {
 		$.ajax({
 	    type: 'POST',
 	    url: url,
-	    data: { id: id },
+	    data: { p_id: p_id }
+	  })
+	}
+}
+
+function Brand() {
+	var path = window.location.pathname.toString().split("/");
+	var p_id = path[4];
+	var url = $("#device_select").data('url');
+	if(p_id) {
+		$.ajax({
+	    type: 'POST',
+	    url: url,
+	    data: { p_id: p_id },
 	    success: function(data){
 	      $('#brand_select').prop("disabled", false).html(data);
 	      $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
@@ -263,20 +280,17 @@ function Brand() {
 }
 
 function Model() {
-	var brand = $("#brand_select").val();
-	var id = $("#device_select").val();
+	var path = window.location.pathname.toString().split("/");
+	var p_id = path[4];
 	var url = $("#brand_select").data('url');
-	if(brand) {
+	if(p_id) {
 		$.ajax({
 	    type: 'POST',
 	    url: url,
-	    data: { brand: brand, id: id },
+	    data: { p_id: p_id },
 	    success: function(data){
 	      $('#model_select').prop("disabled", false).html(data);
 	      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
-	      $('#device_select').val(id);
-	      $('#brand_select').val(brand);
-	      $('#model_select').val(model);
 	    },
 	    error: function(data){
 	      $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
@@ -287,21 +301,16 @@ function Model() {
 }
 
 function Model_extended() {
-	var extended = $("#model_extended_select").val();
-	var model = $("#model_select").val();
-	var brand = $("#brand_select").val();
-	var id = $("#device_select").val();
+	var path = window.location.pathname.toString().split("/");
+	var p_id = path[4];
 	var url = $("#model_select").data('url');
-	if(model) {
+	if(p_id) {
 		$.ajax({
 	    type: 'POST',
 	    url: url,
-	    data: {model: model, id: id, brand: brand },
+	    data: { p_id: p_id },
 	    success: function(data){
 	      $('#model_extended_select').prop("disabled", false).html(data);
-	      $('#device_select').val(id);
-	      $('#brand_select').val(brand);
-	      $('#model_select').val(model);
 	    },
 	    error: function(data){
 	      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
@@ -309,7 +318,3 @@ function Model_extended() {
 	  })
 	}
 }
-
-$("#Category").on('ready', function () {
-	console.log("Category loaded")
-})
