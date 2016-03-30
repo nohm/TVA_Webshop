@@ -34,7 +34,9 @@
                   <% end %>
                 </td>
                 <td><%= number_to_currency(cart_item.part.price_ex, unit: "€") %></td>
-                <td class="right"><%= number_to_currency(cart_item.part.price_ex * cart_item.amount, unit: "€") %></td>
+                <td class="right">
+                  <%= number_to_currency(cart_item.part.price_ex * cart_item.amount, unit: "€") %>
+                </td>
               </tr>
             <% end %>
           </tbody>
@@ -73,6 +75,7 @@
           </tfoot>
         </table>
       </div>
+      <%= link_to("Add Coupon", edit_user_cart_path(current_user, @cart), class: "btn btn-primary") %>
       <button type="button" id="purchase" class="btn btn-primary" data-user-id="<%= current_user.id %>" data-cart-id="<%= @cart.id %>" data-url="<%= purchase_path %>" style="float: right">Purchase</button>
     <% end %>
   </div>

@@ -24,6 +24,8 @@ Rails.application.routes.draw do
 
     match '/purchase' => 'carts#purchase', :as => :purchase, :via => :post
     
+    resources :coupons
+
     resources :users do
       resources :invoices
       resources :carts do

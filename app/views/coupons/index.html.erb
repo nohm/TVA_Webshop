@@ -1,0 +1,58 @@
+<% provide(:title, "Coupons") %>
+<% breadcrumb :coupons, @coupons %>
+
+<div class="panel-body panel-table">
+  <% if @coupons.length == 0 %>
+    <p class="empty_list">
+      <%= "Er zijn geen coupons" %>
+    </p>
+  <% else %>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr class="active">
+            <th>Id</th>
+            <th>Code</th>
+            <th>Category</th>
+            <th>Part</th>
+            <th>User</th>
+            <th>Amount</th>
+            <th>Percent</th>
+            <th>Price</th>
+            <th class="small-col"></th>
+            <th class="small-col"></th>
+          </tr>
+        </thead>
+        <tbody>
+        	<% @coupons.each do |coupon| %>
+	        	<tr>
+	        		<td><%= coupon.id %></td>
+	        		<td><%= coupon.code %></td>
+	        		<td><%= coupon.category_id %></td>
+	        		<td><%= coupon.part_id %></td>
+	        		<td><%= coupon.user_id %></td>
+	        		<td><%= coupon.amount %></td>
+	        		<td><%= coupon.percent %></td>
+	        		<td><%= coupon.price %></td>
+	        		<td>
+	        			<%= link_to edit_coupon_path(coupon) do %>
+                  <span class="glyphicon glyphicon-pencil" title="Edit"></span>
+                <% end %>
+	        		</td>
+	        		<td>
+	        			<%= link_to coupon_path(coupon), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                  <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                <% end %>
+	        		</td>	
+	        	</tr>
+        	<% end %>
+      	</tbody>
+    	</table>
+  	</div>
+	<% end %>
+</div>
+<div class="panel-footer">
+	<% if logged_in? && current_user.manager? %>
+	  <%= link_to("Add coupon", new_coupon_path, :class => 'btn btn-mini btn-primary') %>
+	<% end %>
+</div>

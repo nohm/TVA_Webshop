@@ -71,6 +71,10 @@ crumb :parts_products do
 	parent :parts
 end
 
+crumb :coupons do
+	link "Coupons", coupons_path
+end
+
 # crumb :projects do
 #   link "Projects", projects_path
 # end

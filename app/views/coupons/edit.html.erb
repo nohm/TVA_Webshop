@@ -1,0 +1,20 @@
+<% provide(:title, 'New coupon') %>
+<% breadcrumb :coupons, @coupon %>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= bootstrap_form_for(@coupon, :url => coupon_path(params[:id])) do |f| %>
+      <%= f.alert_message "Please fix the errors below." %>
+      
+      <%= f.text_field :code %>
+      <%= f.text_field :category_id %>
+      <%= f.text_field :part_id %>
+      <%= f.text_field :user_id %>
+      <%= f.text_field :amount %>
+      <%= f.text_field :percent %>
+      <%= f.text_field :price %>
+
+      <%= f.submit "Add part", class: "btn btn-primary" %>
+      <%= link_to("Cancel", coupons_path, class: "btn btn-primary") %>
+    <% end %>
+  </div>
+</div>

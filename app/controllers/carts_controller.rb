@@ -28,6 +28,26 @@ class CartsController < ApplicationController
 		end
 	end
 
+	def edit
+		@cart = Cart.find(params[:id])
+	end
+
+	def update
+		@cart = Cart.find(params[:id])
+
+		if Coupon.where(code: params[:cart][:coupon_code]).exists?
+			if @cart.update(cart_params)
+				redirect_to user_carts_path(current_user)
+      	flash[:success] = "Coupon added"
+			else
+      	render 'edit'
+      end
+    else
+      redirect_to user_carts_path(current_user)
+      	flash[:notice] = "Coupon invalid"
+    end
+	end
+
 	def purchase
 		cart_id = params[:cart_id]
 		cart = Cart.find(cart_id)
@@ -55,6 +75,6 @@ class CartsController < ApplicationController
 	private
 
 	def cart_params
-		params.require(:cart).permit(:user_id, :purchased)
+		params.require(:cart).permit(:user_id, :purchased, :coupon_code)
 	end
 end

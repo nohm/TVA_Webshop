@@ -25,7 +25,7 @@
                   <%= invoice.user.name %>
                 <% end %>
               </td>
-              <td><%= invoice.created_at.to_date %></td>
+              <td><%= invoice.created_at %></td>
               <td>
                 <%= link_to user_invoice_path(invoice.user.id, invoice, :type => 'slip') do %>
                   <span class="glyphicon glyphicon-send"></span>
