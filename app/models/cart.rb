@@ -1,7 +1,6 @@
 class Cart < ActiveRecord::Base
 	belongs_to :user
-	belongs_to :part
+	has_many :cart_items
 
-	validates :amount, presence: true
 
 end

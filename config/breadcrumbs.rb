@@ -11,7 +11,7 @@ crumb :users do
 end 
 
 crumb :carts do
-	link "Cart", carts_path
+	link "Cart", user_carts_path(current_user)
 end
 
 crumb :invoices do

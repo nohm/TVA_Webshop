@@ -3,9 +3,6 @@ class PartimagesController < ApplicationController
 		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
 		@partimages = Partimage.where(part_id: params[:part_id]).page(params[:page]).per(25).order('id ASC')
 	end
-
-	def show
-	end
 	
 	def new
     redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?

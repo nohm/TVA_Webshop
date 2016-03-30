@@ -9,7 +9,7 @@
         TVA Service Center<br>
 		    Twentelaan 2<br>
 		    7609 RE Almelo<br>
-		    The Netherlands<br>
+		    Netherlands<br>
 		    +31 546 851212
       </p>
     </div>
@@ -52,19 +52,19 @@
         </thead>
         <tbody>
         <% if params[:type] == "slip" %>
-          <% @carts.each do |cart| %>
+          <% @cart_items.each do |item| %>
             <tr>
-              <td><%= cart.part.name %></td>
-              <td><%= cart.amount.to_s + "x" %></td>
+              <td><%= item.part.name %></td>
+              <td><%= item.amount.to_s + "x" %></td>
             </tr>
           <% end %>
         <% else %>
-          <% @carts.each do |cart| %>
+          <% @cart_items.each do |item| %>
             <tr>
-              <td class="width40"><%= cart.part.name %></td>
-              <td class="width20"><%= number_to_currency(cart.part.price_ex, unit: '€') %></td>
-              <td class="width20"><%= cart.amount.to_s + "x" %></td>
-              <td class="width20"><%= number_to_currency(cart.amount * cart.part.price_ex, unit: '€') %></td>
+              <td class="width40"><%= item.part.name %></td>
+              <td class="width20"><%= number_to_currency(item.part.price_ex, unit: '€') %></td>
+              <td class="width20"><%= item.amount.to_s + "x" %></td>
+              <td class="width20"><%= number_to_currency(item.amount * item.part.price_ex, unit: '€') %></td>
             </tr>
           <% end %>
         <% end %>

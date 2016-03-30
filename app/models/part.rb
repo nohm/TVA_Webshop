@@ -1,7 +1,7 @@
 class Part < ActiveRecord::Base
 	belongs_to :category
 	has_and_belongs_to_many :products
-	has_many :carts, 						dependent: :destroy
+	has_many :cart_items
 	has_many :partdescriptions, dependent: :destroy
 	has_many :partimages, 			dependent: :destroy
 

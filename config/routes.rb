@@ -23,11 +23,12 @@ Rails.application.routes.draw do
     match '/connect_model_extended' => 'parts_products#connect_model_extended', :as => :connect_model_extended, :via => :post
 
     match '/purchase' => 'carts#purchase', :as => :purchase, :via => :post
-
-    resources :carts
     
     resources :users do
       resources :invoices
+      resources :carts do
+        resources :cart_items
+      end
     end
 
     resources :devices do

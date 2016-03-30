@@ -1,7 +1,7 @@
 <% provide(:title, "Shopping Cart") %>
-<% breadcrumb :carts, @carts %>
+<% breadcrumb :carts, @cart %>
   <div class="panel-body panel-table">
-    <% if @carts.length == 0 %>
+    <% if @cart_items.length == 0 %>
       <p class="empty_list">
         <%= "U heeft geen items in uw winkelwagen" %>
       </p>
@@ -18,23 +18,23 @@
             </tr>
           </thead>
           <tbody>
-            <% @carts.each do |cart| %>
+            <% @cart_items.each do |cart_item| %>
               <tr>
                 <td>
-                  <%= link_to device_product_category_part_path(cart.part.category.product.device.id, cart.part.category.product.id,cart.part.category.id, cart.part.id) do %>
-                    <%= image_tag cart.part.partimagefull.url(:thumb) %>
-                    <b><%= cart.part.name %></b>
+                  <%= link_to device_product_category_part_path(cart_item.part.category.product.device.id, cart_item.part.category.product.id, cart_item.part.category.id, cart_item.part.id) do %>
+                    <%= image_tag cart_item.part.partimagefull.url(:thumb) %>
+                    <b><%= cart_item.part.name %></b>
                   <% end %>
                 </td>
                 <td>
-                  <%= text_field_tag "amount-#{cart.part_id}", {}, min: 1, max: cart.part.stock, :value => cart.amount, :class => "halfWidth amount", :data => { :user => current_user.id, :part => cart.part_id, :id => cart.id, :url => carts_path } %></td>
+                  <%= text_field_tag "amount-#{cart_item.part_id}", {}, min: 1, max: cart_item.part.stock, :value => cart_item.amount, :class => "halfWidth amount", :data => { :cart => cart_item.cart.id, :part => cart_item.part_id, :id => cart_item.id, :url => user_cart_cart_item_path(current_user, cart_item.cart.id, cart_item) } %></td>
                 <td>
-                  <%= link_to cart_path(cart), :method => :delete do %>
+                  <%= link_to user_cart_cart_item_path(params[:user_id], Cart.where(user_id: current_user.id, purchased: false).first.id, cart_item), :method => :delete do %>
                     <span class="glyphicon glyphicon-remove"></span>
                   <% end %>
                 </td>
-                <td><%= number_to_currency(cart.part.price_ex, unit: "€") %></td>
-                <td class="right"><%= number_to_currency(cart.part.price_ex * cart.amount, unit: "€") %></td>
+                <td><%= number_to_currency(cart_item.part.price_ex, unit: "€") %></td>
+                <td class="right"><%= number_to_currency(cart_item.part.price_ex * cart_item.amount, unit: "€") %></td>
               </tr>
             <% end %>
           </tbody>
@@ -44,8 +44,8 @@
               <td colspan="2">Subtotaal excl. BTW</td>
               <% arr = Array.new(0) %>
                 <td colspan="1">
-                <% @carts.each do |cart| %>
-                  <% arr.push(cart.part.price_ex * cart.amount) %>
+                <% @cart_items.each do |cart_item| %>
+                  <% arr.push(cart_item.part.price_ex * cart_item.amount) %>
                 <% end %>
                 <%= number_to_currency(arr.sum, unit: "€") %>
                 </td>
@@ -73,7 +73,7 @@
           </tfoot>
         </table>
       </div>
-      <button type="button" id="purchase" class="btn btn-primary" data-user-id="<%= current_user.id %>" data-cart-ids="<%= @carts.ids %>" data-url="<%= purchase_path %>" style="float: right">Purchase</button>
+      <button type="button" id="purchase" class="btn btn-primary" data-user-id="<%= current_user.id %>" data-cart-id="<%= @cart.id %>" data-url="<%= purchase_path %>" style="float: right">Purchase</button>
     <% end %>
   </div>
   <div class="panel-footer">

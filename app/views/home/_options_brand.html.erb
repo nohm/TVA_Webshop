@@ -1,9 +1,9 @@
 <% if !params[:id].blank? %>
 	<%= bootstrap_form_tag url: search_path, method: 'GET', html: {class: "form-inline"} do |f| %>
-		<%= f.select :product_brand, options_for_select(@products.collect { |product| [product] }, 0), {:selected => params[:brand], prompt: "Choose brand", hide_label: true}, { id: 'brand_select' } %> 
+		<%= f.select :product_brand, options_for_select(@products.collect { |product| [product] }, :selected => params[:brand]), { prompt: "Choose brand", hide_label: true}, { id: 'brand_select' } %> 
 	<% end %>
 <% else %>
 	<%= bootstrap_form_tag url: search_path, method: 'GET', html: {class: "form-inline"} do |f| %>
-		<%= f.select :product_brand, options_for_select(@products.collect { |product| [product] }, 0), {:selected => @product.brand, prompt: "Choose brand", hide_label: true}, { id: 'brand_select' } %> 
+		<%= f.select :product_brand, options_for_select(@products.collect { |product| [product] }, :selected => @product.brand), { prompt: "Choose brand", hide_label: true}, { id: 'brand_select' } %> 
 	<% end %>
 <% end %>

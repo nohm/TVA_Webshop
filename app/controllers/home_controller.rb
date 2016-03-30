@@ -4,7 +4,6 @@ class HomeController < ApplicationController
 		@query = params[:search_query]
 		search_condition = '%' + @query + '%'
 
-
 		product_results = []
 		part_results = []
 		category_results = []
@@ -135,7 +134,11 @@ class HomeController < ApplicationController
 			if !id.blank?
 				@product = Product.find(id)
 				@products = Product.where(device_id: @product.device_id, brand: @product.brand, model: @product.model).pluck(:model_extended).uniq
-				render :partial => 'options_model_extended'
+				if !@products.include?(nil)
+					render :partial => 'options_model_extended'
+				else
+					render inline: 'No Extended' # Javascript needed
+				end
 			end
 		end
 	end

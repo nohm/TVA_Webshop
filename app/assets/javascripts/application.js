@@ -181,7 +181,7 @@ $(document).on('ready page:load', function () {
 	  var $this = $(this);
 	  var row = $this.closest("tr");
 	  var id = $this.data('id');
-	  var user_id = $this.data('user');
+	  var cart_id = $this.data('cart');
 	  var part_id = $this.data('part');
 	  var url = $this.data('url');
 	  var amount = $this.val();
@@ -199,8 +199,8 @@ $(document).on('ready page:load', function () {
 	  if (go) {
 		  $.ajax({
 			  method: "PUT",
-			  url: url + "/" + id,
-			  data: { cart: { user_id: user_id, part_id: part_id, amount: amount } }
+			  url: url,
+			  data: { cart_item: { cart_id: cart_id, part_id: part_id, amount: amount } }
 			}).done(function() {
 				location.reload(true);
 			})
@@ -211,14 +211,14 @@ $(document).on('ready page:load', function () {
 
 	// Change cart after purchase.
 	$("#purchase").click(function () {
-		var cart_ids = $(this).data('cart-ids');
+		var cart_id = $(this).data('cart-id');
 		var user_id = $(this).data('user-id');
 		var url = $(this).data('url');
 
 		$.ajax({
 			method: "POST",
 			url: url,
-			data: { user_id: user_id, cart_ids: cart_ids }
+			data: { user_id: user_id, cart_id: cart_id }
 		})
 	})
 
@@ -251,7 +251,10 @@ function Device() {
 		$.ajax({
 	    type: 'POST',
 	    url: url,
-	    data: { p_id: p_id }
+	    data: { p_id: p_id },
+	    success: function(data){
+	    	$('#device_select').html(data);
+	    }
 	  })
 	}
 }
@@ -310,7 +313,11 @@ function Model_extended() {
 	    url: url,
 	    data: { p_id: p_id },
 	    success: function(data){
-	      $('#model_extended_select').prop("disabled", false).html(data);
+	    	if (data != "No Extended") {
+	      	$('#model_extended_select').html(data).prop("disabled", false);
+	    	} else {
+	    		$('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+	    	}
 	    },
 	    error: function(data){
 	      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');

@@ -3,7 +3,7 @@ class InvoicesController < ApplicationController
 	def show
 		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && params[:user_id].to_i == current_user.id || logged_in? && current_user.manager?
 		@invoice = Invoice.find(params[:id])
-		@carts = Cart.find(@invoice.cart_ids)
+		@cart_items = CartItem.where(cart_id: @invoice.cart_id)
 		@user = User.find(params[:user_id])
 		@country = ISO3166::Country[@user.country]
 
@@ -13,30 +13,31 @@ class InvoicesController < ApplicationController
 		@shipping_cost = 0
 		@cart_amount_total = 0
 		@cart_price_total = 0
-		@carts.each do |cart|
-			@cart_amount_total += cart.amount
-			@cart_price_total += (cart.part.price_ex * cart.amount)
+		@cart_items.each do |item|
+			@cart_amount_total += item.amount
+			@cart_price_total += (item.part.price_ex * item.amount)
 
-			if cart.part.weight.between?(weight_array[0], weight_array[1])
-				@shipping_cost += cart.amount * shipping_array[0]
-			elsif cart.part.weight.between?(weight_array[2], weight_array[3])
-				@shipping_cost += cart.amount * shipping_array[1]
-			elsif cart.part.weight.between?(weight_array[4], weight_array[5])
-				@shipping_cost += cart.amount * shipping_array[2]
-			elsif cart.part.weight.between?(weight_array[6], weight_array[7])
-				@shipping_cost += cart.amount * shipping_array[3]
-			elsif cart.part.weight.between?(weight_array[8], weight_array[9])
-				@shipping_cost += cart.amount * shipping_array[4]
-			elsif cart.part.weight.between?(weight_array[10], weight_array[11])
-				@shipping_cost += cart.amount * shipping_array[5]
+			if item.part.weight.between?(weight_array[0], weight_array[1])
+				@shipping_cost += item.amount * shipping_array[0]
+			elsif item.part.weight.between?(weight_array[2], weight_array[3])
+				@shipping_cost += item.amount * shipping_array[1]
+			elsif item.part.weight.between?(weight_array[4], weight_array[5])
+				@shipping_cost += item.amount * shipping_array[2]
+			elsif item.part.weight.between?(weight_array[6], weight_array[7])
+				@shipping_cost += item.amount * shipping_array[3]
+			elsif item.part.weight.between?(weight_array[8], weight_array[9])
+				@shipping_cost += item.amount * shipping_array[4]
+			elsif item.part.weight.between?(weight_array[10], weight_array[11])
+				@shipping_cost += item.amount * shipping_array[5]
 			end
 		end
 	end
 
 	def destroy
+		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.admin?
 		invoice = Invoice.find(params[:id])
     invoice.destroy
-    redirect_to invoices_path
+    redirect_to :back
     flash[:success] = "Invoice deleted"
 	end
 

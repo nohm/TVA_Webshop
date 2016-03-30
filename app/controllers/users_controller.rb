@@ -36,6 +36,7 @@ class UsersController < ApplicationController
     @user.role_id = 3
     if @user.save
       log_in @user
+      Cart.create(user_id: @user.id)
       flash[:success] = "Welcome to the Webshop!"
       redirect_to root_path
     else
