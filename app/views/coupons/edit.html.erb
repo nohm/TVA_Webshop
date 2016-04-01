@@ -6,11 +6,12 @@
       <%= f.alert_message "Please fix the errors below." %>
       
       <%= f.text_field :code %>
+      <%= f.label      :amount_of_uses %>
+      <%= f.text_field :amount, hide_label: true %>
       <%= f.text_field :category_ids %>
       <%= f.text_field :part_ids %>
       <%= f.text_field :user_ids %>
-      <%= f.label      :amount_of_uses %>
-      <%= f.text_field :amount, hide_label: true %>
+      <%= select("user", "user_id", User.all.collect {|user| [ user.name, user.id ] }, { include_blank: true }, { class: "form-control small", id: "user_select" }) %>
       <%= f.text_field :percent %>
       <%= f.text_field :price %>
       <%= label        :datetime, :expires_in_this_many_days %>
@@ -18,7 +19,7 @@
       <%= label        :datetime, :expires_on_this_hour %>
       <%= number_field :datetime ,:hours, min: 0, max: 23, class: "form-control", id: "hours", value: @coupon.expiration_date.hour %>
       <p><small id="expiration_date_hour"><%= "Expires on: " + @weekday + ", " + @day + "-" + @month + "-" + @year + " " + @hour + ":00:00 UTC" %></small></p>
-      
+
       <%= f.submit "Edit coupon", class: "btn btn-primary" %>
       <%= link_to("Cancel", coupons_path, class: "btn btn-primary") %>
     <% end %>

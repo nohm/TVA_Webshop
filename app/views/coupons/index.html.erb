@@ -30,17 +30,17 @@
 	        		<td><%= coupon.id %></td>
 	        		<td><%= coupon.code %></td>
               <% if !coupon.category_ids.blank? %>
-	        		 <td><%= coupon.category_ids %></td>
+	        		  <td><%= coupon.category_ids %></td>
               <% else %>
                 <td></td>
               <% end %>
 	        		<% if !coupon.part_ids.blank? %>
-               <td><%= coupon.part_ids %></td>
+                <td><%= coupon.part_ids %></td>
               <% else %>
                 <td></td>
               <% end %>
 	        		<% if !coupon.user_ids.blank? %>
-               <td><%= coupon.user_ids %></td>
+                <td><%= coupon.user_ids %></td>
               <% else %>
                 <td></td>
               <% end %>

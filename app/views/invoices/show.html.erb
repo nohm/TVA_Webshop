@@ -77,7 +77,7 @@
               <td><%= number_to_currency(@shipping_cost, unit: '€') %></td>
             </tr>
             <tr>
-              <td colspan="3">21% BTW</td>
+              <td colspan="3">21% VAT</td>
               <td><%= number_to_currency((@cart_price_total + @shipping_cost) * 0.21, unit: '€') %></td>
             </tr>
           <% end %>

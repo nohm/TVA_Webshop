@@ -33,7 +33,7 @@ $(document).on('ready page:load', function () {
 
 
 
-	//Dynamic search for id in parts_products#new
+	// Next 4 onchange events are for the dynamic search in parts_products#new
 	$("#connection_device_select").change(function () {
 		var id = $(this).val();
 		var url = $(this).data('url');
@@ -103,7 +103,7 @@ $(document).on('ready page:load', function () {
 
 
 
-	//Dynamic search
+	// Next 4 onchange events are for the dynamic search inside the header
 	$("#device_select").change(function () {
 		var id = $(this).val();
 		var url = $(this).data('url');
@@ -202,8 +202,8 @@ $(document).on('ready page:load', function () {
 			  url: url,
 			  data: { cart_item: { cart_id: cart_id, part_id: part_id, amount: amount } }
 			}).done(function() {
-				location.reload(true);
-			})
+					location.reload(true);
+				})
 		}
 	})
 
@@ -219,13 +219,18 @@ $(document).on('ready page:load', function () {
 		$.ajax({
 			method: "POST",
 			url: url,
-			data: { user_id: user_id, cart_id: cart_id, coupon_code: coupon_code }
+			data: { user_id: user_id, cart_id: cart_id, coupon_code: coupon_code },
+		  success: function(data){
+		    if (data == "purchased") {
+		      location.reload(true);
+		    }
+		   }
 		})
 	})
 
 
 
-	//Resize the price table at part#show on resize and load.
+	// Resize the price table at part#show on resize and load.
 	var right = $(".right");
 	var Table = $(".priceTable");
 	var RightAlign = $(".RightAlign");
@@ -251,13 +256,38 @@ $(document).on('ready page:load', function () {
 		Expiration_date();
 	});
 
-	$('#coupon_category_ids').change(function () {
-		var current = $('#coupon_part_ids').val();
-		var new_val = $('#coupon_category_ids').val();
-		$('#coupon_part_ids').val(current + new_val + " ");
-	})
+	// Automatically fills in #coupon_user_ids when you select a user in coupons#new or coupons#edit
+	var i = 0;
+	$('#user_select').change(function () {
+		var current = $('#coupon_user_ids').val();
+		var new_val = $(this).val();
+		
+		if (i == 0) {
+			$('#coupon_user_ids').val(current + " " + new_val + " ");
+			i++;
+		} else {
+			$('#coupon_user_ids').val(current + new_val + " ");
+		}
+	});
+
+
+	// Checks if #coupon in cart#index has a current coupon and changes color based on that
+	if($('#coupon').length){
+	  if($('#coupon').html().indexOf("None") >= 0){
+	  	if ($('#coupon').hasClass('btn-success')) {
+	      $('#coupon').removeClass('btn-success');
+	      $('#coupon').addClass('btn-danger');
+	    }
+	  } else {
+	  	if ($('#coupon').hasClass('btn-danger')) {
+	      $('#coupon').removeClass('btn-danger');
+	      $('#coupon').addClass('btn-success');
+	    }
+	  }
+	};
 });
 
+// Next 4 functions are for automatically filling in the dynamic search options with the current product they are in
 function Device() {
 	var path = window.location.pathname.toString().split("products/");
 	if (typeof path[1] !== 'undefined') {
@@ -353,16 +383,19 @@ function Model_extended() {
 	}
 }
 
+
+
+// Function for filling in the expiration date example in coupons#new and coupons#edit
 function Expiration_date() {
-		var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-		var DaysToAdd = $("#days").val();
-		var HoursToAdd = $("#hours").val();
-		var date = new Date();
-		var newDate = new Date(date.setTime( date.getTime() + DaysToAdd * 86400000 ));
-		var day = newDate.getUTCDate();
-		var month = (newDate.getUTCMonth() +1);
-		var year = newDate.getUTCFullYear();
-		var weekday = days[ newDate.getUTCDay() ];
-		$("#expiration_date_hour").html("");
-		$("#expiration_date_hour").append("Expires on: " + weekday + ", " + day + "-" + month + "-" + year + " " + HoursToAdd + ":00:00 UTC");
-	}
+	var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+	var DaysToAdd = $("#days").val();
+	var HoursToAdd = $("#hours").val();
+	var date = new Date();
+	var newDate = new Date(date.setTime( date.getTime() + DaysToAdd * 86400000 ));
+	var day = newDate.getUTCDate();
+	var month = (newDate.getUTCMonth() +1);
+	var year = newDate.getUTCFullYear();
+	var weekday = days[ newDate.getUTCDay() ];
+	$("#expiration_date_hour").html("");
+	$("#expiration_date_hour").append("Expires on: " + weekday + ", " + day + "-" + month + "-" + year + " " + HoursToAdd + ":00:00 UTC");
+}

@@ -7,10 +7,8 @@ class CartsController < ApplicationController
 		weight_array = [0, 999, 1000, 1999, 2000, 2999, 3000, 3999, 4000, 4999, 5000, 5999]
 		shipping_array = [0.50, 1, 1.50, 2, 2.50, 3]
 		@shipping_cost = 0
-		@cart_amount_total = 0
 		@cart_price_total = 0
 		@cart_items.each do |item|
-			@cart_amount_total += item.amount
 			@cart_price_total += ((item.price_sale || item.price) * item.amount)
 
 			if item.part.weight.between?(weight_array[0], weight_array[1])
@@ -27,6 +25,7 @@ class CartsController < ApplicationController
 				@shipping_cost += item.amount * shipping_array[5]
 			end
 		end
+		@cart_price_all = (@cart_price_total + @shipping_cost) * 1.21
 	end
 
 	def edit
@@ -36,48 +35,35 @@ class CartsController < ApplicationController
 	def update
 		@cart = Cart.find(params[:id])
 		cart_items = CartItem.where(cart_id: params[:id])
-
-		if params[:cart][:coupon_code].blank?
-			params[:cart][:coupon_code] = nil
-			if @cart.update(cart_params)
-				
-				cart_items.each do |item|
-					item.price_sale = nil
-					item.save
-				end
-				redirect_to user_carts_path(current_user) and return
-			end
-		end
+		coupon = Coupon.where(code: params[:cart][:coupon_code]).first
 
 		is_already_saved = false
-		if Coupon.where(code: params[:cart][:coupon_code]).exists? && Coupon.where(code: params[:cart][:coupon_code]).first.amount != 0 && Coupon.where(code: params[:cart][:coupon_code]).first.expiration_date > Time.now.utc
-				coupon = Coupon.where(code: params[:cart][:coupon_code]).first
-				cart_items.each do |item|	
-					if coupon.category_ids.include?(item.part.category_id) || coupon.part_ids.include?(item.part_id) || coupon.user_ids.include?(@cart.user_id) 
-						if !coupon.price.blank?
-							item.price_sale = item.price - coupon.price
-							item.save
-						else
-							item.price_sale = item.price - (item.price / 100 * coupon.percent)
-							item.save
-						end
-						@cart.update(cart_params) unless is_already_saved
-						is_already_saved = true
-					else
-
-						item.price_sale = nil
+		if !coupon.blank? && coupon.amount > 0 && coupon.expiration_date > Time.now.utc && !current_user.used_coupon_ids.include?(coupon.id)
+			cart_items.each do |item|	
+				if coupon.category_ids.include?(item.part.category_id) || coupon.part_ids.include?(item.part_id) || coupon.user_ids.include?(@cart.user_id) 
+					if !coupon.price.blank?
+						item.price_sale = item.price - coupon.price
 						item.save
-					end 
-				end
-				if is_already_saved == true
-					redirect_to user_carts_path(current_user)
-					flash[:success] = "Coupon added"
+					else
+						item.price_sale = item.price - (item.price / 100 * coupon.percent)
+						item.save
+					end
+					@cart.update(cart_params) unless is_already_saved
+					is_already_saved = true
 				else
-					@cart.coupon_code = nil
-					@cart.save
-					redirect_to user_carts_path(current_user)
-					flash[:notice] = "Coupon invalid"
-				end
+					item.price_sale = nil
+					item.save
+				end 
+			end
+			if is_already_saved
+				redirect_to user_carts_path(current_user)
+				flash[:success] = "Coupon applied"
+			else
+				@cart.coupon_code = nil
+				@cart.save
+				redirect_to user_carts_path(current_user)
+				flash[:notice] = "Coupon invalid"
+			end
     else
     	cart_items.each do |item|
     		item.price_sale = nil
@@ -85,13 +71,13 @@ class CartsController < ApplicationController
     	end
     	@cart.coupon_code = nil
     	@cart.save
-      sdk
       redirect_to user_carts_path(current_user)
       flash[:notice] = "Coupon invalid"
     end
 	end
 
 	def purchase
+		user = User.find(current_user)
 		cart_id = params[:cart_id]
 		coupon = Coupon.where(code: params[:coupon_code]).first
 		cart = Cart.find(cart_id)
@@ -112,12 +98,16 @@ class CartsController < ApplicationController
 			cart.save
 			Invoice.create(user_id: current_user.id, cart_id: cart_id)
 			Cart.create(user_id: current_user.id)
-			if coupon.amount > 0
+			if !coupon.blank?
+				user.used_coupon_ids << coupon.id
+				user.save
+			end
+			if !coupon.blank? && coupon.amount > 0
 				coupon.amount -= 1
 				coupon.save
 			end
 		end
-		render :js => "window.location = location"
+		render inline: 'purchased' # Javascript needed
 	end
 
 	private

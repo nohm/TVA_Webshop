@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   def show
     redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.id == params[:id].to_i || logged_in? && current_user.admin?
     @user = User.find(params[:id])
-    @invoices = Invoice.where(user_id: @user.id).page(params[:page]).per(25)
+    @invoices = Invoice.where(user_id: @user.id).page(params[:page]).per(20)
   end
 
   def new

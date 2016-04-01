@@ -55,4 +55,7 @@
           <% end %>
         </tbody>
       </table>
+      <% unless @invoices.length == 0 %>
+        <%= paginate @invoices %>
+      <% end %>
   <% end %>        

@@ -11,6 +11,7 @@
       <%= f.text_field :category_ids %>
       <%= f.text_field :part_ids %>
       <%= f.text_field :user_ids %>
+      <%= select("user", "user_id", User.all.collect {|user| [ user.name, user.id ] }, { include_blank: true }, { class: "form-control small", id: "user_select" }) %>
       <%= f.text_field :percent, append: '%' %>
       <%= f.text_field :price, prepend: '€' %>
       <%= label        :datetime, :days %>

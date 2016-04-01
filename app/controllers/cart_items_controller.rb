@@ -35,7 +35,7 @@ class CartItemsController < ApplicationController
 		     	format.html { render inline: "Aantal is niet geldig"}
 		    end
 	    else
-	    	flash[:notice] = "Er zijn nog maar " + @cart_item.part.stock.to_s + " onderdelen beschikbaar voor dit product"
+	    	flash[:notice] = "There are only " + @cart_item.part.stock.to_s + " parts remaining for this product."
 	    	format.html { render inline: "Niet genoeg onderdelen"}
 	    end
 	  end

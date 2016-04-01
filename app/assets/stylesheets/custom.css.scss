@@ -419,6 +419,10 @@ aside {
   color: red;
 }
 
+.green {
+  color: green;
+}
+
 .width10 {
   width: 10%;
 }
@@ -441,6 +445,14 @@ aside {
 
 #hours {
   margin-bottom: 0px;
+}
+
+#coupon {
+  float:right; 
+  margin-right:15px; 
+  width:auto; 
+  text-align:center; 
+  height:34px !important;
 }
 
 #device_select {
