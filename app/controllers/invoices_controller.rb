@@ -15,7 +15,7 @@ class InvoicesController < ApplicationController
 		@cart_price_total = 0
 		@cart_items.each do |item|
 			@cart_amount_total += item.amount
-			@cart_price_total += (item.part.price_ex * item.amount)
+			@cart_price_total += ((item.price_sale || item.price) * item.amount)
 
 			if item.part.weight.between?(weight_array[0], weight_array[1])
 				@shipping_cost += item.amount * shipping_array[0]

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160330121633) do
+ActiveRecord::Schema.define(version: 20160331145426) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 20160330121633) do
     t.integer "cart_id"
     t.integer "part_id"
     t.integer "amount"
+    t.decimal "price",      precision: 10, scale: 2
+    t.decimal "price_sale", precision: 10, scale: 2
   end
 
   create_table "carts", force: :cascade do |t|
@@ -43,13 +45,14 @@ ActiveRecord::Schema.define(version: 20160330121633) do
   end
 
   create_table "coupons", force: :cascade do |t|
-    t.string  "code"
-    t.integer "category_id"
-    t.integer "part_id"
-    t.integer "user_id"
-    t.integer "amount"
-    t.decimal "percent",     precision: 10, scale: 2
-    t.decimal "price",       precision: 10, scale: 2
+    t.string   "code"
+    t.integer  "amount",                                   default: 0
+    t.decimal  "percent",         precision: 10, scale: 2
+    t.decimal  "price",           precision: 10, scale: 2
+    t.datetime "expiration_date"
+    t.integer  "category_ids",                             default: [], array: true
+    t.integer  "part_ids",                                 default: [], array: true
+    t.integer  "user_ids",                                 default: [], array: true
   end
 
   create_table "devices", force: :cascade do |t|

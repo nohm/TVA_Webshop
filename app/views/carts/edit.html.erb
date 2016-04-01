@@ -5,7 +5,7 @@
     <%= bootstrap_form_for(@cart, :url => user_cart_path(current_user, @cart)) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
 
-      <%= f.text_field :coupon_code %>
+      <%= f.text_field :coupon_code, :autofocus => true %>
 
       <%= f.submit "Add coupon", class: "btn btn-primary" %>
       <%= link_to("Cancel", user_carts_path(current_user), class: "btn btn-primary") %>

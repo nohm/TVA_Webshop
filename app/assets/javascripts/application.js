@@ -213,12 +213,13 @@ $(document).on('ready page:load', function () {
 	$("#purchase").click(function () {
 		var cart_id = $(this).data('cart-id');
 		var user_id = $(this).data('user-id');
+		var coupon_code = $(this).data('coupon');
 		var url = $(this).data('url');
 
 		$.ajax({
 			method: "POST",
 			url: url,
-			data: { user_id: user_id, cart_id: cart_id }
+			data: { user_id: user_id, cart_id: cart_id, coupon_code: coupon_code }
 		})
 	})
 
@@ -241,87 +242,127 @@ $(document).on('ready page:load', function () {
   	}
 	})
 	.trigger('resize');
+
+	$("#days").change(function () {
+		Expiration_date();
+	});
+
+	$("#hours").change(function () {
+		Expiration_date();
+	});
+
+	$('#coupon_category_ids').change(function () {
+		var current = $('#coupon_part_ids').val();
+		var new_val = $('#coupon_category_ids').val();
+		$('#coupon_part_ids').val(current + new_val + " ");
+	})
 });
 
 function Device() {
-	var path = window.location.pathname.toString().split("/");
-	var p_id = path[4];
-	var url = $("#device_select").data('urlself');
-	if(p_id) {
-		$.ajax({
-	    type: 'POST',
-	    url: url,
-	    data: { p_id: p_id },
-	    success: function(data){
-	    	$('#device_select').html(data);
-	    }
-	  })
+	var path = window.location.pathname.toString().split("products/");
+	if (typeof path[1] !== 'undefined') {
+		var product = path[1].split("/");
+		var p_id = product[0];
+		var url = $("#device_select").data('urlself');
+		if(p_id) {
+			$.ajax({
+		    type: 'POST',
+		    url: url,
+		    data: { p_id: p_id },
+		    success: function(data){
+		    	$('#device_select').html(data);
+		    }
+		  })
+		}
 	}
 }
 
 function Brand() {
-	var path = window.location.pathname.toString().split("/");
-	var p_id = path[4];
-	var url = $("#device_select").data('url');
-	if(p_id) {
-		$.ajax({
-	    type: 'POST',
-	    url: url,
-	    data: { p_id: p_id },
-	    success: function(data){
-	      $('#brand_select').prop("disabled", false).html(data);
-	      $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
-	      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
-	    },
-	    error: function(data){
-	    	$('#brand_select').prop("disabled", true).html('<option value="">Choose brand</option>');
-	      $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
-	      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
-	    }
-	  })
+	var path = window.location.pathname.toString().split("products/");
+	if (typeof path[1] !== 'undefined') {
+		var product = path[1].split("/");
+		var p_id = product[0];
+		var url = $("#device_select").data('url');
+		if(p_id) {
+			$.ajax({
+		    type: 'POST',
+		    url: url,
+		    data: { p_id: p_id },
+		    success: function(data){
+		      $('#brand_select').prop("disabled", false).html(data);
+		      $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		    },
+		    error: function(data){
+		    	$('#brand_select').prop("disabled", true).html('<option value="">Choose brand</option>');
+		      $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		    }
+		  })
+		}
 	}
 }
 
 function Model() {
-	var path = window.location.pathname.toString().split("/");
-	var p_id = path[4];
-	var url = $("#brand_select").data('url');
-	if(p_id) {
-		$.ajax({
-	    type: 'POST',
-	    url: url,
-	    data: { p_id: p_id },
-	    success: function(data){
-	      $('#model_select').prop("disabled", false).html(data);
-	      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
-	    },
-	    error: function(data){
-	      $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
-	      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
-	    }
-	  })
+	var path = window.location.pathname.toString().split("products/");
+	if (typeof path[1] !== 'undefined') {
+		var product = path[1].split("/");
+		var p_id = product[0];
+		var url = $("#brand_select").data('url');
+		if(p_id) {
+			$.ajax({
+		    type: 'POST',
+		    url: url,
+		    data: { p_id: p_id },
+		    success: function(data){
+		      $('#model_select').prop("disabled", false).html(data);
+		      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		    },
+		    error: function(data){
+		      $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		    }
+		  })
+		}
 	}
 }
 
 function Model_extended() {
-	var path = window.location.pathname.toString().split("/");
-	var p_id = path[4];
-	var url = $("#model_select").data('url');
-	if(p_id) {
-		$.ajax({
-	    type: 'POST',
-	    url: url,
-	    data: { p_id: p_id },
-	    success: function(data){
-	    	if (data != "No Extended") {
-	      	$('#model_extended_select').html(data).prop("disabled", false);
-	    	} else {
-	    		$('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
-	    	}
-	    },
-	    error: function(data){
-	      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
-	    }
-	  })
+	var path = window.location.pathname.toString().split("products/");
+	if (typeof path[1] !== 'undefined') {
+		var product = path[1].split("/");
+		var p_id = product[0];
+		var url = $("#model_select").data('url');
+		if(p_id) {
+			$.ajax({
+		    type: 'POST',
+		    url: url,
+		    data: { p_id: p_id },
+		    success: function(data){
+		    	if (data != "No Extended") {
+		      	$('#model_extended_select').html(data).prop("disabled", false);
+		    	} else {
+		    		$('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		    	}
+		    },
+		    error: function(data){
+		      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		    }
+		  })
+		}
 	}
 }
+
+function Expiration_date() {
+		var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+		var DaysToAdd = $("#days").val();
+		var HoursToAdd = $("#hours").val();
+		var date = new Date();
+		var newDate = new Date(date.setTime( date.getTime() + DaysToAdd * 86400000 ));
+		var day = newDate.getUTCDate();
+		var month = (newDate.getUTCMonth() +1);
+		var year = newDate.getUTCFullYear();
+		var weekday = days[ newDate.getUTCDay() ];
+		$("#expiration_date_hour").html("");
+		$("#expiration_date_hour").append("Expires on: " + weekday + ", " + day + "-" + month + "-" + year + " " + HoursToAdd + ":00:00 UTC");
+	}

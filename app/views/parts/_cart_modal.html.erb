@@ -1,5 +1,5 @@
 <% if part_product.part.stock > 0 %>
-  <%= button_tag( :href => "#", :type => "button",:class => "btn btn-primary small", :data => { :toggle => "modal", :target => "#add-to-cart-" + part_product.part.id.to_s}) do %>
+  <%= button_tag( :href => "#", :type => "button",:class => "btn btn-primary small", :title => "Add to cart", :data => { :toggle => "modal", :target => "#add-to-cart-" + part_product.part.id.to_s}) do %>
     <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
   <% end %>
 <% else %>
@@ -56,6 +56,7 @@
               </tbody>
             </table>
           </div>
+          <%= f.hidden_field :price, :value => part_product.part.price_ex %>
           <%= f.hidden_field :cart_id, :value => Cart.where(user_id: current_user.id, purchased: false).first.id %>
           <%= f.hidden_field :part_id, :value => part_product.part.id %>
         </div>

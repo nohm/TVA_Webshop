@@ -5,17 +5,17 @@
     <%= bootstrap_form_for(@user) do |f| %>
       <%= f.alert_message "Error" %>
 
-      <%= f.text_field :name %>
-      <%= f.email_field :email %>
-      <%= f.text_field :street %>
-      <%= f.text_field :city %>
-      <%= f.text_field :province %>
-      <%= f.label :country %>
-      <%= f.country_select :country,  {}, { :class => "form-control" } %>
-      <%= f.text_field :postal_code %>
-      <%= f.text_field :phone_number %>
-      <%= f.password_field :password %>
-      <%= f.password_field :password_confirmation %>
+      <%= f.text_field      :name %>
+      <%= f.email_field     :email %>
+      <%= f.text_field      :street %>
+      <%= f.text_field      :city %>
+      <%= f.text_field      :province %>
+      <%= f.label           :country %>
+      <%= f.country_select  :country,  {}, { :class => "form-control" } %>
+      <%= f.text_field      :postal_code %>
+      <%= f.text_field      :phone_number %>
+      <%= f.password_field  :password %>
+      <%= f.password_field  :password_confirmation %>
 
       <%= f.submit "Edit settings", class: "btn btn-primary" %>
       <%= link_to("Cancel", root_path, class: "btn btn-primary") %>

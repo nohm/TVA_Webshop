@@ -1,4 +1,4 @@
-<% provide(:title, 'New coupon') %>
+<% provide(:title, 'Edit coupon') %>
 <% breadcrumb :coupons, @coupon %>
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
@@ -6,14 +6,20 @@
       <%= f.alert_message "Please fix the errors below." %>
       
       <%= f.text_field :code %>
-      <%= f.text_field :category_id %>
-      <%= f.text_field :part_id %>
-      <%= f.text_field :user_id %>
-      <%= f.text_field :amount %>
+      <%= f.text_field :category_ids %>
+      <%= f.text_field :part_ids %>
+      <%= f.text_field :user_ids %>
+      <%= f.label      :amount_of_uses %>
+      <%= f.text_field :amount, hide_label: true %>
       <%= f.text_field :percent %>
       <%= f.text_field :price %>
-
-      <%= f.submit "Add part", class: "btn btn-primary" %>
+      <%= label        :datetime, :expires_in_this_many_days %>
+      <%= number_field :datetime, :days, min: 0, class: "form-control", id: "days", value: (@coupon.expiration_date.to_date - Time.now.utc.to_date).to_i  %>
+      <%= label        :datetime, :expires_on_this_hour %>
+      <%= number_field :datetime ,:hours, min: 0, max: 23, class: "form-control", id: "hours", value: @coupon.expiration_date.hour %>
+      <p><small id="expiration_date_hour"><%= "Expires on: " + @weekday + ", " + @day + "-" + @month + "-" + @year + " " + @hour + ":00:00 UTC" %></small></p>
+      
+      <%= f.submit "Edit coupon", class: "btn btn-primary" %>
       <%= link_to("Cancel", coupons_path, class: "btn btn-primary") %>
     <% end %>
   </div>

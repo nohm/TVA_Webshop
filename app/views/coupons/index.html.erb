@@ -19,6 +19,7 @@
             <th>Amount</th>
             <th>Percent</th>
             <th>Price</th>
+            <th>Expiration date</th>
             <th class="small-col"></th>
             <th class="small-col"></th>
           </tr>
@@ -28,12 +29,25 @@
 	        	<tr>
 	        		<td><%= coupon.id %></td>
 	        		<td><%= coupon.code %></td>
-	        		<td><%= coupon.category_id %></td>
-	        		<td><%= coupon.part_id %></td>
-	        		<td><%= coupon.user_id %></td>
+              <% if !coupon.category_ids.blank? %>
+	        		 <td><%= coupon.category_ids %></td>
+              <% else %>
+                <td></td>
+              <% end %>
+	        		<% if !coupon.part_ids.blank? %>
+               <td><%= coupon.part_ids %></td>
+              <% else %>
+                <td></td>
+              <% end %>
+	        		<% if !coupon.user_ids.blank? %>
+               <td><%= coupon.user_ids %></td>
+              <% else %>
+                <td></td>
+              <% end %>
 	        		<td><%= coupon.amount %></td>
 	        		<td><%= coupon.percent %></td>
 	        		<td><%= coupon.price %></td>
+              <td><%= coupon.expiration_date %></td>
 	        		<td>
 	        			<%= link_to edit_coupon_path(coupon) do %>
                   <span class="glyphicon glyphicon-pencil" title="Edit"></span>

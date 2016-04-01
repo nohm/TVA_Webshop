@@ -62,9 +62,9 @@
           <% @cart_items.each do |item| %>
             <tr>
               <td class="width40"><%= item.part.name %></td>
-              <td class="width20"><%= number_to_currency(item.part.price_ex, unit: '€') %></td>
+              <td class="width20"><%= number_to_currency((item.price_sale || item.price), unit: '€') %></td>
               <td class="width20"><%= item.amount.to_s + "x" %></td>
-              <td class="width20"><%= number_to_currency(item.amount * item.part.price_ex, unit: '€') %></td>
+              <td class="width20"><%= number_to_currency((item.price_sale || item.price) * item.amount, unit: '€') %></td>
             </tr>
           <% end %>
         <% end %>
