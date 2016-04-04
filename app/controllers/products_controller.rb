@@ -1,6 +1,19 @@
 class ProductsController < ApplicationController
 	def index
-    @products = Product.where(device_id: params[:device_id]).page(params[:page]).per(25).order('id')
+    if current_user.role.name != "Client"
+      @products = Product.where(device_id: params[:device_id]).page(params[:page]).per(25).order('id')
+    else
+      device_id = params[:device_id]
+      brand = params[:brand]
+      model = params[:model]
+      if !device_id.nil? && !brand.nil? && !model.nil?
+        @products = Product.where(device_id: device_id, brand: brand, model: model).select([:device_id, :model, :brand, :model_extended]).group(:device_id, :model, :brand, :model_extended)
+      elsif !device_id.nil? && !brand.nil?
+        @products = Product.where(device_id: device_id, brand: brand).select([:device_id, :model, :brand]).group(:device_id, :model, :brand)
+      elsif !device_id.nil? 
+        @products = Product.where(device_id: device_id).select([:device_id, :brand]).group(:device_id, :brand)
+      end
+    end
   end
 
   def new

@@ -1,0 +1,14 @@
+<% provide(:title, "Devices") %>
+<% breadcrumb :all_devices, @all_devices %>
+  <div class="panel-body panel-table">
+    
+    <% if @all_devices.length == 0 %>
+      No parts found for this category
+    <% else %>
+      <% @all_devices.each do |device| %>
+        <%= link_to device.name.titleize, {:controller => "home", :action => "all_products", :device_id => device.id }%><br>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="panel-footer">
+  </div>

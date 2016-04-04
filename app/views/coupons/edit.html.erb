@@ -12,8 +12,8 @@
       <%= f.text_field :part_ids %>
       <%= f.text_field :user_ids %>
       <%= select("user", "user_id", User.all.collect {|user| [ user.name, user.id ] }, { include_blank: true }, { class: "form-control small", id: "user_select" }) %>
-      <%= f.text_field :percent %>
-      <%= f.text_field :price %>
+      <%= f.text_field :percent, append: '%' %>
+      <%= f.text_field :price, prepend: '€' %>
       <%= label        :datetime, :expires_in_this_many_days %>
       <%= number_field :datetime, :days, min: 0, class: "form-control", id: "days", value: (@coupon.expiration_date.to_date - Time.now.utc.to_date).to_i  %>
       <%= label        :datetime, :expires_on_this_hour %>

@@ -38,7 +38,7 @@ $(document).on('ready page:load', function () {
 		var id = $(this).val();
 		var url = $(this).data('url');
 		$.ajax({
-      type: 'POST',
+      type: 'GET',
       url: url,
       data: { id: id },
       success: function(data){
@@ -59,7 +59,7 @@ $(document).on('ready page:load', function () {
 		var id = $("#connection_device_select").val();
 		var url = $(this).data('url');
 		$.ajax({
-      type: 'POST',
+      type: 'GET',
       url: url,
       data: { brand: brand, id: id },
       success: function(data){
@@ -80,7 +80,7 @@ $(document).on('ready page:load', function () {
 		var url = $(this).data('url');
 		$("#product_id").attr('value', model);
 		$.ajax({
-      type: 'POST',
+      type: 'GET',
       url: url,
       data: { model: model, id: device_id, brand: brand },
       success: function(data){
@@ -107,40 +107,47 @@ $(document).on('ready page:load', function () {
 	$("#device_select").change(function () {
 		var id = $(this).val();
 		var url = $(this).data('url');
-		$.ajax({
-      type: 'POST',
-      url: url,
-      data: { id: id },
-      success: function(data){
-        $('#brand_select').prop("disabled", false).html(data);
-        $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
-        $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
-      },
-      error: function(data){
-      	$('#brand_select').prop("disabled", true).html('<option value="">Choose brand</option>');
-        $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
-        $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
-      }
-    })
+		if (id){
+			$.ajax({
+	      type: 'GET',
+	      url: url,
+	      data: { id: id },
+	      success: function(data){
+	        $('#brand_select').prop("disabled", false).html(data);
+	        $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+	        $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+	      },
+	      error: function(data){
+	      	$('#brand_select').prop("disabled", true).html('<option value="">Choose brand</option>');
+	        $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+	        $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+	      }
+	    })
+		}	
 	})
 
 	$("#brand_select").change(function () {
 		var brand = $(this).val();
 		var id = $("#device_select").val();
 		var url = $(this).data('url');
-		$.ajax({
-      type: 'POST',
-      url: url,
-      data: { brand: brand, id: id },
-      success: function(data){
-        $('#model_select').prop("disabled", false).html(data);
-        $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');;
-      },
-      error: function(data){
-        $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
-        $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
-      }
-    })
+		if (brand) {
+			$.ajax({
+	      type: 'GET',
+	      url: url,
+	      data: { brand: brand, id: id },
+	      success: function(data){
+	        $('#model_select').prop("disabled", false).html(data);
+	        $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');;
+	      },
+	      error: function(data){
+	        $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+	        $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+	      }
+	    })
+		} else {
+			$('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+	    $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		}
 	})
 
 	$("#model_select").change(function () {
@@ -148,17 +155,21 @@ $(document).on('ready page:load', function () {
 		var brand = $("#brand_select").val();
 		var device_id = $("#device_select").val();
 		var url = $(this).data('url');
-		$.ajax({
-      type: 'POST',
-      url: url,
-      data: { model: model, id: device_id, brand: brand },
-      success: function(data){
-        $('#model_extended_select').prop("disabled", false).html(data);
-      },
-      error: function(data){
-        $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
-      }
-    })
+		if (model){
+			$.ajax({
+	      type: 'GET',
+	      url: url,
+	      data: { model: model, id: device_id, brand: brand },
+	      success: function(data){
+	        $('#model_extended_select').prop("disabled", false).html(data);
+	      },
+	      error: function(data){
+	        $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+	      }
+    	})
+		} else {
+			$('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		}
 	})
 
 	$("#model_extended_select").change(function () {
@@ -167,11 +178,13 @@ $(document).on('ready page:load', function () {
 		var brand = $("#brand_select").val();
 		var id = $("#device_select").val();
 		var url = $(this).data('url');
-		$.ajax({
-			type: 'POST',
-			url: url,
-			data: { model_extended: model_extended, brand: brand, id: id, model: model }
-		})
+		if (model_extended){
+			$.ajax({
+				type: 'GET',
+				url: url,
+				data: { model_extended: model_extended, brand: brand, id: id, model: model }
+			})
+		}
 	})
 
 
@@ -217,7 +230,7 @@ $(document).on('ready page:load', function () {
 		var url = $(this).data('url');
 
 		$.ajax({
-			method: "POST",
+			method: "GET",
 			url: url,
 			data: { user_id: user_id, cart_id: cart_id, coupon_code: coupon_code },
 		  success: function(data){
@@ -256,6 +269,8 @@ $(document).on('ready page:load', function () {
 		Expiration_date();
 	});
 
+
+
 	// Automatically fills in #coupon_user_ids when you select a user in coupons#new or coupons#edit
 	var i = 0;
 	$('#user_select').change(function () {
@@ -269,6 +284,7 @@ $(document).on('ready page:load', function () {
 			$('#coupon_user_ids').val(current + new_val + " ");
 		}
 	});
+
 
 
 	// Checks if #coupon in cart#index has a current coupon and changes color based on that
@@ -287,16 +303,21 @@ $(document).on('ready page:load', function () {
 	};
 });
 
+function getURLParameter(name) {
+	return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+}
+
 // Next 4 functions are for automatically filling in the dynamic search options with the current product they are in
 function Device() {
 	var path = window.location.pathname.toString().split("products/");
+	var device_path = window.location.pathname.toString().split("devices/");
 	if (typeof path[1] !== 'undefined') {
 		var product = path[1].split("/");
 		var p_id = product[0];
 		var url = $("#device_select").data('urlself');
 		if(p_id) {
 			$.ajax({
-		    type: 'POST',
+		    type: 'GET',
 		    url: url,
 		    data: { p_id: p_id },
 		    success: function(data){
@@ -304,18 +325,33 @@ function Device() {
 		    }
 		  })
 		}
+	} else if (typeof device_path[1] !== 'undefined') {
+		var device = device_path[1].split("/");
+		var d_id = device[0];
+		var url = $("#device_select").data('urlself');
+		if(d_id) {
+			$.ajax({
+				type: 'GET',
+				url: url,
+				data: { d_id: d_id },
+				success: function(data){
+					$('#device_select').html(data);
+				}
+			})
+		}
 	}
 }
 
 function Brand() {
 	var path = window.location.pathname.toString().split("products/");
+	var device_path = window.location.pathname.toString().split("devices/");
 	if (typeof path[1] !== 'undefined') {
 		var product = path[1].split("/");
 		var p_id = product[0];
 		var url = $("#device_select").data('url');
 		if(p_id) {
 			$.ajax({
-		    type: 'POST',
+		    type: 'GET',
 		    url: url,
 		    data: { p_id: p_id },
 		    success: function(data){
@@ -330,18 +366,41 @@ function Brand() {
 		    }
 		  })
 		}
+	} else if (typeof device_path[1] !== 'undefined') {
+		var device = device_path[1].split("/");
+		var d_id = device[0];
+		var brand = getURLParameter('brand');
+		var url = $("#device_select").data('url');
+		if(d_id) {
+			$.ajax({
+				type: 'GET',
+				url: url,
+				data: { d_id: d_id, brand: brand },
+				success: function(data){
+					$('#brand_select').prop("disabled", false).html(data);
+		      $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+				},
+		    error: function(data){
+		    	$('#brand_select').prop("disabled", true).html('<option value="">Choose brand</option>');
+		      $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		    }
+			})
+		}
 	}
 }
 
 function Model() {
 	var path = window.location.pathname.toString().split("products/");
+	var device_path = window.location.pathname.toString().split("devices/");
 	if (typeof path[1] !== 'undefined') {
 		var product = path[1].split("/");
 		var p_id = product[0];
 		var url = $("#brand_select").data('url');
 		if(p_id) {
 			$.ajax({
-		    type: 'POST',
+		    type: 'GET',
 		    url: url,
 		    data: { p_id: p_id },
 		    success: function(data){
@@ -354,20 +413,65 @@ function Model() {
 		    }
 		  })
 		}
+	} else if (typeof device_path[1] !== 'undefined') {
+		var device = device_path[1].split("/");
+		var d_id = device[0];
+		var brand = getURLParameter('brand');
+		var model = getURLParameter('model');
+		var url = $("#brand_select").data('url');
+		if(brand) {
+			$.ajax({
+				type: 'GET',
+				url: url,
+				data: { d_id: d_id, brand: brand, model: model },
+		    success: function(data){
+		      $('#model_select').prop("disabled", false).html(data);
+		      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		    },
+		    error: function(data){
+		      $('#model_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		    }
+			})
+		}
 	}
 }
 
 function Model_extended() {
 	var path = window.location.pathname.toString().split("products/");
+	var device_path = window.location.pathname.toString().split("devices/");
 	if (typeof path[1] !== 'undefined') {
 		var product = path[1].split("/");
 		var p_id = product[0];
 		var url = $("#model_select").data('url');
 		if(p_id) {
 			$.ajax({
-		    type: 'POST',
+		    type: 'GET',
 		    url: url,
 		    data: { p_id: p_id },
+		    success: function(data){
+		    	if (data != "No Extended") {
+		      	$('#model_extended_select').html(data).prop("disabled", false);
+		    	} else {
+		    		$('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		    	}
+		    },
+		    error: function(data){
+		      $('#model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
+		    }
+		  })
+		}
+	} else if (typeof device_path[1] !== 'undefined') {
+		var device = device_path[1].split("/");
+		var d_id = device[0];
+		var brand = getURLParameter('brand');
+		var model = getURLParameter('model');
+		var url = $("#model_select").data('url');
+		if(model) {
+			$.ajax({
+		    type: 'GET',
+		    url: url,
+		    data: { d_id: d_id, brand: brand, model: model },
 		    success: function(data){
 		    	if (data != "No Extended") {
 		      	$('#model_extended_select').html(data).prop("disabled", false);

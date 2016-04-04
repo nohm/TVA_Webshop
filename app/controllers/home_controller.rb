@@ -48,18 +48,23 @@ class HomeController < ApplicationController
 		if !params[:id].blank?
 	    id = params[:id]
 
- 		    if !id.blank?
-		    @devices = Device.where(id: id).pluck(:id, :name)
+ 		  if !id.blank?
 		    render :partial => 'options_device'
 			end
-		else
+		elsif !params[:p_id].blank?
 			id = params[:p_id]
 
 	    if !id.blank?
 	    	product = Product.find(id)
-	    	@device = Device.find(product.device_id)
-		    @devices = Device.where(id: @device.id).pluck(:id, :name)
+	    	@device = Device.find(product.device_id)  
 		    render :partial => 'options_device'
+			end
+		elsif !params[:d_id].blank?
+			id = params[:d_id]
+
+			if !id.blank?
+				@device = Device.find(id)
+				render :partial => 'options_device'
 			end
 		end
 	end
@@ -73,7 +78,7 @@ class HomeController < ApplicationController
 		    @products = Product.where(device_id: id).pluck(:brand).uniq
 		    render :partial => 'options_brand'
 			end
-		else
+		elsif !params[:p_id].blank?
 			id = params[:p_id]
 
 			# Fill in #brand_select
@@ -81,6 +86,14 @@ class HomeController < ApplicationController
 	    	@product = Product.find(id)
 		    @products = Product.where(device_id: @product.device_id).pluck(:brand).uniq
 		    render :partial => 'options_brand'
+			end
+		elsif !params[:d_id].blank?
+			id = params[:d_id]
+			
+			if !id.blank?
+				@brand = params[:brand]
+				@products = Product.where(device_id: id).pluck(:brand).uniq
+				render :partial => 'options_brand'
 			end
 		end
 	end
@@ -95,13 +108,21 @@ class HomeController < ApplicationController
 				@products = Product.where(device_id: id, brand: brand).pluck(:model).uniq
 				render :partial => 'options_model'
 			end
-		else
+		elsif !params[:p_id].blank?
 			id = params[:p_id]
 			
 			# Fill in #model_select
 			if !id.blank?
 				@product = Product.find(id)
 				@products = Product.where(device_id: @product.device_id, brand: @product.brand).pluck(:model).uniq
+				render :partial => 'options_model'
+			end
+		elsif !params[:d_id].blank?
+			id = params[:d_id]
+
+			if !id.blank?
+				@model = params[:model]
+				@products = Product.where(device_id: id, brand: params[:brand]).pluck(:model).uniq
 				render :partial => 'options_model'
 			end
 		end
@@ -127,13 +148,25 @@ class HomeController < ApplicationController
 				@products = Product.where(device_id: id, brand: brand, model: model).pluck(:model_extended).uniq
 				render :partial => 'options_model_extended'
 			end
-		else
+		elsif !params[:p_id].blank?
 			id = params[:p_id]
 
 			# Fill in #model_extended_select
 			if !id.blank?
 				@product = Product.find(id)
 				@products = Product.where(device_id: @product.device_id, brand: @product.brand, model: @product.model).pluck(:model_extended).uniq
+				if !@products.include?(nil)
+					render :partial => 'options_model_extended'
+				else
+					render inline: 'No Extended' # Javascript needed
+				end
+			end
+		elsif !params[:d_id].blank?
+			id = params[:d_id]
+
+			# Fill in #model_extended_select
+			if !id.blank?
+				@products = Product.where(device_id: id, brand: params[:brand], model: params[:model]).pluck(:model_extended).uniq
 				if !@products.include?(nil)
 					render :partial => 'options_model_extended'
 				else

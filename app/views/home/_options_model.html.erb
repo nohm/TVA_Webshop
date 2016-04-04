@@ -2,8 +2,12 @@
 	<%= bootstrap_form_tag url: search_path, method: 'GET', html: {class: "form-inline"} do |f| %>
 		<%= f.select :product_model, options_for_select(@products.collect { |product| [product] }, :selected => params[:model]), { prompt: "Choose model", hide_label: true}, { id: 'model_select' } %>
 	<% end %>
-<% else %>
+<% elsif !params[:p_id].blank? %>
 	<%= bootstrap_form_tag url: search_path, method: 'GET', html: {class: "form-inline"} do |f| %>
 		<%= f.select :product_model, options_for_select(@products.collect { |product| [product] }, :selected => @product.model), { prompt: "Choose model", hide_label: true}, { id: 'model_select' } %>
+	<% end %>
+<% elsif !params[:d_id].blank? %>
+	<%= bootstrap_form_tag url: search_path, method: 'GET', html: {class: "form-inline"} do |f| %>
+		<%= f.select :product_model, options_for_select(@products.collect { |product| [product] }, :selected => @model), { prompt: "Choose model", hide_label: true}, { id: 'model_select' } %>
 	<% end %>
 <% end %>

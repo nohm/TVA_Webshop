@@ -16,6 +16,7 @@
       <%= f.text_field      :phone_number %>
       <%= f.password_field  :password %>
       <%= f.password_field  :password_confirmation %>
+      <%= f.password_field  :current_password %>
 
       <%= f.submit "Edit settings", class: "btn btn-primary" %>
       <%= link_to("Cancel", root_path, class: "btn btn-primary") %>

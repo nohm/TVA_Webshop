@@ -1,0 +1,24 @@
+<% provide(:title, "Products") %>
+<% breadcrumb :all_products, @products %>
+  <div class="panel-body panel-table">
+    
+    <% if @products.length == 0 %>
+      No parts found for this category
+    <% else %>
+        <% @products.each do |product| %>
+          <% if product.has_attribute?(:model_extended) %>
+            <%= link_to product.model_extended, device_product_categories_path(params[:device_id], Product.where(model_extended: product.model_extended).first.id ) %><br>
+          <% elsif product.has_attribute?(:model) %>
+            <% if Product.where(model: product.model).first.model_extended.blank? %>
+              <%= link_to product.model, device_product_categories_path(params[:device_id], Product.where(model: product.model).first.id ) %><br>
+            <% else %>
+              <%= link_to product.model, {:controller => "home", :action => "all_products", :device_id => product.device_id, :brand => product.brand, :model => product.model }%><br>
+            <% end %>
+          <% elsif product.has_attribute?(:brand) %>
+            <%= link_to product.brand, {:controller => "home", :action => "all_products", :device_id => product.device_id, :brand => product.brand}%><br>
+          <% end %>
+        <% end %>
+    <% end %>
+  </div>
+  <div class="panel-footer">
+  </div>

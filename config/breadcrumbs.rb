@@ -24,17 +24,76 @@ crumb :invoice do
 end 
 
 crumb :devices do
-	link "Devices", devices_path
+	if !params[:device_id].blank?
+		link Device.find(params[:device_id]).name.titleize, devices_path
+	else	
+		link "Devices", devices_path
+	end
+end
+
+crumb :product_brand do
+	if !params[:brand].blank?
+		link params[:brand], device_products_path(params[:device_id])
+	elsif !params[:product_id].blank?
+		product = Product.find(params[:product_id])
+		link product.brand, device_products_path(params[:device_id])
+	else
+		link "Brand", device_products_path(params[:device_id])
+	end
+	parent :devices
+end
+
+crumb :product_model do
+	if !params[:model].blank?
+		link params[:model], device_products_path(params[:device_id], brand: params[:brand])
+	elsif !params[:product_id].blank?
+		product = Product.find(params[:product_id])
+		link product.model, device_products_path(params[:device_id], brand: product.brand)
+	else 
+		link "Model", device_products_path(params[:device_id])
+	end
+	parent :product_brand
+end
+
+crumb :product_model_extended do
+	if !params[:product_id].blank?
+		product = Product.find(params[:product_id])
+		link product.model_extended, device_products_path(params[:device_id], brand: product.brand, model: product.model)
+	else 
+		link "Model", device_products_path(params[:device_id])
+	end
+	parent :product_model
 end
 
 crumb :products do
-	link "Products", device_products_path(params[:device_id])
+	if !params[:product_id].blank?
+		product = Product.find(params[:product_id])
+		if !product.model_extended.blank?
+			link product.model_extended, device_products_path(params[:device_id])
+		else
+			link product.model, device_products_path(params[:device_id])
+		end
+	else
+		link "Products", device_products_path(params[:device_id])
+	end
 	parent :devices
 end
 
 crumb :categories do
-	link "Categories", device_product_categories_path(params[:device_id], params[:product_id])
-	parent :products
+	if !params[:category_id].blank?
+		link Category.find(params[:category_id]).name, device_product_categories_path(params[:device_id], params[:product_id])
+	else
+		link "Categories", device_product_categories_path(params[:device_id], params[:product_id])
+	end
+
+	product = Product.find(params[:product_id])
+	if current_user.role.name != "Client"
+		parent :products
+	elsif !product.model_extended.blank?
+		parent :product_model_extended
+	else 
+		parent :product_model
+	end
 end
 
 crumb :parts do
@@ -64,6 +123,28 @@ end
 crumb :all_parts do
 	link Category.find_by(id: params[:category_id]).name, parts_path(params[:category_id])
 	parent :search
+end
+
+crumb :all_devices do
+	if !params[:device_id].blank?
+		link Device.find(params[:device_id]).name.titleize, device_path
+	else	
+		link "Devices", device_path
+	end
+end
+
+crumb :all_products do
+	if !params[:product_id].blank?
+		product = Product.find(params[:product_id])
+		if product.model_extended.nil?
+			link "Products", brand_path(params[:device_id] || params[:id], brand: product.brand)
+		else
+			link "Products", model_path(params[:device_id] || params[:id], brand: product.brand, model: product.model)
+		end
+	else
+		link "Products", brand_path(params[:device_id] || params[:id])
+	end
+	parent :all_devices
 end
 
 crumb :parts_products do

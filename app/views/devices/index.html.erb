@@ -6,46 +6,52 @@
         <%= "De lijst is leeg" %>
       </p>
     <% else %>
-      <div class="table-responsive">
-        <table class="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th class="small-col"><%= "Id" %></th>
-              <th><%= "Device name" %></th>
-              <th class="small-col"></th>
-              <% if logged_in? && current_user.manager? %>
-                <th class="small-col"></th>
-                <th class="small-col"></th>
-              <% end %>
-            </tr>
-          </thead>
-          <tbody>
-            <% @devices.each do |device| %>
+      <% if current_user.role.name != "Client" %>
+          <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
               <tr>
-                <td><%= device.id %></td>
-                <td><%= device.name.titleize %></td>
-                <td>
-                  <%= link_to device_products_path(device) do %>
-                    <span class="glyphicon glyphicon-search" title="Show"></span>
-                  <% end %>
-                </td>
+                <th class="small-col"><%= "Id" %></th>
+                <th><%= "Device name" %></th>
+                <th class="small-col"></th>
                 <% if logged_in? && current_user.manager? %>
-                  <td>
-                    <%= link_to edit_device_path(device) do %>
-                      <span class="glyphicon glyphicon-pencil" title="Edit"></span>
-                    <% end %>
-                  </td>
-                  <td>
-                    <%= link_to(device_path(device), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
-                      <span class="glyphicon glyphicon-remove" title="Delete"></span>
-                    <% end %>
-                  </td>
+                  <th class="small-col"></th>
+                  <th class="small-col"></th>
                 <% end %>
               </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              <% @devices.each do |device| %>
+                <tr>
+                  <td><%= device.id %></td>
+                  <td><%= device.name.titleize %></td>
+                  <td>
+                    <%= link_to device_products_path(device) do %>
+                      <span class="glyphicon glyphicon-search" title="Show"></span>
+                    <% end %>
+                  </td>
+                  <% if logged_in? && current_user.manager? %>
+                    <td>
+                      <%= link_to edit_device_path(device) do %>
+                        <span class="glyphicon glyphicon-pencil" title="Edit"></span>
+                      <% end %>
+                    </td>
+                    <td>
+                      <%= link_to(device_path(device), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
+                        <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                      <% end %>
+                    </td>
+                  <% end %>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <% @devices.each do |device| %>
+        <%= link_to device.name.titleize, device_products_path(device.id) %><br>
+      <% end %>
+      <% end %>
     <% end %>
   </div>
   <div class="panel-footer">
