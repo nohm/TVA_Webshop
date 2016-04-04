@@ -31,7 +31,6 @@ class User < ActiveRecord::Base
       user = User.find_by_id(id)
       # Check if the user CANNOT be authenticated with the entered current password
       if (user.authenticate(current_password) == false)
-        sdk
         # Add an error stating that the current password is incorrect
         errors.add(:current_password, "is incorrect.")
       end
