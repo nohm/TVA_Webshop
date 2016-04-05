@@ -56,7 +56,7 @@ $(document).on('ready page:load', function () {
 
 	$("#connection_brand_select").change(function () {
 		var brand = $(this).val();
-		var id = $("#connection_device_select").val();
+		var id = $("#device_id").val();
 		var url = $(this).data('url');
 		$.ajax({
       type: 'GET',
@@ -76,18 +76,17 @@ $(document).on('ready page:load', function () {
 	$("#connection_model_select").change(function () {
 		var model = $(this).val();
 		var brand = $("#connection_brand_select").val();
-		var device_id = $("#connection_device_select").val();
+		var id = $("#device_id").val();
 		var url = $(this).data('url');
 		$("#product_id").attr('value', model);
 		$.ajax({
       type: 'GET',
       url: url,
-      data: { model: model, id: device_id, brand: brand },
+      data: { model: model, id: id, brand: brand },
       success: function(data){
       	if (data == "No model_extended") {
       		$('#connection_model_extended_select').prop("disabled", true).html('<option value="">Choose model</option>');
-      	}
-      	else {
+      	} else {
         	$('#connection_model_extended_select').prop("disabled", false).html(data);
         	$('#Submit_connect').prop("disabled", true)
       	}
@@ -271,15 +270,15 @@ $(document).on('ready page:load', function () {
 
 
 
-	// Automatically fills in #coupon_user_ids when you select a user in coupons#new or coupons#edit
-	var i = 0;
+	// Automatically fills in #coupon_user_ids when you select a user.
+	var edit_coupon_user = 0;
 	$('#user_select').change(function () {
 		var current = $('#coupon_user_ids').val();
 		var new_val = $(this).val();
 		
-		if (i == 0) {
+		if (edit_coupon_user == 0) {
 			$('#coupon_user_ids').val(current + " " + new_val + " ");
-			i++;
+			edit_coupon_user++;
 		} else {
 			$('#coupon_user_ids').val(current + new_val + " ");
 		}
@@ -287,7 +286,101 @@ $(document).on('ready page:load', function () {
 
 
 
-	// Checks if #coupon in cart#index has a current coupon and changes color based on that
+	// Next 2 functions are for automatically filling in #coupon_category_ids when you select a category.
+	$("#c_device_select").change(function () {
+		var device_id = $(this).val();
+		var url = $(this).data('url');
+		if (device_id){
+			$.ajax({
+	      type: 'GET',
+	      url: url,
+	      data: { device_id: device_id },
+	      success: function(data){
+	        $('#c_category_select').prop("disabled", false).html(data);
+	      },
+	      error: function(data){
+	      	$('#c_category_select').prop("disabled", true).html('<option value="">Choose category</option>');
+	      }
+	    })
+		}	else {
+			$('#c_category_select').prop("disabled", true).html('<option value="">Choose category</option>');
+		}
+	})
+
+	var edit_coupon_category = 0;
+	$("#c_category_select").change(function () {
+		var current = $("#coupon_category_ids").val();
+		var new_val = $(this).val();
+
+		if (edit_coupon_category == 0) {
+			$('#coupon_category_ids').val(current + " " + new_val + " ");
+			edit_coupon_category++;
+		} else {
+			$('#coupon_category_ids').val(current + new_val + " ");
+		}
+	})
+
+
+
+	// Next 3 functions are for automatically filling in #coupon_part_ids when you select a part.
+	$("#p_device_select").change(function () {
+		var device_id = $(this).val();
+		var url = $(this).data('url');
+		if (device_id){
+			$.ajax({
+	      type: 'GET',
+	      url: url,
+	      data: { device_id: device_id },
+	      success: function(data){
+	        $('#p_category_select').prop("disabled", false).html(data);
+	        $('#p_part_select').prop("disabled", true);
+	      },
+	      error: function(data){
+	      	$('#p_category_select').prop("disabled", true).html('<option value="">Choose category</option>');
+	      }
+	    })
+		}	else {
+			$('#p_category_select').prop("disabled", true).html('<option value="">Choose category</option>');
+			$('#p_part_select').prop("disabled", true).html('<option value="">Choose part</option>');
+		}
+	})
+
+	$("#p_category_select").change(function () {
+		var device_id = $("#p_device_select").val();
+		var category_id = $(this).val();
+		var url = $(this).data('url');
+		if (category_id){
+			$.ajax({
+	      type: 'GET',
+	      url: url,
+	      data: { device_id: device_id, category_id: category_id },
+	      success: function(data){
+	        $('#p_part_select').prop("disabled", false).html(data);
+	      },
+	      error: function(data){
+	      	$('#p_part_select').prop("disabled", true).html('<option value="">Choose category</option>');
+	      }
+	    })
+		}	else {
+			$('#p_part_select').prop("disabled", true).html('<option value="">Choose category</option>');
+		}
+	})
+
+	var edit_coupon_part = 0;
+	$("#p_part_select").change(function () {
+		var current = $("#coupon_part_ids").val();
+		var new_val = $(this).val();
+
+		if (edit_coupon_part == 0) {
+			$('#coupon_part_ids').val(current + " " + new_val + " ");
+			edit_coupon_part++;
+		} else {
+			$('#coupon_part_ids').val(current + new_val + " ");
+		}
+	})
+
+
+	// Checks if #coupon in cart#index has a current coupon and changes color based on that.
 	if($('#coupon').length){
 	  if($('#coupon').html().indexOf("None") >= 0){
 	  	if ($('#coupon').hasClass('btn-success')) {
@@ -307,7 +400,7 @@ function getURLParameter(name) {
 	return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
 }
 
-// Next 4 functions are for automatically filling in the dynamic search options with the current product they are in
+// Next 4 functions are for automatically filling in the dynamic search options with the current product they are in.
 function Device() {
 	var path = window.location.pathname.toString().split("products/");
 	var device_path = window.location.pathname.toString().split("devices/");
@@ -489,7 +582,7 @@ function Model_extended() {
 
 
 
-// Function for filling in the expiration date example in coupons#new and coupons#edit
+// Function for filling in the expiration date example in coupons#new and coupons#edit.
 function Expiration_date() {
 	var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 	var DaysToAdd = $("#days").val();

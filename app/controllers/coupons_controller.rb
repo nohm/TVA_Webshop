@@ -72,6 +72,26 @@ class CouponsController < ApplicationController
 		flash[:success] = "Coupon deleted"
 	end
 
+	def coupon_category
+		if !params[:device_id].blank?
+	    id = params[:device_id]
+		  @categories = Category.where(device_id: id).order('name ASC')
+		  render :partial => 'coupon_category'
+		else
+			render :inline => 'Category failed'
+		end
+	end
+
+	def coupon_part
+		if !params[:category_id].blank?
+	    id = params[:category_id]
+		  @parts = Part.where(category_id: id).order('name ASC')
+		  render :partial => 'coupon_part'
+		else
+			render :inline => 'Part failed'
+		end
+	end
+
 	private
 
 	def coupon_params

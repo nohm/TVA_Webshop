@@ -1,0 +1,5 @@
+<% if @parts.length >= 1 %>
+	<%= select("part", "part_id", @parts.collect {|part| [ part.name, part.id ] }, {prompt: "Choose part", hide_label: true}, { id: 'p_part_select', class: 'form-control small' }) %>
+<% else %>
+	<%= select("part", "part_id", "Nothing", {prompt: "No products found", hide_label: true}, { id: 'p_part_select', class: 'form-control small' }) %>
+<% end %>

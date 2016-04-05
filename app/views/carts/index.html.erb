@@ -33,14 +33,16 @@
                     <span class="glyphicon glyphicon-remove"></span>
                   <% end %>
                 </td>
-                <td><%= number_to_currency(item.price_sale || item.price, unit: "€") %></td>
-                <td class="right">
+                <td>
                   <% if item.price_sale.blank? %>
-                    <%= number_to_currency(item.price * item.amount, unit: "€") %>
+                    <%= number_to_currency(item.price_sale || item.price, unit: "€") %>
                   <% else %>
-                    <span><%= number_to_currency(item.price * item.amount, unit: "€") %></span><br>
-                    <span class="green"><%= number_to_currency(item.price_sale * item.amount, unit: "€") %></span>
+                    <span><%= number_to_currency(item.price, unit: "€") %></span><br>
+                    <span class="green"><%= number_to_currency(item.price_sale, unit: "€") %></span>
                   <% end %>
+                </td>
+                <td class="right">
+                  <%= number_to_currency(item.price_sale || item.price * item.amount, unit: "€") %>
                 </td>
               </tr>
             <% end %>

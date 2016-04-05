@@ -316,9 +316,9 @@ aside {
 }
 
 .small {
-  width: 150px !important;
+  width: 160px !important;
   height: 34px;
-  margin-bottom: 0px;
+  margin-bottom: 15px;
 }
 
 .bigImage {
@@ -443,16 +443,32 @@ aside {
   width: 66px;
 }
 
-#hours {
-  margin-bottom: 0px;
-}
-
 #coupon {
   float:right; 
   margin-right:15px; 
   width:auto; 
   text-align:center; 
   height:34px !important;
+}
+
+.inline {
+  display: inline !important;
+}
+
+.block {
+  display: block !important;
+}
+
+.error {
+  color: #a94442;
+}
+
+.bottom {
+  margin-bottom: 0px;
+}
+
+.top {
+  margin-top: 5px;
 }
 
 #device_select {

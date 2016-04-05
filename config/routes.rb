@@ -22,8 +22,11 @@ Rails.application.routes.draw do
     get '/connect_model' => 'parts_products#connect_model', :as => :connect_model
     get '/connect_model_extended' => 'parts_products#connect_model_extended', :as => :connect_model_extended
 
-    get '/purchase' => 'carts#purchase', :as => :purchase, :via => :get
-    
+    get '/purchase' => 'carts#purchase', :as => :purchase
+
+    get '/coupon_category' => 'coupons#coupon_category', :as => :coupon_category
+    get '/coupon_part' => 'coupons#coupon_part', :as => :coupon_part
+
     resources :coupons
 
     resources :users do

@@ -7,22 +7,15 @@
       
       <%= f.text_field :part_id, :value => Part.find_by(id: params[:part_id]).name, :class => "cursorDisabled", :readonly => true %>
       
-      
       <%= f.text_field :product_id, :value => @model, :id => "product_id", :class => "cursorDisabled", :readonly => true %>
 
-      <%= f.submit "Connect", class: "btn btn-primary", id: "Submit_connect" %>
-    <% end %>
-		<br>
-    <%= bootstrap_form_tag url: root_path, method: 'GET', html: {class: "form-inline"} do |f| %>
-    <div class="input-group">
-      <%= f.select :connection_device_id, options_for_select(Device.all.collect { |device| [device.name.titleize, device.id] }, 0), {:selected => params[:connection_device_id], prompt: "Choose device", hide_label: true}, { id: 'connection_device_select', data: { 'url' => connect_brand_path } } %>
+      <%= hidden_field("device", "id", :value => params[:device_id]) %>
+      <%= select("product", "brand", options_for_select(Product.where(device_id: params[:device_id]).pluck(:brand).uniq.collect { |product| [product] }, 0), {prompt: "Choose brand", hide_label: true}, { id: 'connection_brand_select', class: 'form-control small inline', data: { 'url' => connect_model_path } }) %>
+      <%= select("product", "model", "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'connection_model_select', class: 'form-control small inline', disabled: "disabled", data: { 'url' => connect_model_extended_path } }) %>
 
-      <%= f.select :connection_brand, "Nothing", {prompt: "Choose brand", hide_label: true}, { id: 'connection_brand_select', disabled: "disabled", data: { 'url' => connect_model_path } } %>
+      <%= select("product", "model_extended", "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'connection_model_extended_select', class: 'form-control small inline', disabled: "disabled" }) %>
 
-      <%= f.select :connection_model, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'connection_model_select', disabled: "disabled", data: { 'url' => connect_model_extended_path } } %>
-
-      <%= f.select :connection_model_extended, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'connection_model_extended_select', disabled: "disabled" } %>
-    </div>
-  <% end %>
+      <%= f.submit "Connect", class: "btn btn-primary block", id: "Submit_connect" %>
+    <% end %>      
   </div>
 </div>

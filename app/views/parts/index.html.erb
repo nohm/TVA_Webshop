@@ -2,9 +2,9 @@
 <% breadcrumb :parts, @parts_products %>
   <div class="panel-body panel-table">
     
-    <% if @parts.length == 0 %>
+    <% if @parts_products.length == 0 %>
       <p class="empty_list">
-        <%= "De lijst is leeg" %>
+        <%= "No products found for this category" %>
       </p>
     <% else %>
       <div class="table-responsive">

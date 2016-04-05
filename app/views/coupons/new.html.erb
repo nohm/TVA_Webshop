@@ -6,18 +6,31 @@
       <%= f.alert_message "Please fix the errors below." %>
       
       <%= f.text_field :code %>
-      <%= f.label :amount_of_uses %>
+      <% if !@coupon.errors[:amount].blank? %>
+        <%= f.label :amount_of_uses, class: 'error' %>
+      <% else %>
+        <%= f.label :amount_of_uses %>
+      <% end %>
       <%= f.text_field :amount, hide_label: true %>
+
       <%= f.text_field :category_ids %>
+      <%= select("category", "device_id", Device.all.collect {|device| [ device.name.titleize, device.id ] }, { prompt: 'Choose device' }, { class: "form-control small inline", id: "c_device_select", data: { 'url' => coupon_category_path } }) %>
+      <%= select("category", "category_id", "Nothing", {prompt: "Choose category", hide_label: true}, { id: 'c_category_select', class: 'form-control small inline', disabled: "disabled" }) %>
+
       <%= f.text_field :part_ids %>
+      <%= select("part", "device_id", Device.all.collect {|device| [ device.name.titleize, device.id ] }, { prompt: 'Choose device' }, { class: "form-control small inline", id: "p_device_select", data: { 'url' => coupon_category_path } }) %>
+      <%= select("part", "category_id", "Nothing", {prompt: "Choose category", hide_label: true}, { id: 'p_category_select', class: 'form-control small inline', disabled: "disabled", data: { 'url' => coupon_part_path } }) %>
+      <%= select("part", "part_id", "Nothing", {prompt: "Choose part", hide_label: true}, { id: 'p_part_select', class: 'form-control small inline', disabled: "disabled" }) %>
+
       <%= f.text_field :user_ids %>
-      <%= select("user", "user_id", User.all.collect {|user| [ user.name, user.id ] }, { include_blank: true }, { class: "form-control small", id: "user_select" }) %>
+      <%= select("user", "user_id", User.all.order('name ASC').collect {|user| [ user.name, user.id ] }, { prompt: 'Choose user' }, { class: "form-control small", id: "user_select" }) %>
+
       <%= f.text_field :percent, append: '%' %>
       <%= f.text_field :price, prepend: '€' %>
       <%= label        :datetime, :days %>
       <%= number_field :datetime, :days, min: 0, class: "form-control", id: "days", value: 0  %>
       <%= label        :datetime, :hours %>
-      <%= number_field :datetime ,:hours, min: 0, max: 23, class: "form-control", id: "hours", value: 0 %>
+      <%= number_field :datetime ,:hours, min: 0, max: 23, class: "form-control bottom", id: "hours", value: 0 %>
       <p><small id="expiration_date_hour">Expires on: Sun, 1-1-2016 0:00:00 UTC</small></p>
 
       <%= f.submit "Add coupon", class: "btn btn-primary" %>

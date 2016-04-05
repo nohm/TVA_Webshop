@@ -1,0 +1,1 @@
+<%= select("category", "category_id", @categories.collect {|category| [ category.name, category.id ] }, {prompt: "Choose category", hide_label: true}, { id: 'c_category_select', class: 'form-control small' }) %>

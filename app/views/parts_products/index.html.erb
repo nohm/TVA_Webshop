@@ -11,7 +11,9 @@
             <th>Model extended</th>
             <th>Type</th>
             <th>Part number</th>
-            <th class="small-col"></th>
+            <% if @parts_products.length != 1 %>
+              <th class="small-col"></th>
+            <% end %>
           </tr>
         </thead>
         <tbody>
@@ -23,11 +25,13 @@
               <td><%= part_product.product.model_extended %></td>
               <td><%= part_product.product.type_number %></td>
               <td><%= part_product.product.partnumber %></td>
-              <td>
-                <%= link_to(device_product_category_part_parts_product_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], part_product), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
-                  <span class="glyphicon glyphicon-remove" title="Delete"></span>
-                <% end %>
-              </td>
+              <% if @parts_products.length != 1 %>  
+                <td>
+                  <%= link_to(device_product_category_part_parts_product_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], part_product), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
+                    <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                  <% end %>
+                </td>
+              <% end %>
             </tr>
           <% end %>
         </tbody>
