@@ -1,7 +1,5 @@
 class User < ActiveRecord::Base
-  has_secure_password
-
-	attr_accessor :remember_token
+  attr_accessor :remember_token
   attr_accessor :current_password
 
   has_many :cart
@@ -18,20 +16,18 @@ class User < ActiveRecord::Base
   validates :street, presence: true
   validates :city, presence: true
   validates :province, presence: true
-  validates :country, presence: true
   validates :postal_code, presence: true
-	validates :password, presence: true, length: { minimum: 6 }, :on => :create
-  validates :password_confirmation, presence: true, :on => :create
+  has_secure_password
+	validates :password, length: { minimum: 6 }, :on => :create
   validate  :current_password_is_correct, on: :update
 
   def current_password_is_correct
-    # Check if the user tried changing his/her password.
-    if !password.blank?
-      # Get a reference to the user since the "authenticate" method always returns false when calling on itself (for some reason).
-      user = User.find_by_id(id)
+    # Get a reference to the user since the "authenticate" method always returns false when calling on itself (for some reason).
+    user = User.find_by_id(id)
+    
+    if user.used_coupon_ids.include?(used_coupon_ids)
       # Check if the user CANNOT be authenticated with the entered current password
       if (user.authenticate(current_password) == false)
-        # Add an error stating that the current password is incorrect
         errors.add(:current_password, "is incorrect.")
       end
     end

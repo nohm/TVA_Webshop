@@ -9,14 +9,14 @@
       <%= f.email_field :email, class: 'form-control', autofocus: true %>
       
       <%= f.label :password %>
-      <%= f.password_field :password, class: 'form-control bottom' %>
+      <%= f.password_field :password, class: 'form-control bottom-none' %>
 
       <%= f.label :remember_me, class: "checkbox inline" do %>
         <%= f.check_box :remember_me %>
-        <span>Remember me on this computer</span>
+        <span>Remember me on this device</span>
       <% end %>
       <br>
-      <%= f.submit "Log in", class: "btn btn-primary top" %>
+      <%= f.submit "Log in", class: "btn btn-primary top-15" %>
     <% end %>
 
     <p>New user? <%= link_to "Sign up now!", signup_path %></p>

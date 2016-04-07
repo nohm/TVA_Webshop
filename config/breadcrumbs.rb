@@ -87,7 +87,7 @@ crumb :categories do
 	end
 
 	product = Product.find(params[:product_id])
-	if current_user.role.name != "Client"
+	if logged_in? && current_user.role.name != "Client"
 		parent :products
 	elsif !product.model_extended.blank?
 		parent :product_model_extended
@@ -113,6 +113,11 @@ end
 
 crumb :partdescriptions do
 	link "Part descriptions", device_product_category_part_partdescriptions_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])
+	parent :parts
+end
+
+crumb :discount_prices do
+	link "Discount prices", device_product_category_part_discount_prices_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])
 	parent :parts
 end
 

@@ -2,7 +2,7 @@
 <% breadcrumb :parts, @parts_products %>
   <div class="panel-body panel-table">
     
-    <% if @parts_products.length == 0 %>
+    <% if @part_amount == 0 %>
       <p class="empty_list">
         <%= "No products found for this category" %>
       </p>
@@ -18,6 +18,7 @@
                 <th><%= "Price" %></th>
                 <th class="col-sm-2"></th>
                 <% if current_user.manager? %>
+                  <th class="small-col"></th>
                   <th class="small-col"></th>
                   <th class="small-col"></th>
                   <th class="small-col"></th>
@@ -74,11 +75,19 @@
                   <% else %>
                     <td><%= part_product.part.stock %></td>
                   <% end %>
-                  <td><%= number_to_currency(part_product.part.price_ex, unit: "€") %></td>
+                  <td>
+                    <%= number_to_currency(DiscountPrice.where(part_id: part_product.part, amount: 1).first.price, unit: "€") %><br>
+                    <small style="font-size: 9px;">Excl 21% VAT</small>
+                  </td>
                   <td>
                       <%= render :partial => "cart_modal", :locals => {:part_product => part_product}%>
                   </td>
                   <% if current_user.manager? %>
+                    <td>
+                      <%= link_to device_product_category_part_discount_prices_path(params[:device_id], params[:product_id], params[:category_id], part_product.part) do %>
+                        <span class="glyphicon glyphicon-euro" title="Prices"></span>
+                      <% end %>
+                    </td>
                     <td>
                       <%= link_to device_product_category_part_parts_products_path(params[:device_id], params[:product_id], params[:category_id], part_product.part) do %>
                         <span class="glyphicon glyphicon-sort" title="Connections"></span>

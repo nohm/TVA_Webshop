@@ -6,7 +6,7 @@
         <%= "De lijst is leeg" %>
       </p>
     <% else %>
-      <% if current_user.role.name != "Client" %>
+      <% if logged_in? && current_user.role.name != "Client" %>
           <div class="table-responsive">
           <table class="table table-striped table-hover">
             <thead>

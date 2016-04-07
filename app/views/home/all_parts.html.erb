@@ -63,7 +63,7 @@
                   <% else %>
                     <td><%= part.stock %></td>
                   <% end %>
-                  <td><%= number_to_currency(part.price_ex, unit: "€") %></td>
+                  <td><%= number_to_currency(DiscountPrice.where(part_id: part_result.id, amount: 1).first.price, unit: "€") %></td>
                 <% end %>
               </tr>
             <% end %>

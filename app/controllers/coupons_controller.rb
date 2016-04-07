@@ -1,16 +1,16 @@
 class CouponsController < ApplicationController
 	def index
-		redirect_to root_path, :alert => "Unauthorized" and return unless current_user.manager?
+		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
 		@coupons = Coupon.all.page(params[:page]).per(25).order('id ASC')
 	end
 
 	def new
-		redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
+		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
 		@coupon = Coupon.new
 	end
 
 	def create
-		redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
+		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
 		params[:coupon][:price] = params[:coupon][:price].to_s.gsub(',', '.').to_f unless params[:coupon][:price].blank?
 		params[:coupon][:category_ids] = params[:coupon][:category_ids].squish.split(" ").map(&:to_i).uniq
 		params[:coupon][:part_ids] = params[:coupon][:part_ids].squish.split(" ").map(&:to_i).uniq
@@ -29,7 +29,7 @@ class CouponsController < ApplicationController
 	end
 
 	def edit
-		redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
+		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
 		@coupon = Coupon.find(params[:id])
 		weekday_array = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 		@day = @coupon.expiration_date.day.to_s
@@ -40,7 +40,7 @@ class CouponsController < ApplicationController
 	end
 
 	def update
-		redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
+		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
 		params[:coupon][:price] = params[:coupon][:price].to_s.gsub(',', '.').to_f unless params[:coupon][:price].blank?
 		params[:coupon][:category_ids] = params[:coupon][:category_ids].squish.split(" ").map(&:to_i).uniq
 		params[:coupon][:part_ids] = params[:coupon][:part_ids].squish.split(" ").map(&:to_i).uniq
@@ -65,7 +65,7 @@ class CouponsController < ApplicationController
 	end
 
 	def destroy
-		redirect_to root_path, :alert => "Unauthorized" and return   unless current_user.manager?
+		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
 		coupon = Coupon.find(params[:id])
 		coupon.destroy
 		redirect_to coupons_path

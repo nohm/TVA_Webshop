@@ -1,0 +1,39 @@
+<% provide(:title, "Prices") %>
+<% breadcrumb :discount_prices, @discount_prices %>
+  <div class="panel-body panel-table">
+    <div class="table-responsive col-md-2">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Amount</th>
+            <th>Price</th>
+            <th class="small-col"></th>
+            <th class="small-col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @discount_prices.each do |d_price| %>
+            <tr>
+              <td><%= d_price.amount %></td>
+              <td><%= number_to_currency(d_price.price, unit: '€') %></td>
+              <td>
+                <%= link_to edit_device_product_category_part_discount_price_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], d_price) do %>
+                  <span class="glyphicon glyphicon-pencil" title="Edit"></span>
+                <% end %>
+              </td>
+              <td>
+                <% if d_price.amount != 1 %>
+                  <%= link_to device_product_category_part_discount_price_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], d_price), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                    <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                  <% end %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <%= link_to("Add price", new_device_product_category_part_discount_price_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id]), :class => 'btn btn-primary ') %>
+  </div>

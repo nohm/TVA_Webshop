@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160401140201) do
+ActiveRecord::Schema.define(version: 20160406133703) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,12 @@ ActiveRecord::Schema.define(version: 20160401140201) do
     t.string "name"
   end
 
+  create_table "discount_prices", force: :cascade do |t|
+    t.integer "part_id"
+    t.integer "amount"
+    t.decimal "price",   precision: 10, scale: 2
+  end
+
   create_table "invoices", force: :cascade do |t|
     t.integer  "user_id"
     t.datetime "created_at", null: false
@@ -83,12 +89,11 @@ ActiveRecord::Schema.define(version: 20160401140201) do
   create_table "parts", force: :cascade do |t|
     t.integer  "category_id"
     t.string   "name"
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.string   "condition"
     t.string   "warranty"
     t.integer  "stock"
-    t.decimal  "price_ex",                   precision: 10, scale: 2
     t.string   "partimagefull_file_name"
     t.string   "partimagefull_content_type"
     t.integer  "partimagefull_file_size"

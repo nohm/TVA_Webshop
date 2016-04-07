@@ -43,6 +43,7 @@ Rails.application.routes.draw do
             resources :parts_products
             resources :partdescriptions
             resources :partimages
+            resources :discount_prices
           end
         end
       end

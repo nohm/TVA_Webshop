@@ -56,7 +56,6 @@
               </tbody>
             </table>
           </div>
-          <%= f.hidden_field :price, :value => part_product.part.price_ex %>
           <%= f.hidden_field :cart_id, :value => Cart.where(user_id: current_user.id, purchased: false).first.id %>
           <%= f.hidden_field :part_id, :value => part_product.part.id %>
         </div>

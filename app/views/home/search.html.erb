@@ -33,6 +33,10 @@
                   </div>
                   <table>
                     <tbody>
+                    	<tr>
+                    		<td><small>Category: </small></td>
+                    		<td><small><%= part_result.category.name %></small></td>
+                    	</tr>
                       <tr>
                         <td><small>Brand: </small></td>
                         <td><small><%= part_result.brand %></small></td>
@@ -68,7 +72,10 @@
 	                <% else %>
 	                  <td><%= part_result.stock %></td>
 	                <% end %>
-	                <td><%= number_to_currency(part_result.price_ex, unit: "€") %></td>
+	                <td><%= number_to_currency(DiscountPrice.where(part_id: part_result.id, amount: 1).first.price, unit: "€") %></td>
+	                <td>
+                      <%= render :partial => "cart_modal", :locals => {:part => part_result }%>
+                  </td>
 	              <% end %>
               </tr>
             <% end %>

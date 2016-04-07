@@ -223,6 +223,7 @@ $(document).on('ready page:load', function () {
 
 	// Change cart after purchase.
 	$("#purchase").click(function () {
+		$('#purchase').css({'cursor' : 'wait'});
 		var cart_id = $(this).data('cart-id');
 		var user_id = $(this).data('user-id');
 		var coupon_code = $(this).data('coupon');
@@ -233,8 +234,10 @@ $(document).on('ready page:load', function () {
 			url: url,
 			data: { user_id: user_id, cart_id: cart_id, coupon_code: coupon_code },
 		  success: function(data){
-		    if (data == "purchased") {
+		    if (data == "Purchase succeeded") {
 		      location.reload(true);
+		    } else {
+		    	location.reload(true);
 		    }
 		   }
 		})
@@ -333,7 +336,7 @@ $(document).on('ready page:load', function () {
 	      data: { device_id: device_id },
 	      success: function(data){
 	        $('#p_category_select').prop("disabled", false).html(data);
-	        $('#p_part_select').prop("disabled", true);
+	        $('#p_part_select').prop("disabled", true).html('<option value="">Choose part</option>');
 	      },
 	      error: function(data){
 	      	$('#p_category_select').prop("disabled", true).html('<option value="">Choose category</option>');
@@ -394,6 +397,10 @@ $(document).on('ready page:load', function () {
 	    }
 	  }
 	};
+
+	$('#test').click(function() {
+		$('#test')
+	})
 });
 
 function getURLParameter(name) {
@@ -404,7 +411,7 @@ function getURLParameter(name) {
 function Device() {
 	var path = window.location.pathname.toString().split("products/");
 	var device_path = window.location.pathname.toString().split("devices/");
-	if (typeof path[1] !== 'undefined') {
+	if (typeof path[1] !== 'undefined' && path[1] != 'new') {
 		var product = path[1].split("/");
 		var p_id = product[0];
 		var url = $("#device_select").data('urlself');
@@ -418,7 +425,7 @@ function Device() {
 		    }
 		  })
 		}
-	} else if (typeof device_path[1] !== 'undefined') {
+	} else if (typeof device_path[1] !== 'undefined' && path[1] != 'new') {
 		var device = device_path[1].split("/");
 		var d_id = device[0];
 		var url = $("#device_select").data('urlself');
@@ -438,7 +445,7 @@ function Device() {
 function Brand() {
 	var path = window.location.pathname.toString().split("products/");
 	var device_path = window.location.pathname.toString().split("devices/");
-	if (typeof path[1] !== 'undefined') {
+	if (typeof path[1] !== 'undefined' && path[1] != 'new') {
 		var product = path[1].split("/");
 		var p_id = product[0];
 		var url = $("#device_select").data('url');
@@ -459,7 +466,7 @@ function Brand() {
 		    }
 		  })
 		}
-	} else if (typeof device_path[1] !== 'undefined') {
+	} else if (typeof device_path[1] !== 'undefined' && path[1] != 'new') {
 		var device = device_path[1].split("/");
 		var d_id = device[0];
 		var brand = getURLParameter('brand');
@@ -487,7 +494,7 @@ function Brand() {
 function Model() {
 	var path = window.location.pathname.toString().split("products/");
 	var device_path = window.location.pathname.toString().split("devices/");
-	if (typeof path[1] !== 'undefined') {
+	if (typeof path[1] !== 'undefined' && path[1] != 'new') {
 		var product = path[1].split("/");
 		var p_id = product[0];
 		var url = $("#brand_select").data('url');
@@ -506,7 +513,7 @@ function Model() {
 		    }
 		  })
 		}
-	} else if (typeof device_path[1] !== 'undefined') {
+	} else if (typeof device_path[1] !== 'undefined' && path[1] != 'new') {
 		var device = device_path[1].split("/");
 		var d_id = device[0];
 		var brand = getURLParameter('brand');
@@ -533,7 +540,7 @@ function Model() {
 function Model_extended() {
 	var path = window.location.pathname.toString().split("products/");
 	var device_path = window.location.pathname.toString().split("devices/");
-	if (typeof path[1] !== 'undefined') {
+	if (typeof path[1] !== 'undefined' && path[1] != 'new') {
 		var product = path[1].split("/");
 		var p_id = product[0];
 		var url = $("#model_select").data('url');
@@ -554,7 +561,7 @@ function Model_extended() {
 		    }
 		  })
 		}
-	} else if (typeof device_path[1] !== 'undefined') {
+	} else if (typeof device_path[1] !== 'undefined' && path[1] != 'new') {
 		var device = device_path[1].split("/");
 		var d_id = device[0];
 		var brand = getURLParameter('brand');

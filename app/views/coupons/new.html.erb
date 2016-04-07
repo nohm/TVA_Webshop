@@ -30,7 +30,7 @@
       <%= label        :datetime, :days %>
       <%= number_field :datetime, :days, min: 0, class: "form-control", id: "days", value: 0  %>
       <%= label        :datetime, :hours %>
-      <%= number_field :datetime ,:hours, min: 0, max: 23, class: "form-control bottom", id: "hours", value: 0 %>
+      <%= number_field :datetime ,:hours, min: 0, max: 23, class: "form-control bottom-none", id: "hours", value: 0 %>
       <p><small id="expiration_date_hour">Expires on: Sun, 1-1-2016 0:00:00 UTC</small></p>
 
       <%= f.submit "Add coupon", class: "btn btn-primary" %>

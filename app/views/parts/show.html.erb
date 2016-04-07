@@ -28,35 +28,38 @@
         <% if logged_in? %>
           <br>
           <div class="col-sm-6 noPadding">
-            <div class="Prijsbox">
+            <div>
               <table class="table table-bordered priceTable">
                 <thead>
                   <tr>
+                    <th class="right">Amount</th>
                     <th class="right">Price</th>
                   </tr>
                 </thead>
                 <tbody>
+                  <% @discount_prices.each do |d_price| %>
+                    <tr>
+                      <td class="right"><%= d_price.amount.to_s + "+" %></td>
+                      <td class="right"><%= number_to_currency(d_price.price, unit: "€") %></td>
+                    </tr>
+                  <% end %>
                   <tr>
-                    <td class="right"><%= number_to_currency(@part.price_ex, unit: "€") %></td>
-                  </tr>
-                  <tr>
-                    <td class="right">Excl 21% BTW</td>
+                    <td colspan="2" class="right">Excl 21% BTW</td>
                   </tr>
                 </tbody>
               </table>
               <div style="clear: both;"></div> 
               <div class="col-xs-6 col-sm-offset-6 noPadding">
               <%= bootstrap_form_for(@cart_item, :url => user_cart_cart_items_path(current_user, Cart.where(user_id: current_user.id, purchased: false).first.id)) do |f| %>
-                <%= f.hidden_field :price, :value => @part.price_ex %>
-                <%= f.hidden_field :cart_id, :value => Cart.where(user_id: current_user.id, purchased: false).first.id %>
-                <%= f.hidden_field :part_id, :value => @part.id %>
+                <%= f.hidden_field :cart_id, value: Cart.where(user_id: current_user.id, purchased: false).first.id %>
+                <%= f.hidden_field :part_id, value: @part.id %>
                 <% if @part.stock > 0 %>
-                  <%= f.number_field :amount, :min => 1, :max => @part.stock, :value => 1 %>
+                  <%= f.number_field :amount, min: 1, max: @part.stock, value: 1 %>
                   <%= button_tag( :class => "btn btn-primary big") do %>
                     <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
                   <% end %>
                 <% else %>
-                  <%= f.number_field :amount, :min => 1, :max => @part.stock, class: "cursorDisabled", :disabled => "disabled", :placeholder => "Out of stock" %>
+                  <%= f.number_field :amount, min: 1, max: @part.stock, class: "cursorDisabled", disabled: "disabled", placeholder: "Out of stock" %>
                   <%= button_tag( :class => "btn btn-danger big cursorDisabled", :disabled => "disabled", :title => "Out of stock") do %>
                     <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
                   <% end %>

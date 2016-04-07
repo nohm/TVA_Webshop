@@ -1,6 +1,7 @@
 class HomeController < ApplicationController
 
 	def search
+		@cart_item = CartItem.new
 		@query = params[:search_query]
 		search_condition = '%' + @query + '%'
 

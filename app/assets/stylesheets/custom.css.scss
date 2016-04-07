@@ -210,7 +210,7 @@ aside {
 }
 
 .small-col {
-  width: 17px;
+  width: 17px !important;
 }
 
 .overview-tab {
@@ -321,6 +321,10 @@ aside {
   margin-bottom: 15px;
 }
 
+.mini {
+  width: 2% !important;
+}
+
 .bigImage {
   padding-left: 0px !important;
 }
@@ -339,8 +343,9 @@ aside {
 }
 
 .priceTable {
-  width: 50%;
-  float: right;
+  width: 50% !important;
+  float: right !important;
+  margin-bottom: 15px !important;
 }
 
 .right {
@@ -348,7 +353,7 @@ aside {
 }
 
 .noPadding {
-  padding: 0px;
+  padding: 0px !important;
 }
 
 .paddingR20 {
@@ -423,8 +428,16 @@ aside {
   color: green;
 }
 
+.width5 {
+  width: 5%;
+}
+
 .width10 {
   width: 10%;
+}
+
+.width15{
+  width: 15%;
 }
 
 .width20 {
@@ -435,8 +448,12 @@ aside {
   width: 40%;
 }
 
-.width60 {
-  width: 60%;
+.width50 {
+  width: 50%;
+}
+
+.width40px {
+  width: 40px;
 }
 
 .width66px {
@@ -463,12 +480,20 @@ aside {
   color: #a94442;
 }
 
-.bottom {
+.bottom-none {
   margin-bottom: 0px;
 }
 
-.top {
-  margin-top: 5px;
+.top-15 {
+  margin-top: 15px;
+}
+
+.left-15 {
+  margin-left: 15px;
+}
+
+.bottom-15 {
+  margin-bottom: 15px;
 }
 
 #device_select {
