@@ -236,8 +236,6 @@ $(document).on('ready page:load', function () {
 		  success: function(data){
 		    if (data == "Purchase succeeded") {
 		      location.reload(true);
-		    } else {
-		    	location.reload(true);
 		    }
 		   }
 		})
@@ -397,10 +395,6 @@ $(document).on('ready page:load', function () {
 	    }
 	  }
 	};
-
-	$('#test').click(function() {
-		$('#test')
-	})
 });
 
 function getURLParameter(name) {

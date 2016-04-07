@@ -1,97 +1,133 @@
 <% provide(:title, "Shopping Cart") %>
 <% breadcrumb :carts, @cart %>
-  <div class="panel-body panel-table">
-    <% if @cart_items.length == 0 %>
-      <p class="empty_list">
-        <%= "There are no items in your shopping cart" %>
-      </p>
-    <% else %>
-      <div class="table-responsive borderGray bottom-15">
-        <table class="table">
-          <thead>
-            <tr class="active">
-              <th><%= "Description" %></th>
-              <th><%= "Amount" %></th>
-              <th><%= "Tier" %></th>
-              <th class="small-col"></th>
-              <th class="right"><%= "Price" %></th>
-              <% if !@cart.coupon_code.blank? %>
-                <th class="right"><%= "Discounted price" %></th>
-              <% end %>
-              <th class="right"><%= "Total" %></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @cart_items.each do |item| %>
-              <tr>
-                <td>
-                  <%= link_to device_product_category_part_path(item.part.category.product.device.id, item.part.category.product.id, item.part.category.id, item.part.id) do %>
-                    <%= image_tag item.part.partimagefull.url(:thumb) %>
-                    <b><%= item.part.name %></b>
-                  <% end %>
-                </td>
-                <td>
-                  <%= text_field_tag "amount-#{item.part_id}", {}, min: 1, max: item.part.stock, :value => item.amount, :class => "width40px amount bottom-none", :data => { :cart => item.cart.id, :part => item.part_id, :id => item.id, :url => user_cart_cart_item_path(current_user.id, item.cart.id, item) } %>
-                </td>
-                <td>
-                  <%= DiscountPrice.where(part_id: item.part_id, amount: 0..(item.amount)).last.amount.to_s + "+" %>
-                </td>
-                <td>
-                  <%= link_to user_cart_cart_item_path(params[:user_id], Cart.where(user_id: current_user.id, purchased: false).first.id, item), :method => :delete do %>
-                    <span class="glyphicon glyphicon-remove"></span>
-                  <% end %>
-                </td>
-                <td class="right"><%= number_to_currency(item.price, unit: "€") %></td>
-                <% if !@cart.coupon_code.blank? %>
-                  <% if !item.price_sale.blank? %>
-                    <td class="right"><%= number_to_currency(item.price_sale, unit: "€") %></td>
-                  <% else %>
-                    <td class="right"><%= "N/A" %></td>
-                  <% end %>
+<div class="panel-body panel-table">
+  <div class="table-responsive borderGray bottom-15">
+    <table class="table">
+      <thead>
+        <tr class="active">
+          <th><%= "Description" %></th>
+          <th><%= "Amount" %></th>
+          <th><%= "Tier" %></th>
+          <th class="small-col"></th>
+          <th class="right"><%= "Price" %></th>
+          <% if !@cart.coupon_code.blank? %>
+            <th class="right"><%= "Discounted price" %></th>
+          <% end %>
+          <th class="right"><%= "Total" %></th>
+        </tr>
+      </thead>
+      <% if @cart_items.length == 0 %>
+        <tbody>
+          <tr>
+            <td colspan="6">Your shopping cart is empty</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr name="Subtotal" class="active borderless right">
+            <td colspan="<%= @colspan %>"></td>
+            <td colspan="2">Subtotal excl. VAT</td>
+            <td colspan="1">€0.00</td>
+          </tr>
+          <tr class="right">
+            <td colspan="<%= @colspan %>"></td>
+            <td colspan="2"><h3>Shipping cost</h3></td>
+            <td colspan="1"><h3>€0.00</h3></td>
+          </tr>
+          <tr name="TotalNoBTW" class="right">
+            <td colspan="<%= @colspan %>" class="borderless"></td>
+            <td colspan="2">Total excl. VAT</td>
+            <td colspan="1">€0.00</td>
+          </tr>
+          <tr name="BTW" class="right">
+            <td colspan="<%= @colspan %>" class="borderless"></td>
+            <td colspan="2" class="borderless"><h3>21% VAT</h3></td>
+            <td colspan="1" class="borderless"><h3>€0.00</h3></td>
+          </tr>
+          <tr class="right">
+            <td colspan="<%= @colspan %>" class="borderless"</td>
+            <td colspan="2">Total incl. VAT</td>
+            <td colspan="1">€0.00</td>
+          </tr>
+        </tfoot>
+      <% else %>
+        <tbody>
+          <% @cart_items.each do |item| %>
+            <tr>
+              <td>
+                <%= link_to device_product_category_part_path(item.part.category.product.device.id, item.part.category.product.id, item.part.category.id, item.part.id) do %>
+                  <%= image_tag item.part.partimagefull.url(:thumb) %>
+                  <b><%= item.part.name %></b>
                 <% end %>
-                <td class="right">
-                  <%= number_to_currency((item.price_sale || item.price) * item.amount, unit: "€") %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-          <tfoot>
-            <tr name="Subtotal" class="active borderless right">
-              <td colspan="<%= @colspan %>"></td>
-              <td colspan="2">Subtotal excl. VAT</td>
-              <td colspan="1"><%= number_to_currency(@cart_price_total, unit: "€") %></td>
+              </td>
+              <td>
+                <%= text_field_tag "amount-#{item.part_id}", {}, min: 1, max: item.part.stock, :value => item.amount, :class => "width40px amount bottom-none", :data => { :cart => item.cart.id, :part => item.part_id, :id => item.id, :url => user_cart_cart_item_path(current_user.id, item.cart.id, item) } %>
+              </td>
+              <td>
+                <%= DiscountPrice.where(part_id: item.part_id, amount: 0..(item.amount)).last.amount.to_s + "+" %>
+              </td>
+              <td>
+                <%= link_to user_cart_cart_item_path(params[:user_id], Cart.where(user_id: current_user.id, purchased: false).first.id, item), :method => :delete do %>
+                  <span class="glyphicon glyphicon-remove"></span>
+                <% end %>
+              </td>
+              <td class="right"><%= number_to_currency(item.price, unit: "€") %></td>
+              <% if !@cart.coupon_code.blank? %>
+                <% if !item.price_sale.blank? %>
+                  <td class="right"><%= number_to_currency(item.price_sale, unit: "€") %></td>
+                <% else %>
+                  <td class="right"><%= "N/A" %></td>
+                <% end %>
+              <% end %>
+              <td class="right">
+                <%= number_to_currency((item.price_sale || item.price) * item.amount, unit: "€") %>
+              </td>
             </tr>
-            <tr class="right">
-              <td colspan="<%= @colspan %>"></td>
-              <td colspan="2"><h3>Shipping cost</h3></td>
-              <td colspan="1"><h3><%= number_to_currency(@shipping_cost, unit: "€") %></h3></td>
-            </tr>
-            <tr name="TotalNoBTW" class="right">
-              <td colspan="<%= @colspan %>" class="borderless"></td>
-              <td colspan="2">Total excl. VAT</td>
-              <td colspan="1"><%= number_to_currency(@cart_price_total + @shipping_cost, unit: "€") %></td>
-            </tr>
-            <tr name="BTW" class="right">
-              <td colspan="<%= @colspan %>" class="borderless"></td>
-              <td colspan="2" class="borderless"><h3>21% VAT</h3></td>
-              <td colspan="1" class="borderless"><h3><%= number_to_currency((@cart_price_total + @shipping_cost) * 0.21, unit: "€") %></h3></td>
-            </tr>
-            <tr class="right">
-              <td colspan="<%= @colspan %>" class="borderless"</td>
-              <td colspan="2">Total incl. VAT</td>
-              <td colspan="1"><%= number_to_currency((@cart_price_total + @shipping_cost) * 1.21, unit: "€") %></td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-      
-      <% if flash[:cart] == "Continue shopping" %>
-        <%= link_to("Continue shopping", :back ,{ class: "btn btn-primary" }) %>
+          <% end %>
+        </tbody>
+        <tfoot>
+          <tr name="Subtotal" class="active borderless right">
+            <td colspan="<%= @colspan %>"></td>
+            <td colspan="2">Subtotal excl. VAT</td>
+            <td colspan="1"><%= number_to_currency(@cart_price_total, unit: "€") %></td>
+          </tr>
+          <tr class="right">
+            <td colspan="<%= @colspan %>"></td>
+            <td colspan="2"><h3>Shipping cost</h3></td>
+            <td colspan="1"><h3><%= number_to_currency(@shipping_cost, unit: "€") %></h3></td>
+          </tr>
+          <tr name="TotalNoBTW" class="right">
+            <td colspan="<%= @colspan %>" class="borderless"></td>
+            <td colspan="2">Total excl. VAT</td>
+            <td colspan="1"><%= number_to_currency(@cart_price_total + @shipping_cost, unit: "€") %></td>
+          </tr>
+          <tr name="BTW" class="right">
+            <td colspan="<%= @colspan %>" class="borderless"></td>
+            <td colspan="2" class="borderless"><h3>21% VAT</h3></td>
+            <td colspan="1" class="borderless"><h3><%= number_to_currency((@cart_price_total + @shipping_cost) * 0.21, unit: "€") %></h3></td>
+          </tr>
+          <tr class="right">
+            <td colspan="<%= @colspan %>" class="borderless"</td>
+            <td colspan="2">Total incl. VAT</td>
+            <td colspan="1"><%= number_to_currency((@cart_price_total + @shipping_cost) * 1.21, unit: "€") %></td>
+          </tr>
+        </tfoot>
       <% end %>
-      <button type="button" id="purchase" class="btn btn-primary" data-user-id="<%= current_user.id %>" data-cart-id="<%= @cart.id %>" data-coupon="<%= @cart.coupon_code %>" data-url="<%= purchase_path %>" style="float: right">Purchase</button>
-      <%= link_to("Current coupon: " + @coupon_code, edit_user_cart_path(current_user, @cart) ,{ class: "btn btn-danger", id: "coupon" }) %>
+    </table>
+  </div>
+      
+  <% if flash[:cart] == "Continue shopping" %>
+    <%= link_to :back, class: "btn btn-primary" do %>
+      <span class="glyphicon glyphicon-shopping-cart"></span> Continue shopping
     <% end %>
-  </div>
-  <div class="panel-footer">
-  </div>
+  <% end %>
+  <% if @cart_items.length == 0 %>
+    <button class="btn btn-primary" disabled="disabled" style="float: right">Purchase</button>
+    <button class="btn btn-danger" disabled="disabled" style="float: right; margin-right: 10px">Current coupon: None</button>
+  <% else %>
+    <button type="button" id="purchase" class="btn btn-primary" data-user-id="<%= current_user.id %>" data-cart-id="<%= @cart.id %>" data-coupon="<%= @cart.coupon_code %>" data-url="<%= purchase_path %>" style="float: right">Purchase</button>
+    <%= link_to("Current coupon: " + @coupon_code, edit_user_cart_path(current_user, @cart) ,{ class: "btn btn-danger", id: "coupon" }) %>
+  <% end %>
+</div>
+<div class="panel-footer">
+</div>
 

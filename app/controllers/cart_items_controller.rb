@@ -32,17 +32,17 @@ class CartItemsController < ApplicationController
 		if params[:cart_item][:amount].to_i <= cart_item.part.stock
 			if params[:cart_item][:amount].to_i > 0	
 		    if cart_item.update_attributes(cart_item_params)
-		      render inline: "Geslaagd"
+		      render inline: "Succeeded"
 		    else
-		    	render inline: "Gefaald"    	
+		    	render inline: "Failed"    	
 		    end
 		  else
-		   	flash[:notice] = "Uw aantal kan niet kleiner zijn dan 1"
-		   	render inline: "Aantal is niet geldig"
+		   	flash[:notice] = "The amount can't be smaller than 1"
+		   	render inline: "Amount is not valid"
 		  end
 	  else
 	  	flash[:notice] = "There are only " + cart_item.part.stock.to_s + " parts remaining for this product."
-	  	render inline: "Niet genoeg onderdelen"
+	  	render inline: "Not enough products"
 	  end
 	end
 
