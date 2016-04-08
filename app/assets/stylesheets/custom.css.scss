@@ -344,7 +344,7 @@ aside {
 
 .priceTable {
   width: 50% !important;
-  float: right !important;
+  float: right;
   margin-bottom: 15px !important;
 }
 
@@ -510,4 +510,21 @@ aside {
 
 #model_extended_select {
   width: 140px;
+}
+
+.list {
+  max-width: 100%; 
+  padding-left:15px;
+}
+
+.listItem {
+  width: 50%;
+  margin-left: 0%;
+  float: left;
+  list-style: disc;
+}
+
+.pagination {
+  margin-bottom: 0px !important;
+  margin-top: 10px !important;
 }

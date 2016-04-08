@@ -116,6 +116,11 @@ crumb :partdescriptions do
 	parent :parts
 end
 
+crumb :subdescriptions do
+	link "Descriptions", device_product_category_part_partdescription_part_subdescriptions_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], params[:partdescription_id])
+	parent :partdescriptions
+end
+
 crumb :discount_prices do
 	link "Discount prices", device_product_category_part_discount_prices_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])
 	parent :parts
@@ -126,30 +131,13 @@ crumb :search do
 end
 
 crumb :all_parts do
-	link Category.find_by(id: params[:category_id]).name, parts_path(params[:category_id])
+	link Category.find_by(id: params[:category_id]).blank? ? "Parts" : Category.find_by(id: params[:category_id]).name, parts_path(params[:category_id])
 	parent :search
 end
 
-crumb :all_devices do
-	if !params[:device_id].blank?
-		link Device.find(params[:device_id]).name.titleize, device_path
-	else	
-		link "Devices", device_path
-	end
-end
-
-crumb :all_products do
-	if !params[:product_id].blank?
-		product = Product.find(params[:product_id])
-		if product.model_extended.nil?
-			link "Products", brand_path(params[:device_id] || params[:id], brand: product.brand)
-		else
-			link "Products", model_path(params[:device_id] || params[:id], brand: product.brand, model: product.model)
-		end
-	else
-		link "Products", brand_path(params[:device_id] || params[:id])
-	end
-	parent :all_devices
+crumb :part do
+	link Part.find(params[:part_id]).name
+	parent :search
 end
 
 crumb :parts_products do

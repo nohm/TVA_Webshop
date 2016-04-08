@@ -14,7 +14,7 @@ class PartsController < ApplicationController
     @part = Part.find(params[:id])
     @cart_item = CartItem.new
     @partimages = Partimage.where(part_id: params[:id])
-    @partdescriptions = Partdescription.where(part_id: params[:id]).order('title ASC')
+    @descriptions = Partdescription.where(part_id: params[:id]).order('title ASC')
     @discount_prices = DiscountPrice.where(part_id: params[:id]).order('amount ASC')
   end
 

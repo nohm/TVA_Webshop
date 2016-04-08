@@ -19,7 +19,7 @@ class HomeController < ApplicationController
 
 			@product_results = Kaminari.paginate_array(product_results).page(params[:product_page]).per(10)
 			@part_results = Kaminari.paginate_array(part_results).page(params[:part_page]).per(5)
-			@category_results = Kaminari.paginate_array(category_results).page(params[:category_page]).per(5)
+			@category_results = Kaminari.paginate_array(category_results).page(params[:category_page]).per(10)
 		end
 	end
 
@@ -37,7 +37,21 @@ class HomeController < ApplicationController
 	end
 
 	def all_parts
+		@cart_item = CartItem.new
 		@all_parts = Part.where(category_id: params[:category_id]).page(params[:page]).per(20).order('id ASC')
+	end
+
+	def part
+		@cart_item = CartItem.new
+		@part = Part.find(params[:part_id])
+    @partimages = Partimage.where(part_id: params[:part_id])
+    @descriptions = Partdescription.where(part_id: params[:part_id]).order('title ASC')
+    @discount_prices = DiscountPrice.where(part_id: params[:part_id]).order('amount ASC')
+	end
+
+	def suitable_products
+		@part = Part.find(params[:part_id])
+		@connections = @part.parts_products.page(params[:page]).per(1)
 	end
 
 	def invoices

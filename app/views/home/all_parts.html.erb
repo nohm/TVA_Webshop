@@ -14,6 +14,7 @@
               <% if logged_in? %>
                 <th><%= "Stock" %></th>
                 <th><%= "Price" %></th>
+                <th></th>
               <% end %>
             </tr>
           </thead>
@@ -22,7 +23,7 @@
               <tr>
                 <td class="col-lg-4 col-md-5">
                   <div class="title">
-                    <%= link_to device_product_category_part_path(part.category.product.device.id, part.category.product.id, part.category.id, part) do %>
+                    <%= link_to part_path(:part_id => part.id) do %>
                       <b><%= part.name %></b>
                     <% end %>
                   </div>
@@ -63,7 +64,13 @@
                   <% else %>
                     <td><%= part.stock %></td>
                   <% end %>
-                  <td><%= number_to_currency(DiscountPrice.where(part_id: part_result.id, amount: 1).first.price, unit: "€") %></td>
+                  <td>
+                    <%= number_to_currency(DiscountPrice.where(part_id: part.id, amount: 1).first.price, unit: "€") %><br>
+                    <small style="font-size: 9px;">Excl 21% VAT</small>
+                  </td>
+                  <td>
+                      <%= render :partial => "cart_modal", :locals => {:part => part }%>
+                  </td>
                 <% end %>
               </tr>
             <% end %>

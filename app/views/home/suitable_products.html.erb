@@ -1,0 +1,18 @@
+<div class="col-md-6 col-md-offset-3 borderGray" style="padding: 5px;">
+  <p>This part can be used in these products:</p> 
+  <ul class="list">
+    <% @connections.each do |connection| %>
+      <% if Product.find(connection.product_id).model_extended.blank? %>
+        <li class="listItem">
+          <%= link_to(Product.find(connection.product_id).model, device_product_categories_path(Product.find(connection.product_id).device_id, Product.find(connection.product_id).id)) %>
+        </li>
+      <% else %>
+        <li class="listItem">
+          <%= link_to(Product.find(connection.product_id).model_extended, device_product_categories_path(Product.find(connection.product_id).device_id, Product.find(connection.product_id).id)) %>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+  <br>
+  <%= paginate @connections %>
+</div>

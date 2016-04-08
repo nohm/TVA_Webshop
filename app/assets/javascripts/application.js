@@ -261,6 +261,9 @@ $(document).on('ready page:load', function () {
 	})
 	.trigger('resize');
 
+
+
+	// Change the preview of expiration date when creating a coupon.
 	$("#days").change(function () {
 		Expiration_date();
 	});
@@ -397,6 +400,9 @@ $(document).on('ready page:load', function () {
 	};
 });
 
+
+
+// Get parameters from the URL
 function getURLParameter(name) {
 	return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
 }

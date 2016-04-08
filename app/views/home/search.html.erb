@@ -5,12 +5,12 @@
 <% else %>
 		<h2>Showing search results for "<%= @query %>"</h2>
 	<% if @part_results.total_count == 0 %>
-		<div class="col-sm-12 col-md-8 borderBlack" >
+		<div class="col-sm-12 col-md-7 borderBlack" >
 			<h4><%= @part_results.total_count %> <%= "Part".pluralize(@part_results.total_count) %> found</h4>
 			<p>No results found</p>
 		</div>
 	<% else %>
-		<div class="col-sm-12 col-md-8 borderBlack" >
+		<div class="col-sm-12 col-md-7 borderBlack" >
 		<h4><%= @part_results.total_count %> <%= "Part".pluralize(@part_results.total_count) %> found</h4>
 		<div class="table-responsive">
         <table class="table table-hover">
@@ -20,6 +20,7 @@
             <% if logged_in? %>
 	          	<th>Stock</th>
 	          	<th>Price</th>
+	          	<th></th>
             <% end %>
           </thead>
           <tbody>
@@ -27,7 +28,7 @@
               <tr>
                 <td class="col-sm-5">
                   <div class="title">
-                    <%= link_to device_product_category_part_path(part_result.category.product.device.id, part_result.category.product.id, part_result.category.id, part_result.id) do %>
+                    <%= link_to part_path(:part_id => part_result.id) do %>
 											<%= part_result.name %>
 										<% end %>
                   </div>
@@ -72,7 +73,10 @@
 	                <% else %>
 	                  <td><%= part_result.stock %></td>
 	                <% end %>
-	                <td><%= number_to_currency(DiscountPrice.where(part_id: part_result.id, amount: 1).first.price, unit: "€") %></td>
+	                <td>
+	                	<%= number_to_currency(DiscountPrice.where(part_id: part_result.id, amount: 1).first.price, unit: "€") %><br>
+                    <small style="font-size: 9px;">Excl 21% VAT</small>
+	                </td>
 	                <td>
                       <%= render :partial => "cart_modal", :locals => {:part => part_result }%>
                   </td>
@@ -88,7 +92,7 @@
 		</div>
 	<% end %>
 
-	<div class="col-md-3 col-md-offset-1">
+	<div class="col-md-4 col-md-offset-1">
 		<div class="row">
 			<% if @category_results.total_count == 0 %>
 				<div class="col-sm-12 borderBlack" >

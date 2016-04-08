@@ -1,6 +1,7 @@
 class Product < ActiveRecord::Base
 	has_many :categories, dependent: :destroy
-	has_and_belongs_to_many :parts
+	has_many :parts_products, :dependent => :destroy
+	has_many :parts, :through => :parts_products
 	belongs_to :device
 	before_save :nil_if_blank
 

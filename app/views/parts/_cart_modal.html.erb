@@ -50,7 +50,7 @@
                     <%= image_tag part_product.part.partimagefull.url(:thumb), class: "borderGray" %>
                   </td>
                   <td class="col-md-2 col-md-offset-10">
-                    <%= f.number_field :amount, min: 1, max: part_product.part.stock, :value => 1, :class => "smallNumber", :hide_label => true %>        
+                    <%= f.number_field :amount, min: 1, max: part_product.part.stock, :value => 1, :class => "smallNumber", :hide_label => true, required: 'required' %>        
                   </td>    
                 </tr>
               </tbody>

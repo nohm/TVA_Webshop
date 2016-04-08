@@ -2,7 +2,8 @@ class Part < ActiveRecord::Base
 	attr_accessor :price_ex
 
 	belongs_to :category
-	has_and_belongs_to_many :products
+	has_many :parts_products, :dependent => :destroy
+	has_many :products, :through => :parts_products
 	has_many :cart_items,				dependent: :destroy
 	has_many :partdescriptions, dependent: :destroy
 	has_many :partimages, 			dependent: :destroy

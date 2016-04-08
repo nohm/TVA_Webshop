@@ -13,6 +13,8 @@ Rails.application.routes.draw do
     get 'search' => 'home#search', :as => :search
     get '/search_model_extended' => 'home#search_model_extended', :as => :search_model_extended
     get 'parts' => 'home#all_parts', :as => :parts
+    get 'part' => 'home#part', :as => :part
+    get 'suited' => 'home#suitable_products', :as => :suited
     get '/options_brand' => 'home#options_brand', :as => :options_brand
     get '/options_model' => 'home#options_model', :as => :options_model
     get '/options_model_extended' => 'home#options_model_extended', :as => :options_model_extended
@@ -41,9 +43,11 @@ Rails.application.routes.draw do
         resources :categories do
           resources :parts do
             resources :parts_products
-            resources :partdescriptions
             resources :partimages
             resources :discount_prices
+            resources :partdescriptions do
+              resources :part_subdescriptions
+            end
           end
         end
       end

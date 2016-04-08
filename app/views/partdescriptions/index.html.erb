@@ -12,8 +12,8 @@
             <tr>
               <th class="small-col"><%= "Id" %></th>
               <th><%= "Title" %></th>
-              <th><%= "Value" %></th>
               <% if logged_in? && current_user.manager? %>
+                <th class="small-col"></th>
                 <th class="small-col"></th>
                 <th class="small-col"></th>
               <% end %>
@@ -24,8 +24,12 @@
               <tr>
                 <td><%= partdescription.id %></td>
                 <td><%= partdescription.title %></td>
-                <td><%= partdescription.value %></td>
                 <% if logged_in? && current_user.manager? %>
+                  <td>
+                    <%= link_to device_product_category_part_partdescription_part_subdescriptions_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partdescription.id) do %>
+                      <span class="glyphicon glyphicon-text-color" title="Descriptions"></span>
+                    <% end %>
+                  </td>
                   <td>
                     <%= link_to edit_device_product_category_part_partdescription_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partdescription) do %>
                       <span class="glyphicon glyphicon-pencil" title="Edit"></span>
