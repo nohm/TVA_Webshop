@@ -63,6 +63,15 @@ class PartsController < ApplicationController
     flash[:success] = "Part deleted"
   end
 
+  def send_tell_a_friend
+    user  = current_user
+    part  = params[:tell_a_friend][:part_id].to_i
+    email = params[:tell_a_friend][:email]
+    Mailer.send_tell_a_friend(user, email, part).deliver_now
+    flash[:success] = "Email has been sent"
+    redirect_to :back
+  end
+
   private
 
   def part_params

@@ -7,8 +7,8 @@
       
       <%= f.text_field :part_id, :value => Part.find_by(id: params[:part_id]).name, :class => "cursorDisabled", :readonly => true %>
       
-      <%= f.text_field :product_id, :value => @model, :id => "product_id", :class => "cursorDisabled", :readonly => true %>
-
+      <%= f.text_field :product_id, :value => @model, :id => "product_id", :class => "cursorDisabled", :readonly => true, :required => "required" %>
+      
       <%= hidden_field("device", "id", :value => params[:device_id]) %>
       <%= select("product", "brand", options_for_select(Product.where(device_id: params[:device_id]).pluck(:brand).uniq.collect { |product| [product] }, 0), {prompt: "Choose brand", hide_label: true}, { id: 'connection_brand_select', class: 'form-control small inline', data: { 'url' => connect_model_path } }) %>
       <%= select("product", "model", "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'connection_model_select', class: 'form-control small inline', disabled: "disabled", data: { 'url' => connect_model_extended_path } }) %>

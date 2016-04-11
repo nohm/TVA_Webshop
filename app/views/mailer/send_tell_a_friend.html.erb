@@ -1,0 +1,11 @@
+<h1>Smart Parts</h1>
+
+<p>Hello there,</p>
+
+<p>
+Somebody you know has recommended this part for you, 
+</p>
+
+<%= link_to @part.name, device_product_category_part_url(@part.category.product.device_id, @part.category.product_id, @part.category_id, @part.id) %>
+
+<p>This part was recommended to you by: <%= @user.name + ', ' + @user.email %></p>

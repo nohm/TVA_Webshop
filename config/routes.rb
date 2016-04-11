@@ -1,7 +1,4 @@
 Rails.application.routes.draw do
-
-  get 'sessions/new'
-
     root                'static_pages#home'
     get  'contact'   => 'static_pages#contact'
     get  'signup'    => 'users#new'
@@ -23,6 +20,7 @@ Rails.application.routes.draw do
     get '/connect_brand' => 'parts_products#connect_brand', :as => :connect_brand
     get '/connect_model' => 'parts_products#connect_model', :as => :connect_model
     get '/connect_model_extended' => 'parts_products#connect_model_extended', :as => :connect_model_extended
+    get 'send_tell_a_friend' => 'parts#send_tell_a_friend', :as => :send_tell_a_friend
 
     get '/purchase' => 'carts#purchase', :as => :purchase
 
@@ -37,6 +35,8 @@ Rails.application.routes.draw do
         resources :cart_items
       end
     end
+    resources :password_resets,     only: [:new, :create, :edit, :update]
+    resources :account_activations, only: [:edit]
 
     resources :devices do
       resources :products do

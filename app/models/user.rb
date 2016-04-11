@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  attr_accessor :remember_token
+  attr_accessor :remember_token, :activation_token, :reset_token
   attr_accessor :current_password
 
   has_many :cart
@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   belongs_to :role
 
 	before_save { email.downcase! }
+  before_create :create_activation_digest
 
 	validates :name, 	presence: true, length: { maximum: 74 }, uniqueness: true
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
@@ -25,12 +26,24 @@ class User < ActiveRecord::Base
     # Get a reference to the user since the "authenticate" method always returns false when calling on itself (for some reason).
     user = User.find_by_id(id)
     
-    if user.used_coupon_ids.include?(used_coupon_ids)
+    url = $request.path_info
+    unless url.include?('password_reset')
       # Check if the user CANNOT be authenticated with the entered current password
       if (user.authenticate(current_password) == false)
         errors.add(:current_password, "is incorrect.")
       end
     end
+  end
+
+  def create_activation_digest
+    self.activation_token  = User.new_token
+    self.activation_digest = User.digest(activation_token)
+  end
+
+  def create_reset_digest
+    self.reset_token = User.new_token
+    update_attribute(:reset_digest, User.digest(reset_token))
+    update_attribute(:reset_sent_at, Time.zone.now)
   end
 
 	# Returns the hash digest of the given string.
@@ -51,9 +64,20 @@ class User < ActiveRecord::Base
   end
 
   # Returns true if the given token matches the digest.
-  def authenticated?(remember_token)
-  	return false if remember_digest.nil?
-    BCrypt::Password.new(remember_digest).is_password?(remember_token)
+  def authenticated?(attribute, token)
+    digest = send("#{attribute}_digest")
+    return false if digest.nil?
+    BCrypt::Password.new(digest).is_password?(token)
+  end
+
+  def password_reset_expired?
+    reset_sent_at < 2.hours.ago
+  end
+
+  # Activates an account.
+  def activate
+    update_attribute(:activated,    true)
+    update_attribute(:activated_at, Time.zone.now)
   end
 
   # Forgets a user.

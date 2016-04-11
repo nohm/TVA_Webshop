@@ -5,7 +5,7 @@
         <div class="alert alert-success">
           <a class="close" data-dismiss="alert">&#215;</a>
           <div id="flash_<%= name %>">
-            <span class="glyphicon glyphicon-<%= name == "success" ? "ok" : "remove" %>"></span>
+            <span class="glyphicon glyphicon-ok"></span>
            <%= '  ' + msg %>
           </div>
           <% flash.delete(name) %>
@@ -14,8 +14,16 @@
         <div class="alert alert-danger">
           <a class="close" data-dismiss="alert">&#215;</a>
           <div id="flash_<%= name %>">
-            <span class="glyphicon glyphicon-<%= name == "success" ? "ok" : "remove" %>"></span>
+            <span class="glyphicon glyphicon-remove"></span>
            <%= '  ' + msg %>
+          </div>
+          <% flash.delete(name) %>
+        </div>
+      <% elsif name == "info" %>
+        <div class="alert alert-info">
+          <a class="close" data-dismiss="alert">&#215;</a>
+          <div id="flash_<%= name %>">
+           <%= msg %>
           </div>
           <% flash.delete(name) %>
         </div>

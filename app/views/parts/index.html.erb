@@ -14,6 +14,7 @@
               <th><%= "Description" %></th>
               <th></th>
               <% if logged_in? %>
+                <th></th>
                 <th><%= "Stock" %></th>
                 <th><%= "Price" %></th>
                 <th class="col-sm-2"></th>
@@ -70,6 +71,9 @@
                   </a>
                 </td>
                 <% if logged_in? %>
+                  <td>
+                    <%= render :partial => "tell_a_friend_modal", :locals => {:part_product => part_product}%>
+                  </td>
                   <% if part_product.part.stock == 0 %>
                     <td><p class="red"><%= "Out of stock" %><p></td>
                   <% else %>

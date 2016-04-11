@@ -1,6 +1,6 @@
 class CartsController < ApplicationController
 	def index
-		@cart = Cart.where(user_id: params[:user_id], purchased: false).first
+		@cart = Cart.where(user_id: current_user.id, purchased: false).first
 		@cart_items = CartItem.where(cart_id: @cart.id ).order('id ASC') 
 		@coupon_code = @cart.coupon_code || "None"
 		@colspan = @cart.coupon_code.blank? ? 3 : 4

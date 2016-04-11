@@ -1,0 +1,3 @@
+Mailer#send_account_activation
+
+Hi, find me in app/views/mailer/send_account_activation
