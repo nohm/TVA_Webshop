@@ -15,12 +15,43 @@ class CartsController < ApplicationController
 			item.save
  			if !coupon.blank?
 	 			if coupon.amount > 0 && coupon.expiration_date > Time.now.utc
-					if coupon.category_ids.include?(item.part.category_id) || coupon.part_ids.include?(item.part_id) || coupon.user_ids.include?(@cart.user_id) 
-						if !coupon.price.blank?
-							item.price_sale = item.price - coupon.price
-							item.save
+					if coupon.part_ids.empty? && coupon.category_ids.empty? && !coupon.user_ids.empty?	
+						if coupon.user_ids.include?(@cart.user_id)
+							if !coupon.price.blank?
+								item.price_sale = item.price - coupon.price
+								item.save
+							else
+								item.price_sale = item.price - (item.price / 100 * coupon.percent)
+								item.save
+							end
 						else
-							item.price_sale = item.price - (item.price / 100 * coupon.percent)
+							item.price_sale = nil
+							item.save
+						end
+					elsif coupon.user_ids.empty?
+						if coupon.category_ids.include?(item.part.category_id) || coupon.part_ids.include?(item.part.id)
+							if !coupon.price.blank?
+								item.price_sale = item.price - coupon.price
+								item.save
+							else
+								item.price_sale = item.price - (item.price / 100 * coupon.percent)
+								item.save
+							end	
+						else
+							item.price_sale = nil
+							item.save
+						end
+					elsif (!coupon.user_ids.empty? && !coupon.part_ids.empty? && !coupon.category_ids.empty?) || (!coupon.user_ids.empty? && !coupon.category_ids.empty?) || (!coupon.user_ids.empty? && !coupon.part_ids.empty?)
+						if (coupon.category_ids.include?(item.part.category_id) && coupon.user_ids.include?(@cart.user_id)) || (coupon.part_ids.include?(item.part.id) && coupon.user_ids.include?(@cart.user_id))
+							if !coupon.price.blank?
+								item.price_sale = item.price - coupon.price
+								item.save
+							else
+								item.price_sale = item.price - (item.price / 100 * coupon.percent)
+								item.save
+							end
+						else
+							item.price_sale = nil
 							item.save
 						end
 					end
@@ -61,21 +92,53 @@ class CartsController < ApplicationController
 
 		is_already_saved = false
 		if !coupon.blank? && coupon.amount > 0 && coupon.expiration_date > Time.now.utc && !current_user.used_coupon_ids.include?(coupon.id)
-			cart_items.each do |item|	
-				if coupon.category_ids.include?(item.part.category_id) || coupon.part_ids.include?(item.part_id) || coupon.user_ids.include?(@cart.user_id) 
-					if !coupon.price.blank?
-						item.price_sale = item.price - coupon.price
-						item.save
+			cart_items.each do |item|
+				if coupon.part_ids.empty? && coupon.category_ids.empty? && !coupon.user_ids.empty?	
+					if coupon.user_ids.include?(@cart.user_id)
+						if !coupon.price.blank?
+							item.price_sale = item.price - coupon.price
+							item.save
+						else
+							item.price_sale = item.price - (item.price / 100 * coupon.percent)
+							item.save
+						end
+						@cart.update(cart_params) unless is_already_saved
+						is_already_saved = true	
 					else
-						item.price_sale = item.price - (item.price / 100 * coupon.percent)
+						item.price_sale = nil
 						item.save
 					end
-					@cart.update(cart_params) unless is_already_saved
-					is_already_saved = true
-				else
-					item.price_sale = nil
-					item.save
-				end 
+				elsif coupon.user_ids.empty?
+					if coupon.category_ids.include?(item.part.category_id) || coupon.part_ids.include?(item.part.id)
+						if !coupon.price.blank?
+							item.price_sale = item.price - coupon.price
+							item.save
+						else
+							item.price_sale = item.price - (item.price / 100 * coupon.percent)
+							item.save
+						end
+						@cart.update(cart_params) unless is_already_saved
+						is_already_saved = true	
+					else
+						item.price_sale = nil
+						item.save
+					end
+				elsif (!coupon.user_ids.empty? && !coupon.part_ids.empty? && !coupon.category_ids.empty?) || (!coupon.user_ids.empty? && !coupon.category_ids.empty?) || (!coupon.user_ids.empty? && !coupon.part_ids.empty?)
+					if (coupon.category_ids.include?(item.part.category_id) && coupon.user_ids.include?(@cart.user_id)) || (coupon.part_ids.include?(item.part.id) && coupon.user_ids.include?(@cart.user_id))
+						if !coupon.price.blank?
+							item.price_sale = item.price - coupon.price
+							item.save
+						else
+							item.price_sale = item.price - (item.price / 100 * coupon.percent)
+							item.save
+						end
+						@cart.update(cart_params) unless is_already_saved
+						is_already_saved = true	
+					else
+						item.price_sale = nil
+						item.save
+					end
+				end
 			end
 			if is_already_saved
 				redirect_to user_carts_path(current_user)

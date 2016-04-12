@@ -20,17 +20,19 @@ class User < ActiveRecord::Base
   validates :postal_code, presence: true
   has_secure_password
 	validates :password, length: { minimum: 6 }, :on => :create
-  validate  :current_password_is_correct, on: :update
+  validate  :current_password_is_correct,      :on => :update
 
   def current_password_is_correct
     # Get a reference to the user since the "authenticate" method always returns false when calling on itself (for some reason).
     user = User.find_by_id(id)
     
-    url = $request.path_info
-    unless url.include?('password_reset')
-      # Check if the user CANNOT be authenticated with the entered current password
-      if (user.authenticate(current_password) == false)
-        errors.add(:current_password, "is incorrect.")
+    if ((user.used_coupon_ids <=> used_coupon_ids) == 0)
+      url = $request.path_info
+      unless url.include?('password_reset')
+        # Check if the user CANNOT be authenticated with the entered current password
+        if (user.authenticate(current_password) == false)
+          errors.add(:current_password, "is incorrect.")
+        end
       end
     end
   end
