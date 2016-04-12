@@ -13,7 +13,7 @@
       <%= f.number_field  :stock %>
       <%= f.file_field    :partimagefull, class: "big", label: "Placeholder image" %>
 
-      <%= f.submit "Edit category", class: "btn btn-primary" %>
+      <%= f.submit "Edit part", class: "btn btn-primary" %>
       <%= link_to("Cancel", device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id]), class: "btn btn-primary") %>
     <% end %>
   </div>

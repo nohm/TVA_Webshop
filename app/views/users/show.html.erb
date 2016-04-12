@@ -2,11 +2,19 @@
 <% breadcrumb :user, @user %>
 <div class="row">
   <aside class="col-md-12">
-    <section class="user_info">
-      <h1>
-        <%= gravatar_for @user %>
-        <%= @user.name %>
-      </h1>
+    <section class="user_info top-none">
+      <h1><b>Personal details:</b></h1>
+      <%= @user.name %><br>
+      <%= @user.street %><br>
+      <%= @user.postal_code + ' ' + @user.city %><br>
+      <%= @country %><br>
+      Email: <%= @user.email %>
+      <% unless @user.phone_number.blank? %>
+        <br>Tel: <%= @user.phone_number %>
+      <% end %>
+      <% if params[:id].to_i == current_user.id %>
+        <br><%= link_to "Edit personal details", edit_user_path(params[:id]) %>
+      <% end %>
     </section>
   </aside>
   <h1 class="col-md-12" style="text-align: left; padding-left: 15px">Purchase history</h1>

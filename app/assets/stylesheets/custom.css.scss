@@ -200,15 +200,6 @@ aside {
   }
 }
 
-.gravatar {
-  float: left;
-  margin-right: 10px;
-}
-
-.gravatar_edit {
-  margin-top: 15px;
-}
-
 .small-col {
   width: 17px !important;
 }
@@ -482,6 +473,10 @@ aside {
 
 .bottom-none {
   margin-bottom: 0px;
+}
+
+.top-none {
+  margin-top: 0px !important;
 }
 
 .top-15 {

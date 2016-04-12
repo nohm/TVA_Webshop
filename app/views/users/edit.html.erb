@@ -4,7 +4,7 @@
   <div class="col-md-6 col-md-offset-3">
     <%= bootstrap_form_for(@user) do |f| %>
       <%= f.alert_message "Please fix the errors below" %>
-
+      <h4><b><%= f.label :change_personal_details %></b></h4>
       <%= f.text_field      :name %>
       <%= f.email_field     :email %>
       <%= f.text_field      :street %>
@@ -14,8 +14,10 @@
       <%= f.country_select  :country,  {}, { :class => "form-control" } %>
       <%= f.text_field      :postal_code %>
       <%= f.text_field      :phone_number %>
+      <br><h4><b><%= f.label :change_password %></b></h4>
       <%= f.password_field  :password %>
       <%= f.password_field  :password_confirmation %>
+      <br><h4><b><%= f.label :confirmation_for_changes %></b></h4>
       <%= f.password_field  :current_password %>
 
       <%= f.submit "Edit settings", class: "btn btn-primary" %>

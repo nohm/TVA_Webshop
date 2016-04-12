@@ -26,7 +26,7 @@
               <%= f.select :product_model_extended, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'model_extended_select', disabled: "disabled", data: { 'url' => search_model_extended_path }} %>
             </div>
             <div class="input-group">
-              <%= f.text_field :search_query, hide_label: true, class: "form-control small" %>
+              <%= f.text_field :search_query, hide_label: true, class: "small" %>
               <div class="input-group-btn">
                 <button class="btn btn-default btn-search" type="submit">
                   <span class="glyphicon glyphicon-search"></span>
