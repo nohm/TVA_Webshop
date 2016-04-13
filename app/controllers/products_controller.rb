@@ -28,7 +28,11 @@ class ProductsController < ApplicationController
     brand = params[:product][:brand]
     brand_select = params[:product][:brand_select]
 
-    render 'new', :alert => "Choose one brand" and return if (brand.blank? && brand_select.blank?) or (!brand.blank? && !brand_select.blank?)
+    if (brand.blank? && brand_select.blank?) || (!brand.blank? && !brand_select.blank?)
+      flash[:half_notice] = "Choose one brand"
+      render 'new' and return
+    end
+
     @product.brand = brand_select if brand.blank?
 
     if @product.save
@@ -46,7 +50,17 @@ class ProductsController < ApplicationController
 
   def update
     redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+    params[:product][:device_id] = params[:device_id]
     @product = Product.find(params[:id])
+    brand = params[:product][:brand]
+    brand_select = params[:product][:brand_select]
+
+    if (brand.blank? && brand_select.blank?) || (!brand.blank? && !brand_select.blank?)
+      flash[:half_notice] = "Choose one brand"
+      render 'edit' and return
+    end
+
+    @product.brand = brand_select if brand.blank?
 
     if @product.update(product_params)
       redirect_to device_products_path(params[:device_id])

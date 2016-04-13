@@ -10,7 +10,6 @@
         <table class="table table-striped table-hover">
           <thead>
             <tr>
-              <th class="small-col"><%= "Id" %></th>
               <th><%= "Title" %></th>
               <th><%= "Value" %></th>
               <% if logged_in? && current_user.manager? %>
@@ -22,7 +21,6 @@
           <tbody>
             <% @descriptions.each do |description| %>
               <tr>
-                <td><%= description.id %></td>
                 <td><%= description.title %></td>
                 <td><%= description.value %></td>
                 <% if logged_in? && current_user.manager? %>

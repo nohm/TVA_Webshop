@@ -21,3 +21,14 @@
 
 en:
   hello: "Hello world"
+
+
+# Stops the error from giving an error message of #{attribute} #{message} and instead just does #{message}
+# Custom validates from coupon.rb
+en:
+  activerecord:
+    attributes:
+      coupon:
+        category_ids: "Categories"
+        part_ids: "Parts"
+        user_ids: "Users"

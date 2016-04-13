@@ -27,6 +27,26 @@
           </div>
           <% flash.delete(name) %>
         </div>
+      <% elsif name == "half_notice" %>
+       <div class="alert alert-danger col-md-6 col-md-offset-3">
+          <a class="close" data-dismiss="alert">&#215;</a>
+          <div id="flash_<%= name %>">
+            <%= msg %>
+          </div>
+          <% flash.delete(name) %>
+        </div>
+      <% end %>
+    <% elsif msg.is_a?(Array) %>
+      <% if name = "danger" %>
+        <div class="alert alert-danger">
+          <a class="close" data-dismiss="alert">&#215;</a>
+          <div id="flash_<%= name %>">
+            <% msg.each do |message| %>
+              <%= '  ' + message %><br>
+            <% end %>
+          </div>
+          <% flash.delete(name) %>
+        </div>
       <% end %>
     <% end %>
   <% end %>

@@ -220,6 +220,24 @@ $(document).on('ready page:load', function () {
 	})
 
 
+	$("#delivery_method").change(function() {
+		var method = $(this).val();
+		var cart_id = $(this).data('cart');
+		var url = $(this).data('url');
+
+		$.ajax({
+			method: "PUT",
+			url: url,
+			data: { cart: { delivery_method: method } },
+			success: function(data){
+				if (data == "Changed delivery method") {
+					location.reload(true);
+				}
+			}
+		})
+	})
+
+
 
 	// Change cart after purchase.
 	$("#purchase").click(function () {

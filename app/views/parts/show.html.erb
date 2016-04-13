@@ -75,15 +75,17 @@
           <tbody>
             <% if @descriptions.length > 0 %>
               <% @descriptions.each do |description| %>
-                <tr class="info">
-                  <th class="Title"><%= description.title %></th>
-                  <td></td>
-                </tr>
-                <% description.part_subdescriptions.each do |subdescription| %>
-                  <tr>
-                    <th><%= subdescription.title %>:</th>
-                    <td><%= subdescription.value %></td>
+                <% unless PartSubdescription.where(:partdescription_id => description.id).empty? %>
+                  <tr class="info">
+                    <th class="Title"><%= description.title %></th>
+                    <td></td>
                   </tr>
+                  <% description.part_subdescriptions.each do |subdescription| %>
+                    <tr>
+                      <th><%= subdescription.title %>:</th>
+                      <td><%= subdescription.value %></td>
+                    </tr>
+                  <% end %>
                 <% end %>
               <% end %>
             <% end %>

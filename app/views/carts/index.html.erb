@@ -88,27 +88,27 @@
           <tr name="Subtotal" class="active borderless right">
             <td colspan="<%= @colspan %>"></td>
             <td colspan="2">Subtotal excl. VAT</td>
-            <td colspan="1"><%= number_to_currency(@cart_price_total, unit: "€") %></td>
+            <td><%= number_to_currency(@cart_price_total, unit: "€") %></td>
           </tr>
           <tr class="right">
             <td colspan="<%= @colspan %>"></td>
             <td colspan="2"><h3>Shipping cost</h3></td>
-            <td colspan="1"><h3><%= number_to_currency(@shipping_cost, unit: "€") %></h3></td>
+            <td><h3><%= number_to_currency(@shipping_cost, unit: "€") %></h3></td>
           </tr>
           <tr name="TotalNoBTW" class="right">
             <td colspan="<%= @colspan %>" class="borderless"></td>
             <td colspan="2">Total excl. VAT</td>
-            <td colspan="1"><%= number_to_currency(@cart_price_total + @shipping_cost, unit: "€") %></td>
+            <td><%= number_to_currency(@cart_price_total + @shipping_cost, unit: "€") %></td>
           </tr>
           <tr name="BTW" class="right">
             <td colspan="<%= @colspan %>" class="borderless"></td>
             <td colspan="2" class="borderless"><h3>21% VAT</h3></td>
-            <td colspan="1" class="borderless"><h3><%= number_to_currency((@cart_price_total + @shipping_cost) * 0.21, unit: "€") %></h3></td>
+            <td class="borderless"><h3><%= number_to_currency((@cart_price_total + @shipping_cost) * 0.21, unit: "€") %></h3></td>
           </tr>
           <tr class="right">
-            <td colspan="<%= @colspan %>" class="borderless"</td>
+            <td colspan="<%= @colspan %>" class="borderless"></td>
             <td colspan="2">Total incl. VAT</td>
-            <td colspan="1"><%= number_to_currency((@cart_price_total + @shipping_cost) * 1.21, unit: "€") %></td>
+            <td><%= number_to_currency((@cart_price_total + @shipping_cost) * 1.21, unit: "€") %></td>
           </tr>
         </tfoot>
       <% end %>
@@ -124,7 +124,10 @@
     <button class="btn btn-primary" disabled="disabled" style="float: right">Purchase</button>
     <button class="btn btn-danger" disabled="disabled" style="float: right; margin-right: 10px">Current coupon: None</button>
   <% else %>
-    <button type="button" id="purchase" class="btn btn-primary" data-user-id="<%= current_user.id %>" data-cart-id="<%= @cart.id %>" data-coupon="<%= @cart.coupon_code %>" data-url="<%= purchase_path %>" style="float: right">Purchase</button>
+      <% if current_user.id == 1 %> 
+        <%= select_tag "delivery_method", options_for_select(["Shipping", "Pick up"], @cart.delivery_method), :class => 'form-control small floatRight', :data => { :url => user_cart_path(current_user.id, @cart.id), :cart => @cart.id } %>
+    <% end %>
+    <button type="button" id="purchase" class="btn btn-primary" data-user-id="<%= current_user.id %>" data-cart-id="<%= @cart.id %>" data-coupon="<%= @cart.coupon_code %>" data-url="<%= purchase_path %>" style="float: right; margin-right: 15px">Purchase</button>
     <%= link_to("Current coupon: " + @coupon_code, edit_user_cart_path(current_user, @cart) ,{ class: "btn btn-danger", id: "coupon" }) %>
   <% end %>
 </div>

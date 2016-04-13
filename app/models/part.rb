@@ -1,5 +1,5 @@
 class Part < ActiveRecord::Base
-	attr_accessor :price_ex
+	attr_accessor :price_ex, :condition_select
 
 	belongs_to :category
 	has_many :parts_products, :dependent => :destroy
@@ -15,7 +15,6 @@ class Part < ActiveRecord::Base
 	validates :partimagefull, :dimensions => { :width => 300, :height => 300 }
 
 	validates :name, 				presence: true
-	validates :condition, 	presence: true
 	validates :warranty, 		presence: true
 	validates :weight, 			presence: true
 	validates :stock, 			presence: true

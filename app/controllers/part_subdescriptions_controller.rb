@@ -15,7 +15,7 @@ class PartSubdescriptionsController < ApplicationController
     @description = PartSubdescription.new(part_subdescription_params)
     if @description.save
       redirect_to device_product_category_part_partdescription_part_subdescriptions_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], params[:partdescription_id])
-      flash[:success] = "description added"
+      flash[:success] = "Description added"
     else
       render 'new'
     end
@@ -31,7 +31,7 @@ class PartSubdescriptionsController < ApplicationController
     @description = PartSubdescription.find(params[:id])
     if @description.update(part_subdescription_params)
       redirect_to device_product_category_part_partdescription_part_subdescriptions_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], params[:partdescription_id])
-      flash[:success] = "description updated"
+      flash[:success] = "Description updated"
     else
       render 'edit'
     end
@@ -42,7 +42,7 @@ class PartSubdescriptionsController < ApplicationController
     description = PartSubdescription.find(params[:id])
     description.destroy
     redirect_to device_product_category_part_partdescription_part_subdescriptions_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], params[:partdescription_id])
-    flash[:success] = "description deleted"
+    flash[:success] = "Description deleted"
   end
 
   private

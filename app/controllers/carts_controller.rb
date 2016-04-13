@@ -10,9 +10,17 @@ class CartsController < ApplicationController
 		shipping_array = [0.50, 1, 1.50, 2, 2.50, 3]
 		@shipping_cost = 0
 		@cart_price_total = 0
+		message = []
 		@cart_items.each do |item|
 			item.price = DiscountPrice.where(part_id: item.part_id, amount: 0..(item.amount)).last.price
 			item.save
+
+			part = Part.find(item.part_id)
+			if item.amount > part.stock
+				message << "There #{part.stock == 1 ? 'is' : 'are'} only #{part.stock} #{"product".pluralize(part.stock)} in stock for '#{part.name}'"
+				flash.now[:danger] = message
+			end
+
  			if !coupon.blank?
 	 			if coupon.amount > 0 && coupon.expiration_date > Time.now.utc
 					if coupon.part_ids.empty? && coupon.category_ids.empty? && !coupon.user_ids.empty?	
@@ -65,18 +73,20 @@ class CartsController < ApplicationController
 
 			@cart_price_total += ((item.price_sale || item.price) * item.amount)
 
-			if item.part.weight.between?(weight_array[0], weight_array[1] - 1)
-				@shipping_cost += item.amount * shipping_array[0]
-			elsif item.part.weight.between?(weight_array[1], weight_array[2] - 1)
-				@shipping_cost += item.amount * shipping_array[1]
-			elsif item.part.weight.between?(weight_array[2], weight_array[3] - 1)
-				@shipping_cost += item.amount * shipping_array[2]
-			elsif item.part.weight.between?(weight_array[3], weight_array[4] - 1)
-				@shipping_cost += item.amount * shipping_array[3]
-			elsif item.part.weight.between?(weight_array[4], weight_array[5] - 1)
-				@shipping_cost += item.amount * shipping_array[4]
-			elsif item.part.weight.between?(weight_array[5], weight_array[6] - 1)
-				@shipping_cost += item.amount * shipping_array[5]
+			if @cart.delivery_method == "Shipping"
+				if item.part.weight.between?(weight_array[0], weight_array[1] - 1)
+					@shipping_cost += item.amount * shipping_array[0]
+				elsif item.part.weight.between?(weight_array[1], weight_array[2] - 1)
+					@shipping_cost += item.amount * shipping_array[1]
+				elsif item.part.weight.between?(weight_array[2], weight_array[3] - 1)
+					@shipping_cost += item.amount * shipping_array[2]
+				elsif item.part.weight.between?(weight_array[3], weight_array[4] - 1)
+					@shipping_cost += item.amount * shipping_array[3]
+				elsif item.part.weight.between?(weight_array[4], weight_array[5] - 1)
+					@shipping_cost += item.amount * shipping_array[4]
+				elsif item.part.weight.between?(weight_array[5], weight_array[6] - 1)
+					@shipping_cost += item.amount * shipping_array[5]
+				end
 			end
 		end
 	end
@@ -87,78 +97,84 @@ class CartsController < ApplicationController
 
 	def update
 		@cart = Cart.find(params[:id])
-		cart_items = CartItem.where(cart_id: params[:id])
-		coupon = Coupon.where(code: params[:cart][:coupon_code]).first
 
-		is_already_saved = false
-		if !coupon.blank? && coupon.amount > 0 && coupon.expiration_date > Time.now.utc && !current_user.used_coupon_ids.include?(coupon.id)
-			cart_items.each do |item|
-				if coupon.part_ids.empty? && coupon.category_ids.empty? && !coupon.user_ids.empty?	
-					if coupon.user_ids.include?(@cart.user_id)
-						if !coupon.price.blank?
-							item.price_sale = item.price - coupon.price
-							item.save
+		if params[:cart][:coupon_code].present?
+			coupon = Coupon.where(code: params[:cart][:coupon_code]).first
+			cart_items = CartItem.where(cart_id: params[:id])
+
+			is_already_saved = false
+			if !coupon.blank? && coupon.amount > 0 && coupon.expiration_date > Time.now.utc && !current_user.used_coupon_ids.include?(coupon.id)
+				cart_items.each do |item|
+					if coupon.part_ids.empty? && coupon.category_ids.empty? && !coupon.user_ids.empty?	
+						if coupon.user_ids.include?(@cart.user_id)
+							if !coupon.price.blank?
+								item.price_sale = item.price - coupon.price
+								item.save
+							else
+								item.price_sale = item.price - (item.price / 100 * coupon.percent)
+								item.save
+							end
+							@cart.update(cart_params) unless is_already_saved
+							is_already_saved = true	
 						else
-							item.price_sale = item.price - (item.price / 100 * coupon.percent)
+							item.price_sale = nil
 							item.save
 						end
-						@cart.update(cart_params) unless is_already_saved
-						is_already_saved = true	
-					else
-						item.price_sale = nil
-						item.save
-					end
-				elsif coupon.user_ids.empty?
-					if coupon.category_ids.include?(item.part.category_id) || coupon.part_ids.include?(item.part.id)
-						if !coupon.price.blank?
-							item.price_sale = item.price - coupon.price
-							item.save
+					elsif coupon.user_ids.empty?
+						if coupon.category_ids.include?(item.part.category_id) || coupon.part_ids.include?(item.part.id)
+							if !coupon.price.blank?
+								item.price_sale = item.price - coupon.price
+								item.save
+							else
+								item.price_sale = item.price - (item.price / 100 * coupon.percent)
+								item.save
+							end
+							@cart.update(cart_params) unless is_already_saved
+							is_already_saved = true	
 						else
-							item.price_sale = item.price - (item.price / 100 * coupon.percent)
+							item.price_sale = nil
 							item.save
 						end
-						@cart.update(cart_params) unless is_already_saved
-						is_already_saved = true	
-					else
-						item.price_sale = nil
-						item.save
-					end
-				elsif (!coupon.user_ids.empty? && !coupon.part_ids.empty? && !coupon.category_ids.empty?) || (!coupon.user_ids.empty? && !coupon.category_ids.empty?) || (!coupon.user_ids.empty? && !coupon.part_ids.empty?)
-					if (coupon.category_ids.include?(item.part.category_id) && coupon.user_ids.include?(@cart.user_id)) || (coupon.part_ids.include?(item.part.id) && coupon.user_ids.include?(@cart.user_id))
-						if !coupon.price.blank?
-							item.price_sale = item.price - coupon.price
-							item.save
+					elsif (!coupon.user_ids.empty? && !coupon.part_ids.empty? && !coupon.category_ids.empty?) || (!coupon.user_ids.empty? && !coupon.category_ids.empty?) || (!coupon.user_ids.empty? && !coupon.part_ids.empty?)
+						if (coupon.category_ids.include?(item.part.category_id) && coupon.user_ids.include?(@cart.user_id)) || (coupon.part_ids.include?(item.part.id) && coupon.user_ids.include?(@cart.user_id))
+							if !coupon.price.blank?
+								item.price_sale = item.price - coupon.price
+								item.save
+							else
+								item.price_sale = item.price - (item.price / 100 * coupon.percent)
+								item.save
+							end
+							@cart.update(cart_params) unless is_already_saved
+							is_already_saved = true	
 						else
-							item.price_sale = item.price - (item.price / 100 * coupon.percent)
+							item.price_sale = nil
 							item.save
 						end
-						@cart.update(cart_params) unless is_already_saved
-						is_already_saved = true	
-					else
-						item.price_sale = nil
-						item.save
 					end
 				end
-			end
-			if is_already_saved
-				redirect_to user_carts_path(current_user)
-				flash[:success] = "Coupon applied"
-			else
-				@cart.coupon_code = nil
-				@cart.save
-				redirect_to user_carts_path(current_user)
-				flash[:notice] = "Coupon isn't useable on any items in this cart"
-			end
-    else
-    	cart_items.each do |item|
-    		item.price_sale = nil
-    		item.save
-    	end
-    	@cart.coupon_code = nil
-    	@cart.save
-      redirect_to user_carts_path(current_user)
-      flash[:notice] = "Coupon invalid"
-    end
+				if is_already_saved
+					redirect_to user_carts_path(current_user)
+					flash[:success] = "Coupon applied"
+				else
+					@cart.coupon_code = nil
+					@cart.save
+					redirect_to user_carts_path(current_user)
+					flash[:notice] = "Coupon isn't useable on any items in this cart"
+				end
+	    else
+	    	cart_items.each do |item|
+	    		item.price_sale = nil
+	    		item.save
+	    	end
+	    	@cart.coupon_code = nil
+	    	@cart.save
+	      redirect_to user_carts_path(current_user)
+	      flash[:notice] = "Coupon invalid"
+	    end
+	  else
+	  	@cart.update(cart_params)
+	  	render inline: 'Changed delivery method' # Needed for Javascript response
+	  end
 	end
 
 	def purchase
@@ -175,7 +191,6 @@ class CartsController < ApplicationController
 					part.stock -= item.amount
 					part.save
 				else
-					flash[:notice] = "There #{part.stock == 1 ? 'is' : 'are'} only #{part.stock} #{"product".pluralize(part.stock)} in stock for '#{part.name}'"
 					errors += 1
 				end
 			end
@@ -183,7 +198,7 @@ class CartsController < ApplicationController
 				cart.purchased = true
 				cart.save
 				Invoice.create(user_id: current_user.id, cart_id: cart_id)
-				Cart.create(user_id: current_user.id)
+				Cart.create(user_id: current_user.id, delivery_method: "Shipping")
 				if !coupon.blank?
 					user.used_coupon_ids << coupon.id
 					user.save
@@ -193,15 +208,15 @@ class CartsController < ApplicationController
 					coupon.save
 				end
 			end
-			render inline: 'Purchase succeeded' # Javascript needed
+			render inline: 'Purchase succeeded' # Needed for Javascript response
 		else
-			render inline: 'Purchase failed' # Javascript needed
+			render inline: 'Purchase failed' # Needed for Javascript response
 		end
 	end
 
 	private
 
 	def cart_params
-		params.require(:cart).permit(:user_id, :purchased, :coupon_code)
+		params.require(:cart).permit(:user_id, :purchased, :coupon_code, :delivery_method)
 	end
 end

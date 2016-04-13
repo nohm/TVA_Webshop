@@ -173,7 +173,7 @@ class HomeController < ApplicationController
 				if !@products.include?(nil)
 					render :partial => 'options_model_extended'
 				else
-					render inline: 'No Extended' # Javascript needed
+					render inline: 'No Extended' # Needed for Javascript response
 				end
 			end
 		elsif !params[:d_id].blank?
@@ -185,7 +185,7 @@ class HomeController < ApplicationController
 				if !@products.include?(nil)
 					render :partial => 'options_model_extended'
 				else
-					render inline: 'No Extended' # Javascript needed
+					render inline: 'No Extended' # Needed for Javascript response
 				end
 			end
 		end

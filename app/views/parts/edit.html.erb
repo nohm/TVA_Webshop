@@ -7,7 +7,8 @@
 
       <%= f.text_field    :name %>
       <%= f.text_field    :brand %>
-      <%= f.text_field    :condition %>
+      <%= f.select(:condition_select, options_for_select(Part.order('condition').uniq.pluck(:condition).collect { |condition| [condition] }, @part.condition), { include_blank: "Select an existing condition", :label => 'Condition <small>Either select an existing condition or create a new one</small>'.html_safe}) %>
+      <%= f.text_field    :condition, :value => nil, :hide_label => true %>
       <%= f.text_field    :warranty %>
       <%= f.text_field    :weight, label: "Weight in grams" %>
       <%= f.number_field  :stock %>

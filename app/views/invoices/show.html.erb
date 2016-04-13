@@ -79,27 +79,40 @@
           <% end %>
         <% end %>
         <tr>
-          <td colspan="5" style="height: 38px;"></td>
+          <td colspan="5" style="height: 38px;" class="borderless"></td>
         </tr>
           <% if params[:type] != "slip" %>
             <tr>
-              <td colspan="<%= @colspan %>">Shipping</td>
-              <td><%= number_to_currency(@shipping_cost, unit: '€') %></td>
+              <td colspan="<%= @colspan %>"></td>
+              <td>Subtotal excl. VAT</td>
+              <td><%= number_to_currency(@cart_price_total, unit: "€") %></td>
             </tr>
             <tr>
-              <td colspan="<%= @colspan %>">21% VAT</td>
-              <td><%= number_to_currency((@cart_price_total + @shipping_cost) * 0.21, unit: '€') %></td>
+              <td colspan="<%= @colspan %>" class="borderless"></td>
+              <td class="borderless"><h3>Shipping</h3></td>
+              <td class="borderless"><h3><%= number_to_currency(@shipping_cost, unit: '€') %></h3></td>
             </tr>
-          <% end %>
-          <tr>
-          <% if params[:type] == "slip" %>
-            <td>Total</td>
-            <td><%= @cart_amount_total.to_s + "x" %></td>
+            <tr class="borderless">
+              <td colspan="<%= @colspan %>" class="borderless"></td>
+              <td>Total excl. VAT</td>
+              <td><%= number_to_currency(@cart_price_total + @shipping_cost, unit: "€") %></td>
+            </tr>
+            <tr class="borderless">
+              <td colspan="<%= @colspan %>" class="borderless"></td>
+              <td class="borderless"><h3>21% VAT</h3></td>
+              <td class="borderless"><h3><%= number_to_currency((@cart_price_total + @shipping_cost) * 0.21, unit: '€') %></h3></td>
+            </tr>
+            <tr>
+              <td colspan="<%= @colspan %>" class="borderless"></td>
+              <td><b>Total incl. VAT</b></td>
+              <td><%= number_to_currency(((@cart_price_total + @shipping_cost) * 1.21), unit: '€') %></td>
+            </tr>
           <% else %>
-            <td colspan="<%= @colspan %>"><b>Total</b></td>
-            <td><%= number_to_currency(((@cart_price_total + @shipping_cost) * 1.21), unit: '€') %></td>
+            <tr>
+              <td>Total</td>
+              <td><%= @cart_amount_total.to_s + "x" %></td>
+            <tr>
           <% end %>
-          </tr>
         </tbody>
       </table>
     </div>

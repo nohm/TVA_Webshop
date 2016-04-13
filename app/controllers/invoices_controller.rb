@@ -5,7 +5,7 @@ class InvoicesController < ApplicationController
 		@invoice = Invoice.find(params[:id])
 		@cart = Cart.find(@invoice.cart_id)
 		@cart_items = CartItem.where(cart_id: @invoice.cart_id)
-		@colspan = @cart.coupon_code.blank? ? 3 : 4
+		@colspan = @cart.coupon_code.blank? ? 2 : 3
 		@user = User.find(params[:user_id])
 		@country = ISO3166::Country[@user.country]
 
@@ -23,18 +23,20 @@ class InvoicesController < ApplicationController
 				@cart_price_discount += ((item.price * item.amount) - (item.price_sale * item.amount))
 			end
 
-			if item.part.weight.between?(weight_array[0], weight_array[1] - 1)
-				@shipping_cost += item.amount * shipping_array[0]
-			elsif item.part.weight.between?(weight_array[1], weight_array[2] - 1)
-				@shipping_cost += item.amount * shipping_array[1]
-			elsif item.part.weight.between?(weight_array[2], weight_array[3] - 1)
-				@shipping_cost += item.amount * shipping_array[2]
-			elsif item.part.weight.between?(weight_array[3], weight_array[4] - 1)
-				@shipping_cost += item.amount * shipping_array[3]
-			elsif item.part.weight.between?(weight_array[4], weight_array[5] - 1)
-				@shipping_cost += item.amount * shipping_array[4]
-			elsif item.part.weight.between?(weight_array[5], weight_array[6] - 1)
-				@shipping_cost += item.amount * shipping_array[5]
+			if @cart.delivery_method == "Shipping"
+				if item.part.weight.between?(weight_array[0], weight_array[1] - 1)
+					@shipping_cost += item.amount * shipping_array[0]
+				elsif item.part.weight.between?(weight_array[1], weight_array[2] - 1)
+					@shipping_cost += item.amount * shipping_array[1]
+				elsif item.part.weight.between?(weight_array[2], weight_array[3] - 1)
+					@shipping_cost += item.amount * shipping_array[2]
+				elsif item.part.weight.between?(weight_array[3], weight_array[4] - 1)
+					@shipping_cost += item.amount * shipping_array[3]
+				elsif item.part.weight.between?(weight_array[4], weight_array[5] - 1)
+					@shipping_cost += item.amount * shipping_array[4]
+				elsif item.part.weight.between?(weight_array[5], weight_array[6] - 1)
+					@shipping_cost += item.amount * shipping_array[5]
+				end
 			end
 		end
 	end

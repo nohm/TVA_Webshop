@@ -29,6 +29,16 @@ class PartsController < ApplicationController
     params[:part][:device_id] = params[:device_id]
     params[:part][:price_ex] = params[:part][:price_ex].to_s.gsub(',', '.').to_f
     @part = Part.new(part_params)
+    condition = params[:part][:condition]
+    condition_select = params[:part][:condition_select]
+
+    if (condition.blank? && condition_select.blank?) || (!condition.blank? && !condition_select.blank?)
+      flash[:half_notice] = "Either choose an existing condition or create a new one"
+      render 'new' and return
+    end
+
+    @part.condition = condition_select if condition.blank?
+
     if @part.save
       DiscountPrice.create(part_id: @part.id, amount: 1, price: params[:part][:price_ex])
       PartsProduct.create(part_id: @part.id, product_id: params[:product_id])
@@ -47,6 +57,16 @@ class PartsController < ApplicationController
   def update
     redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
     @part = Part.find(params[:id])
+    condition = params[:part][:condition]
+    condition_select = params[:part][:condition_select]
+
+    if (condition.blank? && condition_select.blank?) || (!condition.blank? && !condition_select.blank?)
+      flash[:half_notice] = "Either choose an existing condition or create a new one"
+      render 'edit' and return
+    end
+
+    params[:part][:condition] = condition_select if condition.blank?
+    
     if @part.update(part_params)
       redirect_to device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])
       flash[:success] = "Part updated"

@@ -6,11 +6,11 @@
       <%= f.alert_message "Please fix the errors below." %>
 
       <%= f.hidden_field :part_id, :value => params[:part_id] %>
-      <%= f.text_field :amount, :autofocus => true %>
-      <%= f.text_field :price %>
+      <%= f.number_field :amount, :autofocus => true, :value => 0 %>
+      <%= f.text_field   :price, :prepend => '€', :placeholder => '0.00' %>
 
       <%= f.submit "Add price", class: "btn btn-primary" %>
-      <%= link_to("Cancel", device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id]), class: "btn btn-primary") %>
+      <%= link_to("Cancel", device_product_category_part_discount_prices_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id]), class: "btn btn-primary") %>
     <% end %>
   </div>
 </div>

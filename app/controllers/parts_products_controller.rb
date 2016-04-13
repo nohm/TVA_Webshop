@@ -69,7 +69,7 @@ class PartsProductsController < ApplicationController
 		if !model.blank? && !Product.where(model: model, device_id: id).pluck(:model_extended).any?
 			@product_id = Product.find_by(device_id: id, brand: brand, model: model)
 			unless @product_id.blank?
- 				render inline: 'No model_extended' # Javascript needed
+ 				render inline: 'No model_extended' # Needed for Javascript response
 			end
 		else
 			@product = Product.where(device_id: id, brand: brand, model: model).pluck(:model_extended)

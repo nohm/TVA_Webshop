@@ -6,11 +6,10 @@
         <%= "De lijst is leeg" %>
       </p>
     <% else %>
-      <div class="table-responsive">
+      <div class="table-responsive col-md-4">
         <table class="table table-striped table-hover">
           <thead>
             <tr>
-              <th class="small-col"><%= "Id" %></th>
               <th><%= "Title" %></th>
               <% if logged_in? && current_user.manager? %>
                 <th class="small-col"></th>
@@ -22,7 +21,6 @@
           <tbody>
             <% @partdescriptions.each do |partdescription| %>
               <tr>
-                <td><%= partdescription.id %></td>
                 <td><%= partdescription.title %></td>
                 <% if logged_in? && current_user.manager? %>
                   <td>

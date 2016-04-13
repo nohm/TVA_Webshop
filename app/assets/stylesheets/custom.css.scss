@@ -467,10 +467,6 @@ aside {
   display: block !important;
 }
 
-.error {
-  color: #a94442;
-}
-
 .bottom-none {
   margin-bottom: 0px;
 }
@@ -522,4 +518,12 @@ aside {
 .pagination {
   margin-bottom: 0px !important;
   margin-top: 10px !important;
+}
+
+.noTextDecoration {
+  text-decoration: none;
+}
+
+.floatRight {
+  float: right;
 }

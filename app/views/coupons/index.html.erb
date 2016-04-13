@@ -30,17 +30,29 @@
 	        		<td><%= coupon.id %></td>
 	        		<td><%= coupon.code %></td>
               <% if !coupon.category_ids.blank? %>
-	        		  <td><%= coupon.category_ids %></td>
+	        		  <td>
+                  <% coupon.category_ids.each do |category_id| %>
+                    <%= "<ins class='noTextDecoration' title='#{Category.find(category_id).name}''>#{category_id}</ins>".html_safe %>
+                  <% end %>
+                </td>
               <% else %>
                 <td></td>
               <% end %>
 	        		<% if !coupon.part_ids.blank? %>
-                <td><%= coupon.part_ids %></td>
+                <td>
+                  <% coupon.part_ids.each do |part_id| %>
+                    <%= "<ins class='noTextDecoration' title='#{Part.find(part_id).name}'>#{part_id}</ins>".html_safe %>
+                  <% end %>
+                </td>
               <% else %>
                 <td></td>
               <% end %>
 	        		<% if !coupon.user_ids.blank? %>
-                <td><%= coupon.user_ids %></td>
+                <td>
+                  <% coupon.user_ids.each do |user_id| %>
+                    <%= "<ins class='noTextDecoration' title='#{User.find(user_id).name}'>#{user_id}</ins>".html_safe %>
+                  <% end %>
+                </td>
               <% else %>
                 <td></td>
               <% end %>
