@@ -15,9 +15,9 @@
               <th></th>
               <% if logged_in? %>
                 <th></th>
-                <th><%= "Stock" %></th>
-                <th><%= "Price" %></th>
-                <th class="col-sm-2"></th>
+                <th class="center">Stock</th>
+                <th class="center">Price</th>
+                <th></th>
                 <% if current_user.manager? %>
                   <th class="small-col"></th>
                   <th class="small-col"></th>
@@ -75,16 +75,24 @@
                     <%= render :partial => "tell_a_friend_modal", :locals => {:part_product => part_product}%>
                   </td>
                   <% if part_product.part.stock == 0 %>
-                    <td><p class="red"><%= "Out of stock" %><p></td>
+                    <td class="center">
+                      <p class="red bottom-none">Out of stock</p>
+                      <%= bootstrap_form_for @reminder, :url => user_reminders_path(current_user), :html => { :class => 'form-horizontal' } do |f| %>
+                        <%= f.hidden_field :part_id, :value => part_product.part.id %>
+                        <%= f.hidden_field :user_id, :value => current_user.id %>
+
+                        <%= f.submit "Remind me", class: 'btn btn-link btn-xs', style: 'padding: 4px; width: auto;', title: 'Sends you an email when the product is back in stock' %>
+                      <% end %>
+                    </td>
                   <% else %>
-                    <td><%= part_product.part.stock %></td>
+                    <td class="center"><%= part_product.part.stock %></td>
                   <% end %>
-                  <td>
+                  <td class="center">
                     <%= number_to_currency(DiscountPrice.where(part_id: part_product.part, amount: 1).first.price, unit: "€") %><br>
                     <small style="font-size: 9px;">Excl 21% VAT</small>
                   </td>
-                  <td>
-                      <%= render :partial => "cart_modal", :locals => {:part_product => part_product}%>
+                  <td class="center">
+                    <%= render :partial => "cart_modal", :locals => {:part_product => part_product}%>
                   </td>
                   <% if current_user.manager? %>
                     <td>

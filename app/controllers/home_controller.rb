@@ -1,6 +1,7 @@
 class HomeController < ApplicationController
 
 	def search
+		@reminder = Reminder.new
 		@cart_item = CartItem.new
 		@query = params[:search_query]
 		search_condition = '%' + @query + '%'
@@ -37,11 +38,13 @@ class HomeController < ApplicationController
 	end
 
 	def all_parts
+		@reminder = Reminder.new
 		@cart_item = CartItem.new
 		@all_parts = Part.where(category_id: params[:category_id]).page(params[:page]).per(20).order('id ASC')
 	end
 
 	def part
+		@reminder = Reminder.new
 		@cart_item = CartItem.new
 		@part = Part.find(params[:part_id])
     @partimages = Partimage.where(part_id: params[:part_id])

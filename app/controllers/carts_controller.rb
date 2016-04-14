@@ -5,7 +5,6 @@ class CartsController < ApplicationController
 		@coupon_code = @cart.coupon_code || "None"
 		@colspan = @cart.coupon_code.blank? ? 3 : 4
 		coupon = Coupon.where(code: @coupon_code).first
-		@coupon = Coupon.where(code: @coupon_code).first
 		weight_array = [0, 1000, 2000, 3000, 4000, 5000, 6000]
 		shipping_array = [0.50, 1, 1.50, 2, 2.50, 3]
 		@shipping_cost = 0

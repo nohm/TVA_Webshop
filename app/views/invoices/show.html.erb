@@ -92,12 +92,12 @@
               <td class="borderless"><h3>Shipping</h3></td>
               <td class="borderless"><h3><%= number_to_currency(@shipping_cost, unit: '€') %></h3></td>
             </tr>
-            <tr class="borderless">
+            <tr>
               <td colspan="<%= @colspan %>" class="borderless"></td>
               <td>Total excl. VAT</td>
               <td><%= number_to_currency(@cart_price_total + @shipping_cost, unit: "€") %></td>
             </tr>
-            <tr class="borderless">
+            <tr>
               <td colspan="<%= @colspan %>" class="borderless"></td>
               <td class="borderless"><h3>21% VAT</h3></td>
               <td class="borderless"><h3><%= number_to_currency((@cart_price_total + @shipping_cost) * 0.21, unit: '€') %></h3></td>

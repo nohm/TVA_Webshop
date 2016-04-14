@@ -2,8 +2,9 @@ class User < ActiveRecord::Base
   attr_accessor :remember_token, :activation_token, :reset_token
   attr_accessor :current_password
 
-  has_many :cart
-  has_many :invoices
+  has_many :cart, dependent: :destroy
+  has_many :invoices, dependent: :destroy
+  has_many :reminders, dependent: :destroy
   belongs_to :role
 
 	before_save { email.downcase! }

@@ -1,16 +1,21 @@
 class CartItemsController < ApplicationController
-	def create 
-		if CartItem.where(part_id: params[:cart_item][:part_id], cart_id: params[:cart_item][:cart_id]).exists?
-			cart_item = CartItem.where(cart_id: params[:cart_item][:cart_id], part_id: params[:cart_item][:part_id])
-			cart_item.update_all(amount: (cart_item.first.amount + params[:cart_item][:amount].to_i))
+	def create
+		cart_id = params[:cart_item][:cart_id]
+		part_id = params[:cart_item][:part_id]
+		amount = params[:cart_item][:amount].to_i
+		cart = Cart.find(cart_id)
+
+		if CartItem.where(part_id: part_id, cart_id: cart_id).exists?
+			cart_item = CartItem.where(cart_id: cart_id, part_id: part_id)
+			cart_item.update_all(amount: (cart_item.first.amount + amount))
+			cart.update_attribute(:previous_url, request.referrer)
 			flash[:cart] = "Continue shopping"
 			redirect_to user_carts_path(current_user)
 		else
-			amount = params[:cart_item][:amount].to_i
-			part_id = params[:cart_item][:part_id]
 			params[:cart_item][:price] = DiscountPrice.where(part_id: part_id, amount: 0..(amount)).last.price
 			cart_item = CartItem.new(cart_item_params)
 			if cart_item.save
+				cart.update_attribute(:previous_url, request.referrer)
 				flash[:cart] = "Continue shopping"
 		    redirect_to user_carts_path(current_user)
 		  end

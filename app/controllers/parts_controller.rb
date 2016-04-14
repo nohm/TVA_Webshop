@@ -8,11 +8,13 @@ class PartsController < ApplicationController
       end
     end
     @cart_item = CartItem.new
+    @reminder = Reminder.new
   end
 
   def show
     @part = Part.find(params[:id])
     @cart_item = CartItem.new
+    @reminder = Reminder.new
     @partimages = Partimage.where(part_id: params[:id])
     @descriptions = Partdescription.where(part_id: params[:id]).order('title ASC')
     @discount_prices = DiscountPrice.where(part_id: params[:id]).order('amount ASC')
@@ -59,6 +61,17 @@ class PartsController < ApplicationController
     @part = Part.find(params[:id])
     condition = params[:part][:condition]
     condition_select = params[:part][:condition_select]
+
+    if @part.stock == 0 && params[:part][:stock].to_i > 0
+      reminders = Reminder.where(part_id: @part.id)
+      reminders.each do |reminder|
+        if reminder.updated_at > 2.weeks.ago
+          user = User.find(reminder.user_id)
+          Mailer.send_part_reminder(user, @part).deliver_now
+        end
+        reminder.destroy
+      end
+    end
 
     if (condition.blank? && condition_select.blank?) || (!condition.blank? && !condition_select.blank?)
       flash[:half_notice] = "Either choose an existing condition or create a new one"

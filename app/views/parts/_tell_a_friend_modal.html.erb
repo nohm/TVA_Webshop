@@ -7,7 +7,7 @@
       <%= bootstrap_form_for :tell_a_friend, :url => send_tell_a_friend_path, :method => 'GET', :html => { :class => 'form-horizontal' } do |f| %>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="modalLabel-TaF-<%= part_product.part.id %>">Add to cart</h4>
+          <h4 class="modal-title" id="modalLabel-TaF-<%= part_product.part.id %>">Tell a Friend</h4>
         </div>
         <div class="modal-body">
           <%= f.label :email %>

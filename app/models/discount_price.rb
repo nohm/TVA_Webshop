@@ -11,13 +11,13 @@ class DiscountPrice < ActiveRecord::Base
 
 	def higher_amount
 		if amount <= 0
-			errors.add(:amount, "has to be higher than 1")
+			errors.add(:amount, "has to be higher than 0")
 		end
 	end
 
 	def price_not_nil
-		if price == 0
-			errors.add(:price, "has to atleast be higher than 0")
+		if price <= 0
+			errors.add(:price, "has to be higher than 0")
 		end
 	end
 end

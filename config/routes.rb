@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     resources :coupons
 
     resources :users do
+      resources :reminders
       resources :invoices
       resources :carts do
         resources :cart_items

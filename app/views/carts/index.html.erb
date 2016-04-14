@@ -85,7 +85,7 @@
           <% end %>
         </tbody>
         <tfoot>
-          <tr name="Subtotal" class="active borderless right">
+          <tr name="Subtotal" class="active right">
             <td colspan="<%= @colspan %>"></td>
             <td colspan="2">Subtotal excl. VAT</td>
             <td><%= number_to_currency(@cart_price_total, unit: "€") %></td>
@@ -115,19 +115,20 @@
     </table>
   </div>
       
-  <% if flash[:cart] == "Continue shopping" %>
-    <%= link_to :back, class: "btn btn-primary" do %>
-      <span class="glyphicon glyphicon-shopping-cart"></span> Continue shopping
-    <% end %>
-  <% end %>
   <% if @cart_items.length == 0 %>
     <button class="btn btn-primary" disabled="disabled" style="float: right">Purchase</button>
     <button class="btn btn-danger" disabled="disabled" style="float: right; margin-right: 10px">Current coupon: None</button>
   <% else %>
-      <% if current_user.id == 1 %> 
+    <% unless @cart.previous_url.nil? %>
+      <%= link_to @cart.previous_url, class: "btn btn-primary" do %>
+        <span class="glyphicon glyphicon-shopping-cart"></span> Continue shopping
+      <% end %>
+    <% end %>  
+    <% if current_user.id == 1 %> 
         <%= select_tag "delivery_method", options_for_select(["Shipping", "Pick up"], @cart.delivery_method), :class => 'form-control small floatRight', :data => { :url => user_cart_path(current_user.id, @cart.id), :cart => @cart.id } %>
     <% end %>
-    <button type="button" id="purchase" class="btn btn-primary" data-user-id="<%= current_user.id %>" data-cart-id="<%= @cart.id %>" data-coupon="<%= @cart.coupon_code %>" data-url="<%= purchase_path %>" style="float: right; margin-right: 15px">Purchase</button>
+    
+    <%= link_to "Purchase", "#", { class: "btn btn-primary", id: "purchase", style: 'float: right; margin-right: 15px;', :data => { :user_id => current_user.id, :cart_id => @cart.id, :url => purchase_path, :coupon => @cart.coupon_code } } %>
     <%= link_to("Current coupon: " + @coupon_code, edit_user_cart_path(current_user, @cart) ,{ class: "btn btn-danger", id: "coupon" }) %>
   <% end %>
 </div>
