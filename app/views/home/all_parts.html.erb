@@ -59,7 +59,7 @@
                   </a>
                 </td>
                 <% if logged_in? %>
-                  <% if part.stock == 0 %>
+                  <% if PartStock.where(part_id: part.id).sum('stock') == 0 %>
                     <td class="center">
                       <p class="red bottom-none"><%= "Out of stock" %></p>
                       <%= bootstrap_form_for @reminder, :url => user_reminders_path(current_user), :html => { :class => 'form-horizontal' } do |f| %>
@@ -70,7 +70,7 @@
                       <% end %>
                     </td>
                   <% else %>
-                    <td class="center"><%= part.stock %></td>
+                    <td class="center"><%= PartStock.where(part_id: part.id).sum('stock') %></td>
                   <% end %>
                   <td class="center">
                     <%= number_to_currency(DiscountPrice.where(part_id: part.id, amount: 1).first.price, unit: "€") %><br>
@@ -92,3 +92,6 @@
       <%= paginate @all_parts %>
     <% end %>
   </div>
+  <% if flash[:item_added] %>
+    <%= render :partial => "parts/cart_show_modal", :locals => {:cart => @cart, :cart_items => @cart_items} %>
+  <% end %>

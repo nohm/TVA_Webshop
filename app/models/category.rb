@@ -6,7 +6,7 @@ class Category < ActiveRecord::Base
 	has_attached_file :cimg, styles: { medium: "200x200#" }, default_url: "/images/missing.png"
 	validates_attachment_content_type :cimg, content_type: /\Aimage\/.*\Z/
 	validates_attachment_file_name :cimg, matches: [/png\Z/, /jpe?g\Z/, /gif\Z/]
-	validates :cimg, :dimensions => { :width => 300, :height => 300 }, :on => :create
+	validates :cimg, dimensions: { width: 300, height: 300 }, on: :create
 	validates :cimg, attachment_presence: true
 
 	validates :device_id, 	presence: true

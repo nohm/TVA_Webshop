@@ -1,53 +1,55 @@
 <% provide(:title, "Descriptions") %>
 <% breadcrumb :partdescriptions, @partdescriptions %>
-  <div class="panel-body panel-table">
-    <% if @partdescriptions.length == 0 %>
-      <p class="empty_list">
-        <%= "De lijst is leeg" %>
-      </p>
-    <% else %>
-      <div class="table-responsive col-md-4">
-        <table class="table table-striped table-hover">
-          <thead>
+<div class="panel-body panel-table">
+  <% if @partdescriptions.length == 0 %>
+    <p class="empty_list">
+      <%= "De lijst is leeg" %>
+    </p>
+  <% else %>
+    <div class="table-responsive col-md-6 col-md-offset-3">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th><%= "Title" %></th>
+            <% if logged_in? && current_user.manager? %>
+              <th class="small-col"></th>
+              <th class="small-col"></th>
+              <th class="small-col"></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @partdescriptions.each do |partdescription| %>
             <tr>
-              <th><%= "Title" %></th>
+              <td><%= partdescription.title %></td>
               <% if logged_in? && current_user.manager? %>
-                <th class="small-col"></th>
-                <th class="small-col"></th>
-                <th class="small-col"></th>
+                <td>
+                  <%= link_to device_product_category_part_partdescription_part_subdescriptions_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partdescription.id) do %>
+                    <span class="glyphicon glyphicon-text-color" title="Descriptions"></span>
+                  <% end %>
+                </td>
+                <td>
+                  <%= link_to edit_device_product_category_part_partdescription_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partdescription) do %>
+                    <span class="glyphicon glyphicon-pencil" title="Edit"></span>
+                  <% end %>
+                </td>
+                <td>
+                  <%= link_to device_product_category_part_partdescription_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partdescription), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                    <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                  <% end %>
+                </td>
               <% end %>
             </tr>
-          </thead>
-          <tbody>
-            <% @partdescriptions.each do |partdescription| %>
-              <tr>
-                <td><%= partdescription.title %></td>
-                <% if logged_in? && current_user.manager? %>
-                  <td>
-                    <%= link_to device_product_category_part_partdescription_part_subdescriptions_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partdescription.id) do %>
-                      <span class="glyphicon glyphicon-text-color" title="Descriptions"></span>
-                    <% end %>
-                  </td>
-                  <td>
-                    <%= link_to edit_device_product_category_part_partdescription_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partdescription) do %>
-                      <span class="glyphicon glyphicon-pencil" title="Edit"></span>
-                    <% end %>
-                  </td>
-                  <td>
-                    <%= link_to device_product_category_part_partdescription_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partdescription), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
-                      <span class="glyphicon glyphicon-remove" title="Delete"></span>
-                    <% end %>
-                  </td>
-                <% end %>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% end %> 
-  </div>
-  <div class="panel-footer">
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %> 
+</div>
+<div class="panel-footer">
+  <div class="col-md-6 col-md-offset-3">
     <% if logged_in? && current_user.manager? %>
       <%= link_to("Add description", new_device_product_category_part_partdescription_path, :class => 'btn btn-mini btn-primary') %>
     <% end %>
   </div>
+</div>

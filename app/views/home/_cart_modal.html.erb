@@ -1,4 +1,4 @@
-<% if part.stock > 0 %>
+<% if PartStock.where(part_id: part.id).sum('stock') > 0 %>
   <%= button_tag( :href => "#", :type => "button",:class => "btn btn-primary", :title => "Add to cart", :data => { :toggle => "modal", :target => "#add-to-cart-" + part.id.to_s}) do %>
     <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
   <% end %>
@@ -50,7 +50,7 @@
                     <%= image_tag part.partimagefull.url(:thumb), class: "borderGray" %>
                   </td>
                   <td class="col-md-2 col-md-offset-10">
-                    <%= f.number_field :amount, min: 1, max: part.stock, :value => 1, :class => "smallNumber", :hide_label => true, required: 'required' %>        
+                    <%= f.number_field :amount, min: 1, max: PartStock.where(part_id: part.id).sum('stock'), :value => 1, :class => "smallNumber", :hide_label => true, required: 'required' %>        
                   </td>    
                 </tr>
               </tbody>

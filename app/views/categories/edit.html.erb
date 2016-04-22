@@ -2,9 +2,9 @@
 <% breadcrumb :categories, @categories %>
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
-    <%= bootstrap_form_for(@category, :url => device_product_category_path(params[:device_id], params[:product_id], params[:id])) do |f| %>
+    <%= bootstrap_form_for(@category, url: device_product_category_path(params[:device_id], params[:product_id], params[:id])) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
-      <%= image_tag @category.cimg.url(:medium), :class => "borderGray" %>
+      <%= image_tag @category.cimg.url(:medium), class: "borderGray" %>
       <%= f.text_field :name %>
       <%= f.file_field :cimg, class: "big", label: "Placeholder image" %>
 

@@ -1,6 +1,10 @@
 class HomeController < ApplicationController
 
 	def search
+  	if flash[:item_added]
+      @cart = Cart.where(user_id: current_user.id, purchased: false).first
+      @cart_items = CartItem.where(cart_id: @cart.id).order('id')
+    end
 		@reminder = Reminder.new
 		@cart_item = CartItem.new
 		@query = params[:search_query]
@@ -14,9 +18,9 @@ class HomeController < ApplicationController
 		@category_results = []
 		
 		if !@query.match(/([a-zA-Z0-9])+/).blank?
-			product_results += Product.where('brand ILIKE ? OR type_number ILIKE ? OR partnumber ILIKE ? OR model ILIKE ? OR model_extended ILIKE ?', search_condition, search_condition, search_condition, search_condition, search_condition)
-			part_results += Part.where('brand ILIKE ? OR name ILIKE ?', search_condition, search_condition)
-			category_results += Category.where('name ILIKE ?', search_condition)
+			product_results += Product.where('brand ILIKE ? OR type_number ILIKE ? OR partnumber ILIKE ? OR model ILIKE ? OR model_extended ILIKE ?', search_condition, search_condition, search_condition, search_condition, search_condition).order('id')
+			part_results += Part.where('brand ILIKE ? OR name ILIKE ?', search_condition, search_condition).order('id')
+			category_results += Category.where('name ILIKE ?', search_condition).order('id')
 
 			@product_results = Kaminari.paginate_array(product_results).page(params[:product_page]).per(10)
 			@part_results = Kaminari.paginate_array(part_results).page(params[:part_page]).per(5)
@@ -38,15 +42,24 @@ class HomeController < ApplicationController
 	end
 
 	def all_parts
+  	if flash[:item_added]
+      @cart = Cart.where(user_id: current_user.id, purchased: false).first
+      @cart_items = CartItem.where(:cart_id => @cart.id).order('id')
+    end
 		@reminder = Reminder.new
 		@cart_item = CartItem.new
 		@all_parts = Part.where(category_id: params[:category_id]).page(params[:page]).per(20).order('id ASC')
 	end
 
 	def part
+		if flash[:item_added]
+      @cart = Cart.where(user_id: current_user.id, purchased: false).first
+      @cart_items = CartItem.where(cart_id: @cart.id).order('id')
+    end
 		@reminder = Reminder.new
 		@cart_item = CartItem.new
 		@part = Part.find(params[:part_id])
+		@stock = PartStock.where(part_id: @part.id).sum('stock')
     @partimages = Partimage.where(part_id: params[:part_id])
     @descriptions = Partdescription.where(part_id: params[:part_id]).order('title ASC')
     @discount_prices = DiscountPrice.where(part_id: params[:part_id]).order('amount ASC')

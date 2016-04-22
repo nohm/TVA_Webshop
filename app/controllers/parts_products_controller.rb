@@ -33,7 +33,7 @@ class PartsProductsController < ApplicationController
 
 	def destroy
 		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
-		part_product = PartsProduct.find_by(id: params[:id])
+		part_product = PartsProduct.find(params[:id])
 		part_product.destroy
 		redirect_to device_product_category_part_parts_products_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], part_product)
     flash[:success] = "Connection deleted"

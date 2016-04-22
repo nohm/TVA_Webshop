@@ -5,14 +5,12 @@
     <table class="table">
       <thead>
         <tr class="active">
-          <th><%= "Description" %></th>
-          <th><%= "Amount" %></th>
-          <th><%= "Tier" %></th>
-          <th class="small-col"></th>
-          <th class="right"><%= "Price" %></th>
-          <% if !@cart.coupon_code.blank? %>
-            <th class="right"><%= "Discounted price" %></th>
-          <% end %>
+          <th colspan="2"><%= "Description" %></th>
+          <th class="center"><%= "Amount" %></th>
+          <th></th>
+          <th class="center"><%= "Price" %></th>
+          <th class="center"><%= "Tier" %></th>
+          <th class="center"><%= "Discount price" %></th>
           <th class="right"><%= "Total" %></th>
         </tr>
       </thead>
@@ -24,27 +22,27 @@
         </tbody>
         <tfoot>
           <tr name="Subtotal" class="active borderless right">
-            <td colspan="<%= @colspan %>"></td>
+            <td colspan="5"></td>
             <td colspan="2">Subtotal excl. VAT</td>
             <td colspan="1">€0.00</td>
           </tr>
           <tr class="right">
-            <td colspan="<%= @colspan %>"></td>
+            <td colspan="5"></td>
             <td colspan="2"><h3>Shipping cost</h3></td>
             <td colspan="1"><h3>€0.00</h3></td>
           </tr>
           <tr name="TotalNoBTW" class="right">
-            <td colspan="<%= @colspan %>" class="borderless"></td>
+            <td colspan="5" class="borderless"></td>
             <td colspan="2">Total excl. VAT</td>
             <td colspan="1">€0.00</td>
           </tr>
           <tr name="BTW" class="right">
-            <td colspan="<%= @colspan %>" class="borderless"></td>
+            <td colspan="5" class="borderless"></td>
             <td colspan="2" class="borderless"><h3>21% VAT</h3></td>
             <td colspan="1" class="borderless"><h3>€0.00</h3></td>
           </tr>
           <tr class="right">
-            <td colspan="<%= @colspan %>" class="borderless"</td>
+            <td colspan="5" class="borderless"</td>
             <td colspan="2">Total incl. VAT</td>
             <td colspan="1">€0.00</td>
           </tr>
@@ -53,62 +51,65 @@
         <tbody>
           <% @cart_items.each do |item| %>
             <tr>
+              <td class="small-col"><%= image_tag item.part.partimagefull.url(:thumb) %></td>
               <td>
-                <%= link_to device_product_category_part_path(item.part.category.product.device.id, item.part.category.product.id, item.part.category.id, item.part.id) do %>
-                  <%= image_tag item.part.partimagefull.url(:thumb) %>
-                  <b><%= item.part.name %></b>
+                <%= link_to part_path(part_id: item.part_id) do %>
+                  <b><%= item.name %></b>
                 <% end %>
               </td>
-              <td>
-                <%= text_field_tag "amount-#{item.part_id}", {}, min: 1, max: item.part.stock, :value => item.amount, :class => "width40px amount bottom-none", :data => { :cart => item.cart.id, :part => item.part_id, :id => item.id, :url => user_cart_cart_item_path(current_user.id, item.cart.id, item) } %>
+              <td class="center">
+                <%= text_field_tag "amount-#{item.part_id}", {}, value: item.amount, class: "width40px amount bottom-none", data: { cart: item.cart.id, part: item.part_id, id: item.id, url: user_cart_cart_item_path(current_user.id, item.cart.id, item) } %>
               </td>
-              <td>
-                <%= DiscountPrice.where(part_id: item.part_id, amount: 0..(item.amount)).last.amount.to_s + "+" %>
-              </td>
-              <td>
-                <%= link_to user_cart_cart_item_path(params[:user_id], Cart.where(user_id: current_user.id, purchased: false).first.id, item), :method => :delete do %>
+              <td class="center">
+                <%= link_to user_cart_cart_item_path(params[:user_id], Cart.where(user_id: current_user.id, purchased: false).first.id, item), method: :delete do %>
                   <span class="glyphicon glyphicon-remove"></span>
                 <% end %>
               </td>
-              <td class="right"><%= number_to_currency(item.price, unit: "€") %></td>
-              <% if !@cart.coupon_code.blank? %>
-                <% if !item.price_sale.blank? %>
-                  <td class="right"><%= number_to_currency(item.price_sale, unit: "€") %></td>
-                <% else %>
-                  <td class="right"><%= "N/A" %></td>
-                <% end %>
-              <% end %>
+              <td class="center"><%= number_to_currency(item.price, unit: "€") %></td>
+              <td class="center">
+                <%= item.discount_tier.to_s + "+" %>
+              </td>
+              <td class="center">
+                <%= number_to_currency(item.price_tier_discount, unit: "€") %>
+              </td>
               <td class="right">
-                <%= number_to_currency((item.price_sale || item.price) * item.amount, unit: "€") %>
+                <%= number_to_currency(item.price_tier_discount * item.amount, unit: "€") %>
               </td>
             </tr>
           <% end %>
         </tbody>
         <tfoot>
           <tr name="Subtotal" class="active right">
-            <td colspan="<%= @colspan %>"></td>
+            <td colspan="5"></td>
             <td colspan="2">Subtotal excl. VAT</td>
             <td><%= number_to_currency(@cart_price_total, unit: "€") %></td>
           </tr>
           <tr class="right">
-            <td colspan="<%= @colspan %>"></td>
+            <td colspan="5"></td>
             <td colspan="2"><h3>Shipping cost</h3></td>
-            <td><h3><%= number_to_currency(@shipping_cost, unit: "€") %></h3></td>
+            <td><h3>+ <%= number_to_currency(@cart.shipping_cost, unit: "€") %></h3></td>
           </tr>
+          <% unless @cart.coupon_code.blank? %>
+            <tr class="right">
+              <td colspan="5" class="borderless"></td>
+              <td colspan="2" class="borderless"><h3>Coupon Code: <%=  @cart.coupon_code %></h3></td>
+              <td class="borderless"><h3>- <%= number_to_currency(@cart_price_discount, unit: '€') %><h3></td>
+            </tr>
+          <% end %>
           <tr name="TotalNoBTW" class="right">
-            <td colspan="<%= @colspan %>" class="borderless"></td>
+            <td colspan="5" class="borderless"></td>
             <td colspan="2">Total excl. VAT</td>
-            <td><%= number_to_currency(@cart_price_total + @shipping_cost, unit: "€") %></td>
+            <td><%= number_to_currency(@cart_price_total_discount + @cart.shipping_cost, unit: "€") %></td>
           </tr>
           <tr name="BTW" class="right">
-            <td colspan="<%= @colspan %>" class="borderless"></td>
+            <td colspan="5" class="borderless"></td>
             <td colspan="2" class="borderless"><h3>21% VAT</h3></td>
-            <td class="borderless"><h3><%= number_to_currency((@cart_price_total + @shipping_cost) * 0.21, unit: "€") %></h3></td>
+            <td class="borderless"><h3>+ <%= number_to_currency((@cart_price_total_discount + @cart.shipping_cost) * 0.21, unit: "€") %></h3></td>
           </tr>
           <tr class="right">
-            <td colspan="<%= @colspan %>" class="borderless"></td>
+            <td colspan="5" class="borderless"></td>
             <td colspan="2">Total incl. VAT</td>
-            <td><%= number_to_currency((@cart_price_total + @shipping_cost) * 1.21, unit: "€") %></td>
+            <td><%= number_to_currency((@cart_price_total_discount + @cart.shipping_cost) * 1.21, unit: "€") %></td>
           </tr>
         </tfoot>
       <% end %>
@@ -124,12 +125,21 @@
         <span class="glyphicon glyphicon-shopping-cart"></span> Continue shopping
       <% end %>
     <% end %>  
-    <% if current_user.id == 1 %> 
-        <%= select_tag "delivery_method", options_for_select(["Shipping", "Pick up"], @cart.delivery_method), :class => 'form-control small floatRight', :data => { :url => user_cart_path(current_user.id, @cart.id), :cart => @cart.id } %>
-    <% end %>
     
-    <%= link_to "Purchase", "#", { class: "btn btn-primary", id: "purchase", style: 'float: right; margin-right: 15px;', :data => { :user_id => current_user.id, :cart_id => @cart.id, :url => purchase_path, :coupon => @cart.coupon_code } } %>
+    <%= select_tag "delivery_method", options_for_select(["Shipping", "Pick up"], @cart.delivery_method), class: 'form-control small floatRight', data: { url: user_cart_path(current_user.id, @cart.id), cart: @cart.id } %>
+
+    <% if @cart.delivery_method == "Pick up" && @cart.location_id.blank? %>
+      <%= link_to "Purchase", "#", { class: "btn btn-primary floatRight", title: "Please select a pick up location", style: 'margin-right: 15px;', disabled: "disabled" } %>
+    <% else %>
+      <%= link_to "Purchase", "#", { class: "btn btn-primary floatRight", id: "purchase", style: 'margin-right: 15px;', data: { user_id: current_user.id, cart_id: @cart.id, url: purchase_path, coupon: @cart.coupon_code } } %>
+    <% end %>
+
     <%= link_to("Current coupon: " + @coupon_code, edit_user_cart_path(current_user, @cart) ,{ class: "btn btn-danger", id: "coupon" }) %>
+    
+    <br><br>
+    <% if @cart.delivery_method == "Pick up" %>
+        <%= select("part", "location_id", Location.all.order(city: :asc, street: :asc).collect {|location| [ "#{location.city}, #{location.street}", location.id ] }, { selected: @cart.location_id, prompt: 'Choose location' }, { class: "form-control small floatRight", id: "cart_location_select", data: { url: user_cart_path(current_user.id, @cart.id), cart: @cart.id } }) %>
+      <% end %>
   <% end %>
 </div>
 <div class="panel-footer">

@@ -13,11 +13,11 @@
         <li>
           <%= bootstrap_form_tag url: search_path, method: 'GET', html: {class: "form-inline"} do |f| %>
             <div class="input-group">
-            <% if !params[:p_id].blank? %>
-              <%= f.select :product_device_id, options_for_select(Device.all.collect { |device| [device.name.titleize, device.id] }, Product.find(params[:p_id]).device_id), { prompt: "Choose device", hide_label: true}, { id: 'device_select', data: { 'url' => options_brand_path, 'urlself' => options_device_path } } %>
-            <% else %>
-              <%= f.select :product_device_id, options_for_select(Device.all.collect { |device| [device.name.titleize, device.id] } ), { prompt: "Choose device", hide_label: true}, { id: 'device_select', data: { 'url' => options_brand_path, 'urlself' => options_device_path } } %>
-            <% end %>
+              <% if !params[:p_id].blank? %>
+                <%= f.select :product_device_id, options_for_select(Device.all.collect { |device| [device.name.titleize, device.id] }, Product.find(params[:p_id]).device_id), { prompt: "Choose device", hide_label: true}, { id: 'device_select', data: { 'url' => options_brand_path, 'urlself' => options_device_path } } %>
+              <% else %>
+                <%= f.select :product_device_id, options_for_select(Device.all.collect { |device| [device.name.titleize, device.id] } ), { prompt: "Choose device", hide_label: true}, { id: 'device_select', data: { 'url' => options_brand_path, 'urlself' => options_device_path } } %>
+              <% end %>
 
               <%= f.select :product_brand, "Nothing", {prompt: "Choose brand", hide_label: true}, { id: 'brand_select', disabled: "disabled", data: { 'url' => options_model_path } } %>
         
@@ -37,11 +37,20 @@
         </li>
         <li><%= link_to "Home", root_path %></li>
         <% if logged_in? %>
-            <% if current_user.manager? %>
-            <li><%= link_to "Devices", devices_path %></li>
-            <li><%= link_to "Coupons", coupons_path %></li>
-          <% end %>
           <li><%= link_to "Cart", user_carts_path(current_user) %></li>
+          <% if current_user.manager? %>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                Admin <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                  <li><%= link_to "Devices",   devices_path %></li>
+                  <li><%= link_to "Coupons",   coupons_path %></li>
+                  <li><%= link_to "Locations", locations_path %></li>
+                  <li><%= link_to "Users",     users_path %></li>
+              </ul>
+            </li>
+          <% end %>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               Account <b class="caret"></b>
@@ -49,9 +58,6 @@
             <ul class="dropdown-menu">
               <li><%= link_to "Profile",  current_user %></li>
               <li><%= link_to "Settings", edit_user_path(current_user) %></li>
-              <% if current_user.manager? %>
-                <li><%= link_to "Users",    users_path %></li>
-              <% end %>
               <li class="divider"></li>
               <li>
                 <%= link_to "Log out", logout_path, method: "delete" %>

@@ -23,7 +23,7 @@ $(document).on('ready page:load', function () {
 	Model();
 	Model_extended();	
 
-
+	$('#myModal').modal('show');
 
 	// Mouseover fuction for the thumbnails in part#show.
 	$(".SmallImg").mouseover(function() {
@@ -219,7 +219,7 @@ $(document).on('ready page:load', function () {
 		}
 	})
 
-
+	// AJAX PUT request for updating delivery_method in cart.
 	$("#delivery_method").change(function() {
 		var method = $(this).val();
 		var cart_id = $(this).data('cart');
@@ -231,6 +231,26 @@ $(document).on('ready page:load', function () {
 			data: { cart: { delivery_method: method } },
 			success: function(data){
 				if (data == "Changed delivery method") {
+					location.reload(true);
+				}
+			}
+		})
+	})
+
+
+
+	// AJAX PUT request for updating location_id in cart.
+	$("#cart_location_select").change(function() {
+		var location_id = $(this).val();
+		var cart_id = $(this).data('cart');
+		var url = $(this).data('url');
+
+		$.ajax({
+			method: "PUT",
+			url: url,
+			data: { cart: { location_id: location_id } },
+			success: function(data){
+				if (data == "Changed location") {
 					location.reload(true);
 				}
 			}

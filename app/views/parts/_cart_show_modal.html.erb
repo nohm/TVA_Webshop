@@ -1,0 +1,42 @@
+<div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <b>Item added</b>
+      </div>
+      <div class="modal-body">
+      <p>This is your current cart:</p>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <b><th colspan="2">Description</th></b>
+                <b><th class="center">Amount</th></b>
+                <b><th class="center">Total</th></b>
+              </tr>
+            </thead>
+            <tbody>
+              <% cart_items.each do |item| %>
+              <tr>
+                <td><%= image_tag item.part.partimagefull.url(:thumb) %></td>
+                <td>
+                  <%= link_to part_path(:part_id => item.part_id) do %>
+                    <b><%= item.part.name %></b>
+                  <% end %>
+                </td>
+                <td class="center"><%= item.amount %></td>
+                <td class="center"><%= number_to_currency(item.price_tier_discount * item.amount, unit: "€") %></td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%= "Close" %></button>
+        <%= link_to "Go to cart", user_carts_path(current_user.id), class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+</div>

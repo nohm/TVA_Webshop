@@ -25,6 +25,7 @@
                   <th class="small-col"></th>
                   <th class="small-col"></th>
                   <th class="small-col"></th>
+                  <th class="small-col"></th>
                 <% end %>
               <% end %>
             </tr>
@@ -74,7 +75,7 @@
                   <td>
                     <%= render :partial => "tell_a_friend_modal", :locals => {:part_product => part_product}%>
                   </td>
-                  <% if part_product.part.stock == 0 %>
+                  <% if PartStock.where(part_id: part_product.part_id).sum('stock') == 0 %>
                     <td class="center">
                       <p class="red bottom-none">Out of stock</p>
                       <%= bootstrap_form_for @reminder, :url => user_reminders_path(current_user), :html => { :class => 'form-horizontal' } do |f| %>
@@ -85,7 +86,8 @@
                       <% end %>
                     </td>
                   <% else %>
-                    <td class="center"><%= part_product.part.stock %></td>
+                  
+                    <td class="center"><%= PartStock.where(part_id: part_product.part_id).sum('stock') %></td>
                   <% end %>
                   <td class="center">
                     <%= number_to_currency(DiscountPrice.where(part_id: part_product.part, amount: 1).first.price, unit: "€") %><br>
@@ -95,6 +97,11 @@
                     <%= render :partial => "cart_modal", :locals => {:part_product => part_product}%>
                   </td>
                   <% if current_user.manager? %>
+                    <td>
+                      <%= link_to device_product_category_part_part_stocks_path(params[:device_id], params[:product_id], params[:category_id], part_product.part) do %>
+                        <span class="glyphicon glyphicon-gift" title="Stock"></span>
+                      <% end %>
+                    </td>
                     <td>
                       <%= link_to device_product_category_part_discount_prices_path(params[:device_id], params[:product_id], params[:category_id], part_product.part) do %>
                         <span class="glyphicon glyphicon-euro" title="Prices"></span>
@@ -140,3 +147,7 @@
       <%= link_to("Add part", new_device_product_category_part_path, :class => 'btn btn-mini btn-primary') %>
     <% end %>
   </div>
+  <% if flash[:item_added] %>
+    <%= render :partial => "cart_show_modal", :locals => {:cart => @cart, :cart_items => @cart_items} %>
+  <% end %>
+  

@@ -101,6 +101,11 @@ crumb :parts do
 	parent :categories
 end
 
+crumb :part_stocks do
+	link "Part stocks",device_product_category_part_part_stocks_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])
+	parent :parts
+end
+
 crumb :partshow do
 	link Part.find_by(id: params[:id]).name, device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], params[:id])
 	parent :parts
@@ -127,7 +132,7 @@ crumb :discount_prices do
 end
 
 crumb :search do
-	link "Search", :back
+	link "Search", search_path(:part_page => params[:part_page], :category_page => params[:category_page], :search_query => params[:search_query])
 end
 
 crumb :all_parts do
@@ -147,6 +152,10 @@ end
 
 crumb :coupons do
 	link "Coupons", coupons_path
+end
+
+crumb :locations do
+	link "Locations", locations_path
 end
 
 # crumb :projects do

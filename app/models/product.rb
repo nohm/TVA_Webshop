@@ -1,15 +1,15 @@
 class Product < ActiveRecord::Base
-	has_many :categories, dependent: :destroy
-	has_many :parts_products, :dependent => :destroy
-	has_many :parts, :through => :parts_products
+	has_many :categories, 		dependent: :destroy
+	has_many :parts_products, dependent: :destroy
+	has_many :parts, 					:through => :parts_products
 	belongs_to :device
 	before_save :nil_if_blank
 
 	attr_accessor :brand_select
-	validates :type_number, presence: true, uniqueness: true
-	validates :partnumber, uniqueness: true, :allow_blank => true
-	validates :model, presence: true
-	validates :model_extended, uniqueness: true, :allow_blank => true
+	validates :type_number, 		presence: true, uniqueness: true
+	validates :partnumber, 			uniqueness: true, allow_blank: true
+	validates :model, 					presence: true
+	validates :model_extended, 	uniqueness: true, allow_blank: true
 
 	protected
 

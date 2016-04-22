@@ -1,0 +1,21 @@
+<% provide(:title, 'New location') %>
+<% breadcrumb :locations, @location %>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= bootstrap_form_for(@location) do |f| %>
+      <%= f.alert_message "Please fix the errors below." %>
+
+      <%= f.text_field      :name,        :placeholder => "e.g. Smart Parts" %>
+      <%= f.text_field      :city,        :placeholder => "e.g. Almelo" %>
+      <%= f.text_field      :street,      :placeholder => "e.g. Twentelaan 2" %>
+      <%= f.text_field      :postal_code, :placeholder => "e.g. 7609 RE" %>
+      <%= f.label           :country %>
+      <%= f.country_select  :country,  {}, { :class => "form-control" } %>
+      <%= f.text_field      :phone_number %>
+
+      <%= f.submit "Add location", class: "btn btn-primary" %>
+      <%= link_to("Cancel", locations_path, class: "btn btn-primary") %>
+    <% end %>
+  </div>
+</div>

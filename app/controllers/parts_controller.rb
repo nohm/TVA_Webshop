@@ -1,5 +1,9 @@
 class PartsController < ApplicationController
   def index
+    if flash[:item_added]
+      @cart = Cart.where(user_id: current_user.id, purchased: false).first
+      @cart_items = CartItem.where(cart_id: @cart.id).order('id')
+    end
     @parts_products = PartsProduct.where(product_id: params[:product_id]).page(params[:page]).per(25).order('id ASC')
     @part_amount = 0
     @parts_products.each do |part_product|
@@ -12,9 +16,14 @@ class PartsController < ApplicationController
   end
 
   def show
+    if flash[:item_added]
+      @cart = Cart.where(user_id: current_user.id, purchased: false).first
+      @cart_items = CartItem.where(cart_id: @cart.id).order('id')
+    end
     @part = Part.find(params[:id])
     @cart_item = CartItem.new
     @reminder = Reminder.new
+    @stock = PartStock.where(part_id: @part.id).sum('stock')
     @partimages = Partimage.where(part_id: params[:id])
     @descriptions = Partdescription.where(part_id: params[:id]).order('title ASC')
     @discount_prices = DiscountPrice.where(part_id: params[:id]).order('amount ASC')
@@ -44,6 +53,7 @@ class PartsController < ApplicationController
     if @part.save
       DiscountPrice.create(part_id: @part.id, amount: 1, price: params[:part][:price_ex])
       PartsProduct.create(part_id: @part.id, product_id: params[:product_id])
+      PartStock.create(part_id: @part.id, stock: params[:part][:stock], location_id: params[:part][:location_id])
       redirect_to device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])
       flash[:success] = "Part added"
     else
@@ -61,17 +71,6 @@ class PartsController < ApplicationController
     @part = Part.find(params[:id])
     condition = params[:part][:condition]
     condition_select = params[:part][:condition_select]
-
-    if @part.stock == 0 && params[:part][:stock].to_i > 0
-      reminders = Reminder.where(part_id: @part.id)
-      reminders.each do |reminder|
-        if reminder.updated_at > 2.weeks.ago
-          user = User.find(reminder.user_id)
-          Mailer.send_part_reminder(user, @part).deliver_now
-        end
-        reminder.destroy
-      end
-    end
 
     if (condition.blank? && condition_select.blank?) || (!condition.blank? && !condition_select.blank?)
       flash[:half_notice] = "Either choose an existing condition or create a new one"

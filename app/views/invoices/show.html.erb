@@ -33,6 +33,10 @@
         <dt>Date</dt>
         <dd><%= @invoice.created_at.localtime.to_date %></dd>
       </dl>
+      <dl class="dl-horizontal dl-misc">
+        <dt>Delivery method</dt>
+        <dd><%= @cart.delivery_method %></dd>
+      </dl>
     </div>
   </div>
 
@@ -44,11 +48,12 @@
           <tr>
             <th>Type</th>
             <% if params[:type] != "slip" %>
-              <th>Price</th>
-              <% if !@cart.coupon_code.blank? %>
-                <th>Discounted price</th>
-              <% end %>
               <th>Amount</th>
+              <th>Price</th>
+              <th>Tier</th>
+              <% if !@cart.coupon_code.blank? %>
+                <th>Discount price</th>
+              <% end %>
             <% end %>
             <th>Total</th>
           </tr>
@@ -57,24 +62,25 @@
         <% if params[:type] == "slip" %>
           <% @cart_items.each do |item| %>
             <tr>
-              <td><%= item.part.name %></td>
+              <td><%= item.name %></td>
               <td><%= item.amount.to_s + "x" %></td>
             </tr>
           <% end %>
         <% else %>
           <% @cart_items.each do |item| %>
             <tr>
-              <td class="width40"><%= item.part.name %></td>
-              <td class="width15"><%= number_to_currency(item.price, unit: '€') %></td>
+              <td class="width40"><%= item.name %></td>
+              <td class="width12"><%= item.amount.to_s + "x" %></td>
+              <td class="width12"><%= number_to_currency(item.price, unit: '€') %></td>
+              <td class="width12"><%= item.discount_tier.to_s + "+" %></td>
               <% if !@cart.coupon_code.blank? %>
-                <% if !item.price_sale.blank? %>
-                  <td class="width15"><%= number_to_currency(item.price_sale, unit: '€') %></td>
+                <% if !item.price_coupon_discount.blank? %>
+                  <td class="width12"><%= number_to_currency(item.price_tier_discount, unit: "€") %></td>
                 <% else %>
                   <td>N/A</td>
                 <% end %>
               <% end %>
-              <td class="width15"><%= item.amount.to_s + "x" %></td>
-              <td class="width15"><%= number_to_currency((item.price_sale || item.price) * item.amount, unit: '€') %></td>
+              <td class="width12"><%= number_to_currency(item.price_tier_discount * item.amount, unit: "€") %></td>
             </tr>
           <% end %>
         <% end %>
@@ -83,29 +89,38 @@
         </tr>
           <% if params[:type] != "slip" %>
             <tr>
-              <td colspan="<%= @colspan %>"></td>
+              <td colspan="4"></td>
               <td>Subtotal excl. VAT</td>
               <td><%= number_to_currency(@cart_price_total, unit: "€") %></td>
             </tr>
+            <% if @cart.shipping_cost > 0 %>
+              <tr>
+                <td colspan="4" class="borderless"></td>
+                <td class="borderless"><h3>Shipping</h3></td>
+                <td class="borderless"><h3><%= number_to_currency(@cart.shipping_cost, unit: '€') %> +</h3></td>
+              </tr>
+            <% end %>
+            <% unless @cart.coupon_code.blank? %>
+              <tr>
+                <td colspan="4" class="borderless"></td>
+                <td class="borderless"><h3>Coupon Code: <%=  @cart.coupon_code %></h3></td>
+                <td class="borderless"><h3><%= number_to_currency(@cart_price_discount, unit: '€') %> -<h3></td>
+              </tr>
+            <% end %>
             <tr>
-              <td colspan="<%= @colspan %>" class="borderless"></td>
-              <td class="borderless"><h3>Shipping</h3></td>
-              <td class="borderless"><h3><%= number_to_currency(@shipping_cost, unit: '€') %></h3></td>
-            </tr>
-            <tr>
-              <td colspan="<%= @colspan %>" class="borderless"></td>
+              <td colspan="4" class="borderless"></td>
               <td>Total excl. VAT</td>
-              <td><%= number_to_currency(@cart_price_total + @shipping_cost, unit: "€") %></td>
+              <td><%= number_to_currency(@cart_price_total_discount + @cart.shipping_cost, unit: "€") %></td>
             </tr>
             <tr>
-              <td colspan="<%= @colspan %>" class="borderless"></td>
+              <td colspan="4" class="borderless"></td>
               <td class="borderless"><h3>21% VAT</h3></td>
-              <td class="borderless"><h3><%= number_to_currency((@cart_price_total + @shipping_cost) * 0.21, unit: '€') %></h3></td>
+              <td class="borderless"><h3><%= number_to_currency((@cart_price_total_discount + @cart.shipping_cost) * 0.21, unit: '€') %> +</h3></td>
             </tr>
             <tr>
-              <td colspan="<%= @colspan %>" class="borderless"></td>
+              <td colspan="4" class="borderless"></td>
               <td><b>Total incl. VAT</b></td>
-              <td><%= number_to_currency(((@cart_price_total + @shipping_cost) * 1.21), unit: '€') %></td>
+              <td><%= number_to_currency(((@cart_price_total_discount + @cart.shipping_cost) * 1.21), unit: '€') %></td>
             </tr>
           <% else %>
             <tr>

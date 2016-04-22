@@ -39,6 +39,8 @@ Rails.application.routes.draw do
     resources :password_resets,     only: [:new, :create, :edit, :update]
     resources :account_activations, only: [:edit]
 
+    resources :locations
+
     resources :devices do
       resources :products do
         resources :categories do
@@ -46,6 +48,7 @@ Rails.application.routes.draw do
             resources :parts_products
             resources :partimages
             resources :discount_prices
+            resources :part_stocks
             resources :partdescriptions do
               resources :part_subdescriptions
             end

@@ -28,7 +28,7 @@
               <tr>
                 <td class="col-sm-5">
                   <div class="title">
-                    <%= link_to part_path(:part_id => part_result.id) do %>
+                    <%= link_to part_path(:part_id => part_result.id, :part_page => params[:part_page], :category_page => params[:category_page], :product_page => params[:product_page], :search_query => params[:search_query]) do %>
 											<%= part_result.name %>
 										<% end %>
                   </div>
@@ -68,7 +68,7 @@
                   </a>
                 </td>
                 <% if logged_in? %>
-	                <% if part_result.stock == 0 %>
+	                <% if PartStock.where(part_id: part_result.id).sum('stock') == 0 %>
 	                  <td class="center">
 	                  	<p class="red bottom-none"><%= "Out of stock" %></p>
 	                  	<%= bootstrap_form_for @reminder, :url => user_reminders_path(current_user), :html => { :class => 'form-horizontal' } do |f| %>
@@ -79,7 +79,7 @@
                       <% end %>
 	                  </td>
 	                <% else %>
-	                  <td class="center"><%= part_result.stock %></td>
+	                  <td class="center"><%= PartStock.where(part_id: part_result.id).sum('stock') %></td>
 	                <% end %>
 	                <td class="center">
 	                	<%= number_to_currency(DiscountPrice.where(part_id: part_result.id, amount: 1).first.price, unit: "€") %><br>
@@ -113,7 +113,7 @@
 					<ol class="noPadding" style="list-style-type:none;">	
 						<% @category_results.each do |category_result| %>
 							<li>
-								<%= link_to parts_path(:category_id => category_result.id) do %>
+								<%= link_to parts_path(:category_id => category_result.id, :part_page => params[:part_page], :category_page => params[:category_page], :product_page => params[:product_page], :search_query => params[:search_query]) do %>
 									<%= category_result.name %>
 							</li>
 							<% end %>
@@ -154,9 +154,11 @@
 				</div>
 			<% end %>
 		</div>
+	</div>
 <% end %>
-	
+<% if flash[:item_added] %>
+  <%= render :partial => "parts/cart_show_modal", :locals => {:cart => @cart, :cart_items => @cart_items} %>
+<% end %>
 
-	
 
 			

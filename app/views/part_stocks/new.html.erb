@@ -1,0 +1,20 @@
+<% provide(:title, 'New Stock') %>
+<% breadcrumb :part_stocks, @part_stock %>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= bootstrap_form_for(@part_stock, :url => device_product_category_part_part_stocks_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])) do |f| %>
+      <%= f.alert_message "Please fix the errors below." %>
+
+      <%= f.label "Location" %>
+      <%= select("part_stock", "location_id", Location.all.order(city: :asc, street: :asc).collect {|location| [ "#{location.city}, #{location.street}", location.id ] }, { prompt: 'Choose location' }, { class: "form-control", id: "location_select" }) %>
+
+      <%= f.number_field :stock, min: 0, value: 0 %>
+
+      <%= f.hidden_field :part_id, value: params[:part_id] %>
+
+      <%= f.submit "Add location", class: "btn btn-primary" %>
+      <%= link_to("Cancel", device_product_category_part_part_stocks_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id]), class: "btn btn-primary") %>
+    <% end %>
+  </div>
+</div>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160414091406) do
+ActiveRecord::Schema.define(version: 20160422094551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,18 +20,23 @@ ActiveRecord::Schema.define(version: 20160414091406) do
     t.integer "cart_id"
     t.integer "part_id"
     t.integer "amount"
-    t.decimal "price",      precision: 10, scale: 2
-    t.decimal "price_sale", precision: 10, scale: 2
+    t.decimal "price",                 precision: 10, scale: 2
+    t.decimal "price_coupon_discount", precision: 10, scale: 2
+    t.string  "name"
+    t.integer "discount_tier"
+    t.decimal "price_tier_discount",   precision: 10, scale: 2
   end
 
   create_table "carts", force: :cascade do |t|
     t.integer  "user_id"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.boolean  "purchased",       default: false
+    t.datetime "created_at",                                               null: false
+    t.datetime "updated_at",                                               null: false
+    t.boolean  "purchased",                                default: false
     t.string   "coupon_code"
     t.string   "delivery_method"
     t.string   "previous_url"
+    t.integer  "location_id"
+    t.decimal  "shipping_cost",   precision: 10, scale: 2
   end
 
   create_table "categories", force: :cascade do |t|
@@ -72,6 +77,23 @@ ActiveRecord::Schema.define(version: 20160414091406) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "cart_id"
+  end
+
+  create_table "locations", force: :cascade do |t|
+    t.string "name"
+    t.string "street"
+    t.string "postal_code"
+    t.string "city"
+    t.string "country"
+    t.string "phone_number"
+  end
+
+  create_table "part_stocks", force: :cascade do |t|
+    t.integer  "part_id"
+    t.integer  "location_id"
+    t.integer  "stock"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   create_table "part_subdescriptions", force: :cascade do |t|

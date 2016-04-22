@@ -431,8 +431,8 @@ aside {
   width: 10%;
 }
 
-.width15{
-  width: 15%;
+.width12{
+  width: 12%;
 }
 
 .width20 {
@@ -530,4 +530,9 @@ aside {
 
 .floatRight {
   float: right;
+}
+
+.modal .modal-body {
+    max-height: 420px;
+    overflow-y: auto;
 }

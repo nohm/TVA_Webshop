@@ -19,7 +19,7 @@
                   <%= link_to edit_device_product_category_path(params[:device_id], params[:product_id], category) do %>
                     <span class="glyphicon glyphicon-pencil" title="Edit"></span>
                   <% end %>
-                  <%= link_to device_product_category_path(params[:device_id], params[:product_id], category), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                  <%= link_to device_product_category_path(params[:device_id], params[:product_id], category), data: { confirm: "Are you sure?" }, method: :delete do %>
                     <span class="glyphicon glyphicon-remove" title="Delete"></span>
                   <% end %>
                 <% end %>
@@ -32,6 +32,6 @@
   </div>
   <div class="panel-footer">
     <% if logged_in? && current_user.manager? %>
-      <%= link_to("Add category", new_device_product_category_path, :class => 'btn btn-mini btn-primary') %>
+      <%= link_to("Add category", new_device_product_category_path, class: 'btn btn-mini btn-primary') %>
     <% end %>
   </div>

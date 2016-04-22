@@ -3,7 +3,6 @@ class SessionsController < ApplicationController
   end
 
   def create
-    #user = User.where(email: params[:session][:email].downcase, name: params[:session][:email])
     if User.find_by(email: params[:session][:login].downcase).blank?
       user = User.find_by(name: params[:session][:login])
     else

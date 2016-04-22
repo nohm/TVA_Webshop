@@ -11,6 +11,7 @@
       <%= f.text_field    :condition, :value => nil, :hide_label => true %>
       <%= f.text_field    :warranty %>
       <%= f.number_field  :weight, :label => "Weight in grams", :value => 0, :min => 0 %>
+      <%= select("part", "location_id", Location.all.order(city: :asc, street: :asc).collect {|location| [ "#{location.city}, #{location.street}", location.id ] }, { prompt: 'Choose location' }, { class: "form-control", id: "location_select" }) %>
       <%= f.number_field  :stock, :value => 0, :min => 0 %>
       <%= f.label         :price %>
       <%= f.text_field    :price_ex, :prepend => '€', :placeholder => '0.00', :hide_label => true %>

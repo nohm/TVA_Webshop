@@ -2,9 +2,9 @@ class User < ActiveRecord::Base
   attr_accessor :remember_token, :activation_token, :reset_token
   attr_accessor :current_password
 
-  has_many :cart, dependent: :destroy
-  has_many :invoices, dependent: :destroy
-  has_many :reminders, dependent: :destroy
+  has_many :cart,       dependent: :destroy
+  has_many :invoices,   dependent: :destroy
+  has_many :reminders,  dependent: :destroy
   belongs_to :role
 
 	before_save { email.downcase! }
@@ -12,16 +12,14 @@ class User < ActiveRecord::Base
 
 	validates :name, 	presence: true, length: { maximum: 74 }, uniqueness: true
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
-	validates :email, presence: true, length: { maximum: 255 },
-										format: { with: VALID_EMAIL_REGEX },
-										uniqueness: { case_sensitive: false }
-  validates :street, presence: true
-  validates :city, presence: true
-  validates :province, presence: true
+	validates :email,       presence: true, length: { maximum: 255 }, format: { with: VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
+  validates :street,      presence: true
+  validates :city,        presence: true
+  validates :province,    presence: true
   validates :postal_code, presence: true
   has_secure_password
-	validates :password, length: { minimum: 6 }, :on => :create
-  validate  :current_password_is_correct,      :on => :update
+	validates :password,    length: { minimum: 6 }, on: :create
+  validate  :current_password_is_correct,      on: :update
 
   def current_password_is_correct
     # Get a reference to the user since the "authenticate" method always returns false when calling on itself (for some reason).

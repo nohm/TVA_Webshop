@@ -2,7 +2,7 @@
 <% breadcrumb :coupons, @coupon %>
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
-    <%= bootstrap_form_for(@coupon, :url => coupons_path) do |f| %>
+    <%= bootstrap_form_for(@coupon, url: coupons_path) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
       
       <%= f.text_field :code %>

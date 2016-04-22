@@ -20,7 +20,7 @@ class Coupon < ActiveRecord::Base
   def parts_exist
     no_parts = []
     part_ids.each do |part_id|
-      if Part.where(:id => part_id).empty?
+      if Part.where(id: part_id).empty?
         no_parts << part_id
       end
     end
@@ -32,7 +32,7 @@ class Coupon < ActiveRecord::Base
   def categories_exist
     no_categories = []
     category_ids.each do |category_id|
-      if Category.where(:id => category_id).empty?
+      if Category.where(id: category_id).empty?
         no_categories << category_id
       end
     end
@@ -44,7 +44,7 @@ class Coupon < ActiveRecord::Base
   def users_exist
     no_users = []
     user_ids.each do |user_id|
-      if User.where(:id => user_id).empty?
+      if User.where(id: user_id).empty?
         no_users << user_id
       end
     end
