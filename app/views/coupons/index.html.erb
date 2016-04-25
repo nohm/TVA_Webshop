@@ -29,33 +29,39 @@
 	        	<tr>
 	        		<td><%= coupon.id %></td>
 	        		<td><%= coupon.code %></td>
-              <% if !coupon.category_ids.blank? %>
-	        		  <td>
+	        		<td style="max-width: 75px;">
+                <% if !coupon.category_ids.blank? %>
                   <% coupon.category_ids.each do |category_id| %>
-                    <%= "<ins class='noTextDecoration' title='#{Category.exists?(category_id) ? Category.find(category_id).name : 'Category does not exist'}''>#{category_id}</ins>".html_safe %>
+                    <% if Category.exists?(category_id) %>
+                      <%= "<ins class='noTextDecoration' title='#{Category.find(category_id).name}'>#{category_id}</ins>".html_safe %>
+                    <% else %>
+                      <%= "<ins class='noTextDecoration red' title='Category does not exist'>#{category_id}</ins>".html_safe %>
+                    <% end %>
                   <% end %>
-                </td>
-              <% else %>
-                <td></td>
-              <% end %>
-	        		<% if !coupon.part_ids.blank? %>
-                <td>
+                <% end %>
+              </td>
+              <td style="max-width: 75px;">
+                <% if !coupon.part_ids.blank? %>
                   <% coupon.part_ids.each do |part_id| %>
-                    <%= "<ins class='noTextDecoration' title='#{Part.exists?(part_id) ? Part.find(part_id).name : 'Part does not exist'}'>#{part_id}</ins>".html_safe %>
+                    <% if Part.exists?(part_id) %>
+                      <%= "<ins class='noTextDecoration' title='#{Part.find(part_id).name}'>#{part_id}</ins>".html_safe %>
+                    <% else %>
+                      <%= "<ins class='noTextDecoration red' title='Part does not exist'>#{part_id}</ins>".html_safe %>
+                    <% end %>
                   <% end %>
-                </td>
-              <% else %>
-                <td></td>
-              <% end %>
-	        		<% if !coupon.user_ids.blank? %>
-                <td>
+                <% end %>
+              </td>
+              <td style="max-width: 75px;">
+                <% if !coupon.user_ids.blank? %>
                   <% coupon.user_ids.each do |user_id| %>
-                    <%= "<ins class='noTextDecoration' title='#{User.exists?(user_id) ? User.find(user_id).name : 'User does not exist'}'>#{user_id}</ins>".html_safe %>
+                    <% if User.exists?(user_id) %>
+                      <%= "<ins class='noTextDecoration' title='#{User.find(user_id).name}'>#{user_id}</ins>".html_safe %>
+                    <% else %>
+                      <%= "<ins class='noTextDecoration red' title='User does not exist'>#{user_id}</ins>".html_safe %>
+                    <% end %>
                   <% end %>
-                </td>
-              <% else %>
-                <td></td>
-              <% end %>
+                <% end %>
+              </td>
 	        		<td><%= coupon.amount %></td>
 	        		<td><%= coupon.percent %></td>
 	        		<td><%= coupon.price %></td>

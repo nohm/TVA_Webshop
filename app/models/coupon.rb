@@ -7,7 +7,7 @@ class Coupon < ActiveRecord::Base
   validate :expiration_date_in_future
   validate :categories_exist
   validate :parts_exist
-  validate :users_exist
+  #validate :users_exist
 
   private 
 
