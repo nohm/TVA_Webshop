@@ -38,7 +38,7 @@ class PartsController < ApplicationController
     redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
     params[:part][:category_id] = params[:category_id]
     params[:part][:device_id] = params[:device_id]
-    params[:part][:price_ex] = params[:part][:price_ex].to_s.gsub(',', '.').to_f
+    price = params[:part][:price].to_s.gsub(',', '.').to_f
     @part = Part.new(part_params)
     condition = params[:part][:condition]
     condition_select = params[:part][:condition_select]
@@ -49,14 +49,16 @@ class PartsController < ApplicationController
     end
 
     @part.condition = condition_select if condition.blank?
-
+    
     if @part.save
-      DiscountPrice.create(part_id: @part.id, amount: 1, price: params[:part][:price_ex])
+      DiscountPrice.create(part_id: @part.id, amount: 1, price: price)
       PartsProduct.create(part_id: @part.id, product_id: params[:product_id])
       PartStock.create(part_id: @part.id, stock: params[:part][:stock], location_id: params[:part][:location_id])
       redirect_to device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])
       flash[:success] = "Part added"
     else
+      @location_id = params[:part][:location_id]
+      @condition = @part.condition
       render 'new'
     end
   end
@@ -107,6 +109,6 @@ class PartsController < ApplicationController
   private
 
   def part_params
-    params.require(:part).permit(:category_id, :name, :condition, :warranty, :price_ex, :stock, :partimagefull, :brand, :weight)
+    params.require(:part).permit(:category_id, :name, :condition, :warranty, :price, :stock, :partimagefull, :brand, :weight, :location_id)
   end
 end

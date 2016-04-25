@@ -32,7 +32,7 @@
               <% if !coupon.category_ids.blank? %>
 	        		  <td>
                   <% coupon.category_ids.each do |category_id| %>
-                    <%= "<ins class='noTextDecoration' title='#{Category.find(category_id).name}''>#{category_id}</ins>".html_safe %>
+                    <%= "<ins class='noTextDecoration' title='#{Category.exists?(category_id) ? Category.find(category_id).name : 'Category does not exist'}''>#{category_id}</ins>".html_safe %>
                   <% end %>
                 </td>
               <% else %>
@@ -41,7 +41,7 @@
 	        		<% if !coupon.part_ids.blank? %>
                 <td>
                   <% coupon.part_ids.each do |part_id| %>
-                    <%= "<ins class='noTextDecoration' title='#{Part.find(part_id).name}'>#{part_id}</ins>".html_safe %>
+                    <%= "<ins class='noTextDecoration' title='#{Part.exists?(part_id) ? Part.find(part_id).name : 'Part does not exist'}'>#{part_id}</ins>".html_safe %>
                   <% end %>
                 </td>
               <% else %>
@@ -50,7 +50,7 @@
 	        		<% if !coupon.user_ids.blank? %>
                 <td>
                   <% coupon.user_ids.each do |user_id| %>
-                    <%= "<ins class='noTextDecoration' title='#{User.find(user_id).name}'>#{user_id}</ins>".html_safe %>
+                    <%= "<ins class='noTextDecoration' title='#{User.exists?(user_id) ? User.find(user_id).name : 'User does not exist'}'>#{user_id}</ins>".html_safe %>
                   <% end %>
                 </td>
               <% else %>
