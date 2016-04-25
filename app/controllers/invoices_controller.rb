@@ -26,6 +26,8 @@ class InvoicesController < ApplicationController
 
 		if @cart_price_discount != 0
 			@cart_price_total_discount = @cart_price_total - @cart_price_discount
+		else
+			@cart_price_total_discount = @cart_price_total
 		end
 	end
 

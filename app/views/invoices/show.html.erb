@@ -93,13 +93,11 @@
               <td>Subtotal excl. VAT</td>
               <td><%= number_to_currency(@cart_price_total, unit: "€") %></td>
             </tr>
-            <% if @cart.shipping_cost > 0 %>
-              <tr>
-                <td colspan="4" class="borderless"></td>
-                <td class="borderless"><h3>Shipping</h3></td>
-                <td class="borderless"><h3><%= number_to_currency(@cart.shipping_cost, unit: '€') %> +</h3></td>
-              </tr>
-            <% end %>
+            <tr>
+              <td colspan="4" class="borderless"></td>
+              <td class="borderless"><h3>Shipping</h3></td>
+              <td class="borderless"><h3><%= number_to_currency(@cart.shipping_cost, unit: '€') %> +</h3></td>
+            </tr>
             <% unless @cart.coupon_code.blank? %>
               <tr>
                 <td colspan="4" class="borderless"></td>

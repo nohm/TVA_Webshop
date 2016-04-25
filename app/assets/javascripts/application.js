@@ -23,6 +23,7 @@ $(document).on('ready page:load', function () {
 	Model();
 	Model_extended();	
 
+	// Shows a modal when you are redirected from adding a part to your cart.
 	$('#myModal').modal('show');
 
 	// Mouseover fuction for the thumbnails in part#show.

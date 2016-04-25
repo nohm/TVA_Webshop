@@ -3,6 +3,7 @@ class CartsController < ApplicationController
 		@cart = Cart.where(user_id: current_user.id, purchased: false).first
 		@cart_items = CartItem.where(cart_id: @cart.id ).order('id ASC') 
 		@coupon_code = @cart.coupon_code || "None"
+		@colspan = @cart.coupon_code.blank? ? 5 : 6
 		coupon = Coupon.where(code: @coupon_code).first
 		weight_array = [1, 10000, 30000]
 		shipping_array = [6.95, 13.25]
@@ -102,7 +103,7 @@ class CartsController < ApplicationController
 		else
 			@cart_price_total_discount = @cart_price_total
 		end
-		
+
 		if total_weight.between?(weight_array[0], weight_array[1] - 1)
 			@shipping_cost = shipping_array[0]
 		elsif total_weight.between?(weight_array[1], weight_array[2] - 1)
@@ -211,27 +212,40 @@ class CartsController < ApplicationController
 		coupon = Coupon.where(code: params[:coupon_code]).first
 		cart = Cart.find(cart_id)
 		cart_items = CartItem.where(cart_id: cart_id)
-		errors = 0
+		errors = false
 		if !Invoice.where(user_id: current_user.id, cart_id: cart.id).exists?
 			cart_items.each do |item|
 				part = Part.find(item.part_id)
-				part_stocks = PartStock.where(part_id: part.id)
+				part_stocks = PartStock.where(part_id: part.id).order('stock DESC')
+				purchase_amount = item.amount
+
 				# if cart.delivery_method == "Shipping"
 					if (part_stocks.sum('stock') - item.amount) >= 0
 						part_stocks.each do |part_stock|
 							if (part_stock.stock - item.amount) >= 0
 								part_stock.stock -= item.amount
 								part_stock.save
+								break
+							else
+								if part_stock.stock < purchase_amount
+									purchase_amount -= part_stock.stock
+									part_stock.stock = 0
+									part_stock.save
+								else
+									part_stock.stock -= purchase_amount
+									part_stock.save
+									purchase_amount = 0
+								end
 							end
 						end
 					else
-						errors += 1
+						errors = true
 					end
 				# elsif cart.delivery_method == "Pick up"
 					# do something
 				# end
 			end
-			if errors == 0
+			if errors == false
 				cart.purchased = true
 				cart.save
 				Invoice.create(user_id: current_user.id, cart_id: cart_id)

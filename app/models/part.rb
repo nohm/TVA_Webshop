@@ -1,5 +1,5 @@
 class Part < ActiveRecord::Base
-	attr_accessor :price_ex, :condition_select, :location_id
+	attr_accessor :price_ex, :condition_select, :location_id, :stock
 
 	belongs_to :category
 	has_many :parts_products, 	dependent: :destroy
@@ -18,7 +18,7 @@ class Part < ActiveRecord::Base
 	validates :name, 				presence: true
 	validates :warranty, 		presence: true
 	validates :weight, 			presence: true
-	validates :stock, 			presence: true
+	validates :stock, 			presence: true, on: :create
 	validates :price_ex, 		presence: true, on: :create
 	validates :brand, 			presence: true
 

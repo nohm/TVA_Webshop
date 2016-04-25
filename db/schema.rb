@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160422094551) do
+ActiveRecord::Schema.define(version: 20160425064904) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -122,7 +122,6 @@ ActiveRecord::Schema.define(version: 20160422094551) do
     t.datetime "updated_at",                 null: false
     t.string   "condition"
     t.string   "warranty"
-    t.integer  "stock"
     t.string   "partimagefull_file_name"
     t.string   "partimagefull_content_type"
     t.integer  "partimagefull_file_size"
@@ -168,7 +167,6 @@ ActiveRecord::Schema.define(version: 20160422094551) do
     t.integer  "role_id"
     t.string   "street"
     t.string   "city"
-    t.string   "province"
     t.string   "country"
     t.string   "phone_number"
     t.string   "postal_code"

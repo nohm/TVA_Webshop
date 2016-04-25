@@ -9,13 +9,12 @@
 
       <%= f.text_field      :name, :placeholder => "e.g. Dennis Lop" %>
       <%= f.email_field     :email, :placeholder => "e.g. Example@Example.com" %>
-      <%= f.text_field      :street, :placeholder => "e.g. Astreet 8" %>
-      <%= f.text_field      :city, :placeholder => "e.g. New York" %>
+      <%= f.text_field      :street, :placeholder => "e.g. Twentelaan 2" %>
+      <%= f.text_field      :city, :placeholder => "e.g. Almelo" %>
 
-      <%= f.text_field      :province, :placeholder => "e.g. New York" %>
       <%= f.label           :country %>
       <%= f.country_select  :country,  {}, { :class => "form-control" } %>
-      <%= f.text_field      :postal_code, :placeholder => "e.g. 1234 AB" %>
+      <%= f.text_field      :postal_code, :placeholder => "e.g. 7609 RE" %>
       <%= f.text_field      :phone_number %>
       <%= f.password_field  :password %>
       <%= f.password_field  :password_confirmation %>
