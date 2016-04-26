@@ -26,7 +26,6 @@
     <table class="table table-striped table-hover">
         <thead>
           <tr>
-            <th class="small-col">Id</th>
             <th>Client</th>
             <th>Purchase date</th>
             <th class="small-col"></th>
@@ -39,23 +38,22 @@
         <tbody>
           <% @invoices.each do |invoice| %>
             <tr>
-              <td><%= invoice.id %></td>
               <td><%= invoice.user.name %></td>
-              <td><%= invoice.created_at.localtime %></td>
+              <td><%= invoice.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S") %></td>
               <td>
                 <%= link_to user_invoice_path(@user, invoice, :type => 'slip') do %>
-                  <span class="glyphicon glyphicon-send"></span>
+                  <span class="glyphicon glyphicon-send" title="Slip"></span>
                 <% end %>
               </td>
               <td>
                 <%= link_to user_invoice_path(@user, invoice) do %>
-                  <span class="glyphicon glyphicon-euro"></span>
+                  <span class="glyphicon glyphicon-euro" title="Invoice"></span>
                 <% end %>
               </td>
               <% if current_user.manager? %>
                 <td>
                   <%= link_to user_invoice_path(@user, invoice), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
-                    <span class="glyphicon glyphicon-remove"></span>
+                    <span class="glyphicon glyphicon-remove" title="Delete"></span>
                   <% end %>
                 </td>
               <% end %>

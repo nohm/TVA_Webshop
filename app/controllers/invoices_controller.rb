@@ -1,7 +1,7 @@
 class InvoicesController < ApplicationController
 
 	def show
-		redirect_to root_path, :alert => "Unauthorized" and return unless (logged_in? && params[:user_id].to_i == current_user.id) || (logged_in? && current_user.manager?)
+		redirect_to root_path, :notice => "Unauthorized" and return unless (logged_in? && params[:user_id].to_i == current_user.id) || (logged_in? && current_user.manager?)
 		@invoice = Invoice.find(params[:id])
 		@cart = Cart.find(@invoice.cart_id)
 		@cart_items = CartItem.where(cart_id: @invoice.cart_id)
@@ -32,7 +32,7 @@ class InvoicesController < ApplicationController
 	end
 
 	def destroy
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.admin?
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.admin?
 		invoice = Invoice.find(params[:id])
     invoice.destroy
     redirect_to :back

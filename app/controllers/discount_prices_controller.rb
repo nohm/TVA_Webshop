@@ -1,16 +1,16 @@
 class DiscountPricesController < ApplicationController
 	def index
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
-		@discount_prices = DiscountPrice.where(part_id: params[:part_id])
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
+		@discount_prices = DiscountPrice.where(part_id: params[:part_id]).page(params[:page]).per(25)
 	end
 
 	def new
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		@discount_price = DiscountPrice.new
 	end
 
 	def create
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		params[:discount_price][:price] = params[:discount_price][:price].to_s.gsub(',', '.').to_f
 		@discount_price = DiscountPrice.new(discount_price_params)
     if @discount_price.save
@@ -22,12 +22,12 @@ class DiscountPricesController < ApplicationController
 	end
 
 	def edit
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		@discount_price = DiscountPrice.find(params[:id])
 	end
 
 	def update
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		params[:discount_price][:price] = params[:discount_price][:price].to_s.gsub(',', '.').to_f
 		@discount_price = DiscountPrice.find(params[:id])
     if @discount_price.update(discount_price_params)
@@ -39,7 +39,7 @@ class DiscountPricesController < ApplicationController
 	end
 
 	def destroy
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		discount_price = DiscountPrice.find(params[:id])
 		discount_price.destroy
 		redirect_to device_product_category_part_discount_prices_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])

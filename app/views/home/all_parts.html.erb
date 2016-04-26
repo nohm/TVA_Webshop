@@ -1,97 +1,96 @@
 <% provide(:title, "Parts") %>
 <% breadcrumb :all_parts, @all_parts %>
-  <div class="panel-body panel-table">
-    
-    <% if @all_parts.length == 0 %>
-      No parts found for this category
-    <% else %>
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th><%= "Description" %></th>
+<div class="panel-body panel-table">    
+  <% if @all_parts.length == 0 %>
+    No parts found for this category
+  <% else %>
+    <div class="table-responsive">
+      <table class="table table-hover borderGray">
+        <thead>
+          <tr>
+            <th><%= "Description" %></th>
+            <th></th>
+            <% if logged_in? %>
+              <th class="center"><%= "Stock" %></th>
+              <th class="center"><%= "Price" %></th>
               <th></th>
-              <% if logged_in? %>
-                <th class="center"><%= "Stock" %></th>
-                <th class="center"><%= "Price" %></th>
-                <th></th>
-              <% end %>
-            </tr>
-          </thead>
-          <tbody>
-            <% @all_parts.each do |part| %>
-              <tr>
-                <td class="col-lg-4 col-md-5">
-                  <div class="title">
-                    <%= link_to part_path(:part_id => part.id) do %>
-                      <b><%= part.name %></b>
-                    <% end %>
-                  </div>
-                  <table>
-                    <tbody>
-                      <tr>
-                        <td><small>Brand: </small></td>
-                        <td><small><%= part.brand %></small></td>
-                      </tr>
-                      <tr>
-                        <td class="paddingR20"><small>Condition: </small></td>
-                        <td><small><%= part.condition %></small></td>
-                      </tr>
-                      <tr>
-                        <td><small>Warranty: </small></td>
-                        <td><small><%= part.warranty %></small></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-                <td>
-                	<a 
-                    <% if !part.partimagefull_file_name.nil? %> 
-                      href=<%= part.partimagefull.url %>
-                    <% end %>
-                  >
-                    <div class="col-md-6 width66px noPadding">
-                      <%= image_tag part.partimagefull.url(:thumb), class: "borderGray" %>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @all_parts.each do |part| %>
+            <tr>
+              <td class="col-lg-4 col-md-5">
+                <div class="title">
+                  <%= link_to part_path(:part_id => part.id) do %>
+                    <b><%= part.name %></b>
+                  <% end %>
+                </div>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td><small>Brand: </small></td>
+                      <td><small><%= part.brand %></small></td>
+                    </tr>
+                    <tr>
+                      <td class="paddingR20"><small>Condition: </small></td>
+                      <td><small><%= part.condition %></small></td>
+                    </tr>
+                    <tr>
+                      <td><small>Warranty: </small></td>
+                      <td><small><%= part.warranty %></small></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+              <td>
+                <a 
+                  <% if !part.partimagefull_file_name.nil? %> 
+                    href=<%= part.partimagefull.url %>
+                  <% end %>
+                >
+                  <div class="col-md-6 width66px noPadding">
+                    <%= image_tag part.partimagefull.url(:thumb), class: "borderGray" %>
                       <% if !part.partimagefull_file_name.nil? %>
                         <div class="bottomRight"><span class="glyphicon glyphicon-search"></span></div>
                       <% end %>
-                    </div>
-                  </a>
-                </td>
-                <% if logged_in? %>
-                  <% if PartStock.where(part_id: part.id).sum('stock') == 0 %>
-                    <td class="center">
-                      <p class="red bottom-none"><%= "Out of stock" %></p>
-                      <%= bootstrap_form_for @reminder, :url => user_reminders_path(current_user), :html => { :class => 'form-horizontal' } do |f| %>
-                        <%= f.hidden_field :part_id, :value => part.id %>
-                        <%= f.hidden_field :user_id, :value => current_user.id %>
+                  </div>
+                </a>
+              </td>
+              <% if logged_in? %>
+                <% if PartStock.where(part_id: part.id).sum('stock') == 0 %>
+                  <td class="center">
+                    <p class="red bottom-none"><%= "Out of stock" %></p>
+                    <%= bootstrap_form_for @reminder, :url => user_reminders_path(current_user), :html => { :class => 'form-horizontal' } do |f| %>
+                      <%= f.hidden_field :part_id, :value => part.id %>
+                      <%= f.hidden_field :user_id, :value => current_user.id %>
 
-                        <%= f.submit "Remind me", class: 'btn btn-link btn-xs', style: 'padding: 4px; width: auto;', title: 'Sends you an email when the product is back in stock' %>
-                      <% end %>
-                    </td>
-                  <% else %>
-                    <td class="center"><%= PartStock.where(part_id: part.id).sum('stock') %></td>
-                  <% end %>
-                  <td class="center">
-                    <%= number_to_currency(DiscountPrice.where(part_id: part.id, amount: 1).first.price, unit: "€") %><br>
-                    <small style="font-size: 9px;">Excl 21% VAT</small>
+                      <%= f.submit "Remind me", class: 'btn btn-link btn-xs', style: 'padding: 4px; width: auto;', title: 'Sends you an email when the product is back in stock' %>
+                    <% end %>
                   </td>
-                  <td class="center">
-                      <%= render :partial => "cart_modal", :locals => {:part => part }%>
-                  </td>
+                <% else %>
+                  <td class="center"><%= PartStock.where(part_id: part.id).sum('stock') %></td>
                 <% end %>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% end %>
-  </div>
-  <div class="panel-footer">
-  	<% unless @all_parts.length == 0 %>
-      <%= paginate @all_parts %>
-    <% end %>
-  </div>
-  <% if flash[:item_added] %>
-    <%= render :partial => "parts/cart_show_modal", :locals => {:cart => @cart, :cart_items => @cart_items} %>
+                <td class="center">
+                  <%= number_to_currency(DiscountPrice.where(part_id: part.id, amount: 1).first.price, unit: "€") %><br>
+                  <small style="font-size: 9px;">Excl 21% VAT</small>
+                </td>
+                <td class="center">
+                  <%= render :partial => "cart_modal", :locals => {:part => part }%>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   <% end %>
+</div>
+<div class="panel-footer">
+  <% unless (paginate @all_parts).blank? %>
+    <%= paginate @all_parts %><br>
+  <% end %>
+</div>
+<% if flash[:item_added] %>
+  <%= render :partial => "parts/cart_show_modal", :locals => {:cart => @cart, :cart_items => @cart_items} %>
+<% end %>

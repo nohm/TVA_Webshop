@@ -1,166 +1,165 @@
-  <% provide(:title, @part.name) %>
-  <% breadcrumb :part, @part %>
-    <div class="panel-body">
-      <div class="row">
-        <div class="col-sm-6 ImageContainer noPadding">
-          <h4><%= @part.name %></h4>
-          <div class="bigImage col-sm-1 noPadding" style="width: 302px;">
-            <% if @partimages.first.nil? %>
-              <%= image_tag "MissingLarge.png" %>
-            <% else %>
-              <a class="BigImgOriginal" style="display: inline-block;" href=<%= @partimages.first.pimg.url %>>
-                <%= image_tag @partimages.first.pimg.url(:large), :class => "BigImg borderGray", :title => @part.name %>
-                <div class="bottomRight"><span class="glyphicon glyphicon-search"></span></div>
-              </a>
-            <% end %>
-          </div>
-          <div style="clear: both;"></div> 
-          <div style="min-width: 284px; min-height: 71px; ">
-            <% @partimages.each do |image| %>
-              <div class="smallImgContainer">
-
-                <%= image_tag image.pimg.url(:thumb), :data => {:hover => image.pimg.url(:large), :url => image.pimg.url}, :class => "SmallImg borderGray" %>
-              </div>
-            <% end %>
-          </div>
-          <div style="clear: both;"></div> 
-        </div>
-        <% if logged_in? %>
-          <br>
-          <div class="col-sm-6 noPadding">
-            <div>
-              <table class="table table-bordered priceTable">
-                <thead>
-                  <tr>
-                    <th class="right">Amount</th>
-                    <th class="right">Price</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% @discount_prices.each do |d_price| %>
-                    <tr>
-                      <td class="right"><%= d_price.amount.to_s + "+" %></td>
-                      <td class="right"><%= number_to_currency(d_price.price, unit: "€") %></td>
-                    </tr>
-                  <% end %>
-                  <tr>
-                    <td colspan="2" class="right">Excl 21% BTW</td>
-                  </tr>
-                  <% if @stock > 0 %>
-                    <tr>
-                      <td colspan="2" class="right">
-                        In stock: <%= @stock %>
-                      </td>
-                    </tr>
-                  <% end %>
-                </tbody>
-              </table>
-              <div style="clear: both;"></div> 
-              <div class="col-xs-6 col-sm-offset-6 noPadding">
-              <%= bootstrap_form_for(@cart_item, :url => user_cart_cart_items_path(current_user, Cart.where(user_id: current_user.id, purchased: false).first.id)) do |f| %>
-                <%= f.hidden_field :cart_id, value: Cart.where(user_id: current_user.id, purchased: false).first.id %>
-                <%= f.hidden_field :part_id, value: @part.id %>
-                <% if @stock > 0 %>
-                  <%= f.number_field :amount, min: 1, max: @stock, value: 1, required: 'required' %>
-                  <%= button_tag( :class => "btn btn-primary big") do %>
-                    <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
-                  <% end %>
-                <% else %>
-                  <%= f.number_field :amount, min: 1, max: @stock, class: "cursorDisabled", disabled: "disabled", placeholder: "Out of stock" %>
-                  <%= button_tag( :class => "btn btn-danger big cursorDisabled", :disabled => "disabled", :title => "Out of stock") do %>
-                    <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
-                  <% end %>
-                <% end %>
-              <% end %>
-              <% if @stock == 0 %>
-                <%= bootstrap_form_for @reminder, :url => user_reminders_path(current_user), :html => { :class => 'form-horizontal center' } do |f| %>
-                  <%= f.hidden_field :part_id, :value => @part.id %>
-                  <%= f.hidden_field :user_id, :value => current_user.id %>
-
-                  <%= f.submit "Remind me", class: 'btn btn-link btn-xs', style: 'width: 100%;', title: 'Sends you an email when the product is back in stock' %>
-                <% end %>
-              <% end %>
-              </div>
-            </div>
+<% provide(:title, @part.name) %>
+<% breadcrumb :part, @part %>
+<div class="panel-body">
+  <div class="row">
+    <div class="col-sm-6 ImageContainer noPadding">
+      <h4><%= @part.name %></h4>
+      <div class="bigImage col-sm-1 noPadding" style="width: 302px;">
+        <% if @partimages.first.nil? %>
+          <%= image_tag "MissingLarge.png" %>
+        <% else %>
+          <a class="BigImgOriginal" style="display: inline-block;" href=<%= @partimages.first.pimg.url %>>
+            <%= image_tag @partimages.first.pimg.url(:large), :class => "BigImg borderGray", :title => @part.name %>
+            <div class="bottomRight"><span class="glyphicon glyphicon-search"></span></div>
+          </a>
+        <% end %>
+      </div>
+      <div style="clear: both;"></div> 
+      <div style="min-width: 284px; min-height: 71px; ">
+        <% @partimages.each do |image| %>
+          <div class="smallImgContainer">
+            <%= image_tag image.pimg.url(:thumb), :data => {:hover => image.pimg.url(:large), :url => image.pimg.url}, :class => "SmallImg borderGray" %>
           </div>
         <% end %>
       </div>
-      <div class="table-responsive noPadding borderGray" style="margin: 15px -15px">
-        <table class="table table-hover ">
-          <tbody>
-            <% if @descriptions.length > 0 %>
-              <% @descriptions.each do |description| %>
-                <tr class="info">
-                  <th class="Title"><%= description.title %></th>
-                  <td></td>
-                </tr>
-                <% description.part_subdescriptions.each do |subdescription| %>
-                  <tr>
-                    <th><%= subdescription.title %>:</th>
-                    <td><%= subdescription.value %></td>
-                  </tr>
-                <% end %>
-              <% end %>
-            <% end %>
-
-            <tr class="info">
-              <th class="Title">Categorization</th>
-              <td></td>
-            </tr>
-            <tr>
-              <th>Category:</th>
-              <td><%= @part.category.name %></td>
-            </tr>
-            <tr>
-              <th>Application:</th>
-              <td><%= @part.category.product.device.name.titleize %></td>
-            </tr>
-
-            <tr class="info">
-              <th class="Title">General specifications</th>
-              <td></td>
-            </tr>
-            <tr>
-              <th>Brand:</th>
-              <td><%= @part.brand %></td>
-            </tr>
-            <tr>
-              <th>Condition:</th>
-              <td><%= @part.condition %></td>
-            </tr>
-            <tr>
-              <th>Warranty:</th>
-              <td><%= @part.warranty %></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <% if @part.parts_products.count > 1 %>
-        <div class="col-md-6 borderGray" style="padding: 5px;">
-          <p>This part can be used in these products:</p> 
-          <ul class="list">
-            <% @part.parts_products.first(10).each do |connection| %>
-              <% next if @part.category.product.id == connection.product_id %>
-              <% if Product.find(connection.product_id).model_extended.blank? %>
-                <li class="listItem">
-                  <%= link_to(Product.find(connection.product_id).model, device_product_categories_path(Product.find(connection.product_id).device_id, Product.find(connection.product_id).id)) %>
-                </li>
-                <% else %>
-                <li class="listItem">
-                  <%= link_to(Product.find(connection.product_id).model_extended, device_product_categories_path(Product.find(connection.product_id).device_id, Product.find(connection.product_id).id)) %>
-                </li>
-              <% end %>
-            <% end %>
-            <% if @part.parts_products.count > 10 %>
-              <li class="listItem">
-                  <%= link_to("And #{@part.parts_products.count() - 1} more products", suited_path(:part_id => @part.id)) %>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-      <% end %>
+      <div style="clear: both;"></div> 
     </div>
-    <% if flash[:item_added] %>
-      <%= render :partial => "parts/cart_show_modal", :locals => {:cart => @cart, :cart_items => @cart_items} %>
+    <% if logged_in? %>
+      <br>
+      <div class="col-sm-6 noPadding">
+        <div>
+          <table class="table table-bordered priceTable">
+            <thead>
+              <tr>
+                <th class="right">Amount</th>
+                <th class="right">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @discount_prices.each do |d_price| %>
+                <tr>
+                  <td class="right"><%= d_price.amount.to_s + "+" %></td>
+                  <td class="right"><%= number_to_currency(d_price.price, unit: "€") %></td>
+                </tr>
+              <% end %>
+              <tr>
+                <td colspan="2" class="right">Excl 21% VAT</td>
+              </tr>
+              <% if @stock > 0 %>
+                <tr>
+                  <td colspan="2" class="right">
+                    In stock: <%= @stock %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <div style="clear: both;"></div> 
+          <div class="col-xs-6 col-sm-offset-6 noPadding">
+          <%= bootstrap_form_for(@cart_item, :url => user_cart_cart_items_path(current_user, Cart.where(user_id: current_user.id, purchased: false).first.id)) do |f| %>
+            <%= f.hidden_field :cart_id, value: Cart.where(user_id: current_user.id, purchased: false).first.id %>
+            <%= f.hidden_field :part_id, value: @part.id %>
+            <% if @stock > 0 %>
+              <%= f.number_field :amount, min: 1, max: @stock, value: 1, required: 'required' %>
+              <%= button_tag( :class => "btn btn-primary big") do %>
+                <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
+              <% end %>
+            <% else %>
+              <%= f.number_field :amount, min: 1, max: @stock, class: "cursorDisabled", disabled: "disabled", placeholder: "Out of stock" %>
+              <%= button_tag( :class => "btn btn-danger big cursorDisabled", :disabled => "disabled", :title => "Out of stock") do %>
+                <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
+              <% end %>
+            <% end %>
+          <% end %>
+          <% if @stock == 0 %>
+            <%= bootstrap_form_for @reminder, :url => user_reminders_path(current_user), :html => { :class => 'form-horizontal center' } do |f| %>
+              <%= f.hidden_field :part_id, :value => @part.id %>
+              <%= f.hidden_field :user_id, :value => current_user.id %>
+
+              <%= f.submit "Remind me", class: 'btn btn-link btn-xs', style: 'width: 100%;', title: 'Sends you an email when the product is back in stock' %>
+            <% end %>
+          <% end %>
+          </div>
+        </div>
+      </div>
     <% end %>
+  </div>
+  <div class="table-responsive noPadding borderGray" style="margin: 15px -15px">
+    <table class="table table-hover ">
+      <tbody>
+        <% if @descriptions.length > 0 %>
+          <% @descriptions.each do |description| %>
+            <tr class="info">
+              <th class="Title"><%= description.title %></th>
+              <td></td>
+            </tr>
+            <% description.part_subdescriptions.each do |subdescription| %>
+              <tr>
+                <th><%= subdescription.title %>:</th>
+                <td><%= subdescription.value %></td>
+              </tr>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <tr class="info">
+          <th class="Title">Categorization</th>
+          <td></td>
+        </tr>
+        <tr>
+          <th>Category:</th>
+          <td><%= @part.category.name %></td>
+        </tr>
+        <tr>
+          <th>Application:</th>
+          <td><%= @part.category.product.device.name.titleize %></td>
+        </tr>
+
+        <tr class="info">
+          <th class="Title">General specifications</th>
+          <td></td>
+        </tr>
+        <tr>
+          <th>Brand:</th>
+          <td><%= @part.brand %></td>
+        </tr>
+        <tr>
+          <th>Condition:</th>
+          <td><%= @part.condition %></td>
+        </tr>
+        <tr>
+          <th>Warranty:</th>
+          <td><%= @part.warranty %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <% if @part.parts_products.count > 1 %>
+    <div class="col-md-6 borderGray" style="padding: 5px;">
+      <p>This part can be used in these products:</p> 
+      <ul class="list">
+        <% @part.parts_products.first(10).each do |connection| %>
+          <% next if @part.category.product.id == connection.product_id %>
+          <% if Product.find(connection.product_id).model_extended.blank? %>
+            <li class="listItem">
+              <%= link_to(Product.find(connection.product_id).model, device_product_categories_path(Product.find(connection.product_id).device_id, Product.find(connection.product_id).id)) %>
+            </li>
+            <% else %>
+            <li class="listItem">
+              <%= link_to(Product.find(connection.product_id).model_extended, device_product_categories_path(Product.find(connection.product_id).device_id, Product.find(connection.product_id).id)) %>
+            </li>
+          <% end %>
+        <% end %>
+        <% if @part.parts_products.count > 10 %>
+          <li class="listItem">
+            <%= link_to("And #{@part.parts_products.count() - 1} more products", suited_path(:part_id => @part.id)) %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+</div>
+<% if flash[:item_added] %>
+  <%= render :partial => "parts/cart_show_modal", :locals => {:cart => @cart, :cart_items => @cart_items} %>
+<% end %>

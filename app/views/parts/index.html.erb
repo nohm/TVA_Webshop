@@ -1,37 +1,37 @@
 <% provide(:title, "Parts") %>
 <% breadcrumb :parts, @parts_products %>
-  <div class="panel-body panel-table">
+<div class="panel-body panel-table">
     
-    <% if @part_amount == 0 %>
-      <p class="empty_list">
-        <%= "No products found for this category" %>
-      </p>
-    <% else %>
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th><%= "Description" %></th>
+  <% if @part_amount == 0 %>
+    <p class="empty_list">
+      <%= "No products found for this category" %>
+    </p>
+  <% else %>
+    <div class="table-responsive">
+      <table class="table table-hover borderGray">
+        <thead>
+          <tr>
+            <th><%= "Description" %></th>
+            <th></th>
+            <% if logged_in? %>
               <th></th>
-              <% if logged_in? %>
-                <th></th>
-                <th class="center">Stock</th>
-                <th class="center">Price</th>
-                <th></th>
-                <% if current_user.manager? %>
-                  <th class="small-col"></th>
-                  <th class="small-col"></th>
-                  <th class="small-col"></th>
-                  <th class="small-col"></th>
-                  <th class="small-col"></th>
-                  <th class="small-col"></th>
-                  <th class="small-col"></th>
-                <% end %>
+              <th class="center">Stock</th>
+              <th class="center">Price</th>
+              <th></th>
+              <% if current_user.manager? %>
+                <th class="small-col"></th>
+                <th class="small-col"></th>
+                <th class="small-col"></th>
+                <th class="small-col"></th>
+                <th class="small-col"></th>
+                <th class="small-col"></th>
+                <th class="small-col"></th>
               <% end %>
-            </tr>
-          </thead>
-          <tbody>
-            <% @parts_products.each do |part_product| %>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @parts_products.each do |part_product| %>
             <% if part_product.part.category_id == params[:category_id].to_i %>
               <tr>
                 <td class="col-lg-4 col-md-5">
@@ -86,7 +86,7 @@
                       <% end %>
                     </td>
                   <% else %>
-                  
+                    
                     <td class="center"><%= PartStock.where(part_id: part_product.part_id).sum('stock') %></td>
                   <% end %>
                   <td class="center">
@@ -136,18 +136,21 @@
                 <% end %>
               </tr>
             <% end %>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% end %>
-  </div>
-  <div class="panel-footer">
-    <% if logged_in? && current_user.manager? %>
-      <%= link_to("Add part", new_device_product_category_part_path, :class => 'btn btn-mini btn-primary') %>
-    <% end %>
-  </div>
-  <% if flash[:item_added] %>
-    <%= render :partial => "cart_show_modal", :locals => {:cart => @cart, :cart_items => @cart_items} %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   <% end %>
+</div>
+<div class="panel-footer noPadding">
+  <% unless (paginate @parts_products).blank? %>
+    <%= paginate @parts_products %><br>
+  <% end %>
+  <% if logged_in? && current_user.manager? %>
+    <%= link_to("Add part", new_device_product_category_part_path, :class => 'btn btn-mini btn-primary') %>
+  <% end %>
+</div>
+<% if flash[:item_added] %>
+  <%= render :partial => "cart_show_modal", :locals => {:cart => @cart, :cart_items => @cart_items} %>
+<% end %>
   

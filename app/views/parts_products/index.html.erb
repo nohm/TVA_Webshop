@@ -1,43 +1,46 @@
 <% provide(:title, "Part connections") %>
 <% breadcrumb :parts_products, @parts_products %>
-  <div class="panel-body panel-table">
-  	<div class="table-responsive">
-      <table class="table table-hover">
-        <thead>
+<div class="panel-body panel-table">
+  <div class="table-responsive">
+    <table class="table table-hover borderGray">
+      <thead>
+        <tr>
+          <th>Device</th>
+          <th>Brand</th>
+          <th>Model</th>
+          <th>Model extended</th>
+          <th>Type</th>
+          <th>Part number</th>
+          <% if @parts_products.length != 1 %>
+            <th class="small-col"></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @parts_products.each do |part_product| %>
           <tr>
-          	<th>Device</th>
-            <th>Brand</th>
-            <th>Model</th>
-            <th>Model extended</th>
-            <th>Type</th>
-            <th>Part number</th>
-            <% if @parts_products.length != 1 %>
-              <th class="small-col"></th>
+          	<td><%= part_product.product.device.name.titleize %></td>
+            <td><%= part_product.product.brand %></td>
+            <td><%= part_product.product.model %></td>
+            <td><%= part_product.product.model_extended %></td>
+            <td><%= part_product.product.type_number %></td>
+            <td><%= part_product.product.partnumber %></td>
+            <% if @parts_products.length != 1 %>  
+              <td>
+                <%= link_to(device_product_category_part_parts_product_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], part_product), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
+                  <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                <% end %>
+              </td>
             <% end %>
           </tr>
-        </thead>
-        <tbody>
-          <% @parts_products.each do |part_product| %>
-          	<tr>
-          		<td><%= part_product.product.device.name.titleize %></td>
-              <td><%= part_product.product.brand %></td>
-              <td><%= part_product.product.model %></td>
-              <td><%= part_product.product.model_extended %></td>
-              <td><%= part_product.product.type_number %></td>
-              <td><%= part_product.product.partnumber %></td>
-              <% if @parts_products.length != 1 %>  
-                <td>
-                  <%= link_to(device_product_category_part_parts_product_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], part_product), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
-                    <span class="glyphicon glyphicon-remove" title="Delete"></span>
-                  <% end %>
-                </td>
-              <% end %>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
+        <% end %>
+      </tbody>
+    </table>
   </div>
-  <div class="panel-footer">
-    <%= link_to("Add connection", new_device_product_category_part_parts_product_path, :class => 'btn btn-mini btn-primary') %>
-  </div>
+</div>
+<div class="panel-footer noPadding">
+  <% unless (paginate @parts_products).blank? %>
+    <%= paginate @parts_products %><br>
+  <% end %>
+  <%= link_to("Add connection", new_device_product_category_part_parts_product_path, :class => 'btn btn-mini btn-primary') %>
+</div>

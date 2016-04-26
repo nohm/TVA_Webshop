@@ -17,12 +17,12 @@ class ProductsController < ApplicationController
   end
 
   def new
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
     @product = Product.new
   end
 
   def create
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
     params[:product][:device_id] = params[:device_id]
     @product = Product.new(product_params)
     brand = params[:product][:brand]
@@ -44,12 +44,12 @@ class ProductsController < ApplicationController
   end
 
   def edit
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
     @product = Product.find(params[:id])
   end
 
   def update
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
     params[:product][:device_id] = params[:device_id]
     @product = Product.find(params[:id])
     brand = params[:product][:brand]
@@ -71,7 +71,7 @@ class ProductsController < ApplicationController
   end
 
   def destroy
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
     product = Product.find(params[:id])
     product.destroy
     redirect_to device_products_path(params[:device_id])

@@ -14,6 +14,7 @@ class CartsController < ApplicationController
 		message = []
 		is_already_saved = false
 		@cart_items.each do |item|
+			item.discount_tier = DiscountPrice.where(part_id: item.part_id, amount: 0..(item.amount)).last.amount
 			item.price_tier_discount = DiscountPrice.where(part_id: item.part_id, amount: 0..(item.amount)).last.price
 			item.save
 
@@ -28,11 +29,7 @@ class CartsController < ApplicationController
 				flash.now[:danger] = message
 			end
 
-			unless item.price_coupon_discount.blank?
-				@cart_price_discount += ((item.price_tier_discount * item.amount) - (item.price_coupon_discount * item.amount))
-			end
-
- 			unless coupon.blank?
+ 			if !coupon.blank?
 	 			if coupon.amount > 0 && coupon.expiration_date > Time.now.utc
 					if coupon.part_ids.empty? && coupon.category_ids.empty? && !coupon.user_ids.empty?	
 						if coupon.user_ids.include?(@cart.user_id)
@@ -86,15 +83,24 @@ class CartsController < ApplicationController
 				else
 					@cart.coupon_code = nil
 					@cart.save
-					#redirect_to user_carts_path(current_user)
+					redirect_to user_carts_path(current_user)
 					flash[:notice] = "Coupon invalid"
 				end
+			elsif !@cart.coupon_code.blank?
+				@cart.coupon_code = nil
+				@cart.save
+				redirect_to user_carts_path(current_user)
+				flash[:notice] = "Coupon invalid"
 			end
 
 			@cart_price_total += (item.price_tier_discount * item.amount)
 
 			if @cart.delivery_method == "Shipping"
 				total_weight += (item.part.weight * item.amount)
+			end
+
+			unless item.price_coupon_discount.blank?
+				@cart_price_discount += ((item.price_tier_discount * item.amount) - (item.price_coupon_discount * item.amount))
 			end
 		end
 
@@ -103,7 +109,7 @@ class CartsController < ApplicationController
 		else
 			@cart_price_total_discount = @cart_price_total
 		end
-
+		
 		if total_weight.between?(weight_array[0], weight_array[1] - 1)
 			@shipping_cost = shipping_array[0]
 		elsif total_weight.between?(weight_array[1], weight_array[2] - 1)
@@ -219,8 +225,8 @@ class CartsController < ApplicationController
 				part_stocks = PartStock.where(part_id: part.id).order('stock DESC')
 				purchase_amount = item.amount
 
-				# if cart.delivery_method == "Shipping"
-					if (part_stocks.sum('stock') - item.amount) >= 0
+				if (part_stocks.sum('stock') - item.amount) >= 0
+					if cart.delivery_method == "Shipping"
 						part_stocks.each do |part_stock|
 							if (part_stock.stock - item.amount) >= 0
 								part_stock.stock -= item.amount
@@ -235,15 +241,38 @@ class CartsController < ApplicationController
 									part_stock.stock -= purchase_amount
 									part_stock.save
 									purchase_amount = 0
+									break
 								end
 							end
 						end
-					else
-						errors = true
+					elsif cart.delivery_method == "Pick up"
+						location_stock = PartStock.find_by(part_id: part.id, location_id: cart.location_id)
+						if location_stock.stock > purchase_amount
+							location_stock.stock -= item.amount
+							location_stock.save
+						elsif location_stock.stock < purchase_amount
+							purchase_amount -= location_stock.stock
+							location_stock.stock = 0
+							location_stock.save
+							if purchase_amount != 0
+								part_stocks.each do |part_stock|
+									if part_stock.stock < purchase_amount
+										purchase_amount -= part_stock.stock
+										part_stock.stock = 0
+										part_stock.save
+									else
+										part_stock.stock -= purchase_amount
+										part_stock.save
+										purchase_amount = 0
+										break
+									end
+								end
+							end
+						end
 					end
-				# elsif cart.delivery_method == "Pick up"
-					# do something
-				# end
+				else
+					errors = true
+				end
 			end
 			if errors == false
 				cart.purchased = true

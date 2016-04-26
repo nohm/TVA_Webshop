@@ -7,7 +7,7 @@
     <%= bootstrap_form_for(@user) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
 
-      <%= f.text_field      :name, :placeholder => "e.g. Dennis Lop" %>
+      <%= f.text_field      :name, :placeholder => "e.g. Dennis Lop", autofocus: true %>
       <%= f.email_field     :email, :placeholder => "e.g. Example@Example.com" %>
       <%= f.text_field      :street, :placeholder => "e.g. Twentelaan 2" %>
       <%= f.text_field      :city, :placeholder => "e.g. Almelo" %>

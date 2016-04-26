@@ -1,17 +1,26 @@
 <% provide(:title, "Invoice") %>
 <% breadcrumb :invoice, @invoice %>
-
 <div class="well well-large">
   <div class="row">
     <div class="col-xs-6 col-md-4 col-md-offset-2">
       <strong>Sender</strong>
-      <p>
-        TVA Service Center<br>
-		    Twentelaan 2<br>
-		    7609 RE Almelo<br>
-		    Netherlands<br>
-		    +31 546 851212
-      </p>
+      <% if @cart.delivery_method == "Shipping" %>
+        <p>
+          TVA Service Center<br>
+  		    Twentelaan 2<br>
+  		    7609 RE Almelo<br>
+  		    Netherlands<br>
+  		    +31 546 851212
+        </p>
+      <% else %>
+        <p>
+          <%= @location.name %><br>
+          <%= @location.street %><br>
+          <%= @location.postal_code + ' ' + @location.city %><br>
+          <%= ISO3166::Country[@location.country] %><br>
+          <%= @location.phone_number %>
+        </p>
+      <% end %>
     </div>
     <div class="col-xs-6 col-md-4 col-md-offset-2">
       <strong>Addressee</strong>
@@ -51,9 +60,7 @@
               <th>Amount</th>
               <th>Price</th>
               <th>Tier</th>
-              <% if !@cart.coupon_code.blank? %>
-                <th>Discount price</th>
-              <% end %>
+              <th>Discount price</th>
             <% end %>
             <th>Total</th>
           </tr>
@@ -73,13 +80,7 @@
               <td class="width12"><%= item.amount.to_s + "x" %></td>
               <td class="width12"><%= number_to_currency(item.price, unit: '€') %></td>
               <td class="width12"><%= item.discount_tier.to_s + "+" %></td>
-              <% if !@cart.coupon_code.blank? %>
-                <% if !item.price_coupon_discount.blank? %>
-                  <td class="width12"><%= number_to_currency(item.price_tier_discount, unit: "€") %></td>
-                <% else %>
-                  <td>N/A</td>
-                <% end %>
-              <% end %>
+              <td class="width12"><%= number_to_currency(item.price_tier_discount, unit: "€") %></td>
               <td class="width12"><%= number_to_currency(item.price_tier_discount * item.amount, unit: "€") %></td>
             </tr>
           <% end %>

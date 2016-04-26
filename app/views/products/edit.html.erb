@@ -5,7 +5,7 @@
     <%= bootstrap_form_for(@product, :url => device_product_path(params[:device_id], params[:id])) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
     	
-      <%= f.text_field :brand, label: 'Brand <small>Only pick one</small>'.html_safe %>
+      <%= f.text_field :brand, label: 'Brand <small>Only pick one</small>'.html_safe, autofocus: true %>
       <%= f.select(:brand_select, Product.order('brand').uniq.pluck(:brand), { include_blank: true, hide_label: true}) %>
       <%= f.text_field :model %>
       <%= f.text_field :model_extended %>

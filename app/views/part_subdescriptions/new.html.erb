@@ -5,7 +5,7 @@
     <%= bootstrap_form_for(@description, :url => device_product_category_part_partdescription_part_subdescriptions_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], params[:partdescription_id])) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
       
-      <%= f.text_field :title %>
+      <%= f.text_field :title, autofocus: true %>
       <%= f.text_field :value %>
  
       <%= f.submit "Add description", class: "btn btn-primary" %>

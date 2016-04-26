@@ -1,37 +1,37 @@
 <% provide(:title, "Categories") %>
 <% breadcrumb :categories, @categories %>
-  <div class="panel-body panel-table" id="Category">
-    <% if @categories.length == 0 %>
-      <p class="empty_list">
-        <%= "De lijst is leeg" %>
-      </p>
-    <% else %>
-      <div class="overview-row row">
-        <% @categories.each do |category| %>
-          <div class="col-sm-3 overview-tab category-tab" data-category-id="<%= category.id %>">
-            <div class="thumbnail">
-              <%= link_to device_product_category_parts_path(params[:device_id], params[:product_id], category) do %>
-                <%= image_tag category.cimg.url(:medium) %>
-              <% end %>
-              <div class="caption">
-                <p class="center"><b>Category: </b><%= category.name %></p>
-                <% if logged_in? && current_user.manager? %>
-                  <%= link_to edit_device_product_category_path(params[:device_id], params[:product_id], category) do %>
-                    <span class="glyphicon glyphicon-pencil" title="Edit"></span>
-                  <% end %>
-                  <%= link_to device_product_category_path(params[:device_id], params[:product_id], category), data: { confirm: "Are you sure?" }, method: :delete do %>
-                    <span class="glyphicon glyphicon-remove" title="Delete"></span>
-                  <% end %>
+<div class="panel-body panel-table" id="Category">
+  <% if @categories.length == 0 %>
+    <p class="empty_list">
+      <%= "De lijst is leeg" %>
+    </p>
+  <% else %>
+    <div class="overview-row row">
+      <% @categories.each do |category| %>
+        <div class="col-sm-3 overview-tab category-tab" data-category-id="<%= category.id %>">
+          <div class="thumbnail">
+            <%= link_to device_product_category_parts_path(params[:device_id], params[:product_id], category) do %>
+              <%= image_tag category.cimg.url(:medium) %>
+            <% end %>
+            <div class="caption">
+              <p class="center"><b>Category: </b><%= category.name %></p>
+              <% if logged_in? && current_user.manager? %>
+                <%= link_to edit_device_product_category_path(params[:device_id], params[:product_id], category) do %>
+                  <span class="glyphicon glyphicon-pencil" title="Edit"></span>
                 <% end %>
-              </div>
+                <%= link_to device_product_category_path(params[:device_id], params[:product_id], category), data: { confirm: "Are you sure?" }, method: :delete do %>
+                  <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                <% end %>
+              <% end %>
             </div>
           </div>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
-  <div class="panel-footer">
-    <% if logged_in? && current_user.manager? %>
-      <%= link_to("Add category", new_device_product_category_path, class: 'btn btn-mini btn-primary') %>
-    <% end %>
-  </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+<div class="panel-footer">
+  <% if logged_in? && current_user.manager? %>
+    <%= link_to("Add category", new_device_product_category_path, class: 'btn btn-mini btn-primary') %>
+  <% end %>
+</div>

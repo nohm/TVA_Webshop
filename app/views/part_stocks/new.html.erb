@@ -6,8 +6,7 @@
     <%= bootstrap_form_for(@part_stock, :url => device_product_category_part_part_stocks_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
 
-      <%= f.label "Location" %>
-      <%= select("part_stock", "location_id", Location.all.order(city: :asc, street: :asc).collect {|location| [ "#{location.city}, #{location.street}", location.id ] }, { prompt: 'Choose location' }, { class: "form-control", id: "location_select" }) %>
+      <%= f.select :location_id, options_for_select(Location.all.order(city: :asc, street: :asc).collect {|location| [ "#{location.city}, #{location.street}", location.id ] }, @location_id), { include_blank: "Choose location", label: "Location" }, { id: 'location_select' } %>
 
       <%= f.number_field :stock, min: 0, value: 0 %>
 

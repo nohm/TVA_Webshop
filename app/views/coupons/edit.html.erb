@@ -5,10 +5,8 @@
     <%= bootstrap_form_for(@coupon, url: coupon_path(params[:id])) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
       
-      <%= f.text_field :code %>
-      
-      <%= f.label :amount_of_uses %>
-      <%= f.text_field :amount, hide_label: true %>
+      <%= f.text_field :code, autofocus: true %>
+      <%= f.text_field :amount, label: "Amount of uses" %>
 
       <%= f.text_field :category_ids %>
       <%= select("category", "device_id", Device.all.collect {|device| [ device.name.titleize, device.id ] }, { prompt: 'Choose device' }, { class: "form-control small inline", id: "c_device_select", data: { 'url' => coupon_category_path } }) %>

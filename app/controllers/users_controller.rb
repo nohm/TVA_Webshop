@@ -1,12 +1,12 @@
 class UsersController < ApplicationController
 
   def index
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.admin?
-    @users = User.all.page(params[:page]).per(25).order('id ASC')
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.admin?
+    @users = User.all.page(params[:page]).per(10).order('id ASC')
   end
 
   def show
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.id == params[:id].to_i || logged_in? && current_user.admin?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.id == params[:id].to_i || logged_in? && current_user.admin?
     @user = User.find(params[:id])
     @invoices = Invoice.where(user_id: @user.id).page(params[:page]).per(20)
     @country = ISO3166::Country[@user.country]
@@ -17,12 +17,12 @@ class UsersController < ApplicationController
   end
 
   def edit
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.id == params[:id].to_i
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.id == params[:id].to_i
     @user = User.find(params[:id])
   end
 
   def update
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.id == params[:id].to_i || logged_in? && current_user.admin?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.id == params[:id].to_i || logged_in? && current_user.admin?
     @user = User.find(params[:id])
     if @user.update(user_params)
       redirect_to root_path
@@ -45,7 +45,7 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.admin?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.admin?
     user = User.find(params[:id])
     user.destroy
     redirect_to users_path

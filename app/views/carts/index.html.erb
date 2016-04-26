@@ -34,12 +34,12 @@
             <td colspan="2"><h3>Shipping cost</h3></td>
             <td colspan="1"><h3>€0.00</h3></td>
           </tr>
-          <tr name="TotalNoBTW" class="right">
+          <tr class="right">
             <td colspan="5" class="borderless"></td>
             <td colspan="2">Total excl. VAT</td>
             <td colspan="1">€0.00</td>
           </tr>
-          <tr name="BTW" class="right">
+          <tr class="right">
             <td colspan="5" class="borderless"></td>
             <td colspan="2" class="borderless"><h3>21% VAT</h3></td>
             <td colspan="1" class="borderless"><h3>€0.00</h3></td>
@@ -108,12 +108,12 @@
               <td class="borderless"><h3><%= number_to_currency(@cart_price_discount, unit: '€') %> -<h3></td>
             </tr>
           <% end %>
-          <tr name="TotalNoBTW" class="right">
+          <tr class="right">
             <td colspan="<%= @colspan %>" class="borderless"></td>
             <td colspan="2">Total excl. VAT</td>
             <td><%= number_to_currency(@cart_price_total_discount + @cart.shipping_cost, unit: "€") %></td>
           </tr>
-          <tr name="BTW" class="right">
+          <tr class="right">
             <td colspan="<%= @colspan %>" class="borderless"></td>
             <td colspan="2" class="borderless"><h3>21% VAT</h3></td>
             <td class="borderless"><h3><%= number_to_currency((@cart_price_total_discount + @cart.shipping_cost) * 0.21, unit: "€") %> +</h3></td>

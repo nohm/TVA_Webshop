@@ -48,7 +48,7 @@ class HomeController < ApplicationController
     end
 		@reminder = Reminder.new
 		@cart_item = CartItem.new
-		@all_parts = Part.where(category_id: params[:category_id]).page(params[:page]).per(20).order('id ASC')
+		@all_parts = Part.where(category_id: params[:category_id]).page(params[:page]).per(10).order('id ASC')
 	end
 
 	def part
@@ -67,12 +67,12 @@ class HomeController < ApplicationController
 
 	def suitable_products
 		@part = Part.find(params[:part_id])
-		@connections = @part.parts_products.page(params[:page]).per(1)
+		@connections = @part.parts_products.page(params[:page]).per(30)
 	end
 
 	def invoices
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
-		@invoices = Invoice.all.page(params[:page]).per(25)
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
+		@invoices = Invoice.all.page(params[:page]).per(10)
 	end
 
 	def options_device

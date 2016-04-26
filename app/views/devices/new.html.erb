@@ -5,7 +5,7 @@
     <%= bootstrap_form_for(@device) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
     	
-      <%= f.text_field :name, label: 'Device' %>
+      <%= f.text_field :name, label: 'Device', autofocus: true %>
 
       <%= f.submit "Add device", class: "btn btn-primary" %>
       <%= link_to("Cancel", devices_path, class: "btn btn-primary") %>

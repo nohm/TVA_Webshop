@@ -1,49 +1,52 @@
 <% provide(:title, "Parts") %>
 <% breadcrumb :partimages, @partimages %>
-  <div class="panel-body panel-table">
-    <% if @partimages.length == 0 %>
-      <p class="empty_list">
-        <%= "De lijst is leeg" %>
-      </p>
-    <% else %>
-      <div class="table-responsive">
-        <table class="table table-striped table-hover">
-          <thead>
+<div class="panel-body panel-table">
+  <% if @partimages.length == 0 %>
+    <p class="empty_list">
+      <%= "De lijst is leeg" %>
+    </p>
+  <% else %>
+    <div class="table-responsive col-md-2">
+      <table class="table table-hover borderGray">
+        <thead>
+          <tr>
+            <th class="small-col"><%= "Id" %></th>
+            <th><%= "Picture" %></th>
+            <% if current_user.manager? %>
+              <th class="small-col"></th>
+              <th class="small-col"></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @partimages.each do |partimage| %>
             <tr>
-              <th class="small-col"><%= "Id" %></th>
-              <th><%= "Picture" %></th>
+              <td><%= partimage.id %></td>
+              <td><%= image_tag(partimage.pimg.url(:thumb), class: "borderGray") %></td>
               <% if current_user.manager? %>
-                <th class="small-col"></th>
-                <th class="small-col"></th>
+                <td>
+                  <%= link_to edit_device_product_category_part_partimage_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partimage.id) do %>
+                    <span class="glyphicon glyphicon-pencil" title="Edit"></span>
+                  <% end %>
+                </td>
+                <td>
+                  <%= link_to device_product_category_part_partimage_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partimage.id), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                    <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                  <% end %>
+                </td>
               <% end %>
             </tr>
-          </thead>
-          <tbody>
-            <% @partimages.each do |partimage| %>
-              <tr>
-                <td><%= partimage.id %></td>
-                <td><%= image_tag partimage.pimg.url(:thumb) %></td>
-                <% if current_user.manager? %>
-                  <td>
-                    <%= link_to edit_device_product_category_part_partimage_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partimage.id) do %>
-                      <span class="glyphicon glyphicon-pencil" title="Edit"></span>
-                    <% end %>
-                  </td>
-                  <td>
-                    <%= link_to device_product_category_part_partimage_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partimage.id), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
-                      <span class="glyphicon glyphicon-remove" title="Delete"></span>
-                    <% end %>
-                  </td>
-                <% end %>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% end %>
-  </div>
-  <div class="panel-footer">
-    <% if current_user.manager? %>
-      <%= link_to("Add image", new_device_product_category_part_partimage_path, :class => 'btn btn-mini btn-primary') %>
-    <% end %>
-  </div>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>
+<div class="panel-footer">
+  <% unless (paginate @partimages).blank? %>
+    <%= paginate @partimages %><br>
+  <% end %>
+  <% if current_user.manager? %>
+    <%= link_to("Add image", new_device_product_category_part_partimage_path, :class => 'btn btn-mini btn-primary') %>
+  <% end %>
+</div>

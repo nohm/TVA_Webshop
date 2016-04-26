@@ -5,7 +5,7 @@
     <%= bootstrap_form_for(@partdescription, :url => device_product_category_part_partdescription_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], params[:id])) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
       
-      <%= f.text_field :title %>
+      <%= f.text_field :title, autofocus: true %>
 
       <%= f.submit "Edit description", class: "btn btn-primary" %>
       <%= link_to("Cancel", device_product_category_part_partdescriptions_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id]), class: "btn btn-primary") %>

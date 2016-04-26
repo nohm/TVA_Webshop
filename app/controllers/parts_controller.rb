@@ -4,7 +4,7 @@ class PartsController < ApplicationController
       @cart = Cart.where(user_id: current_user.id, purchased: false).first
       @cart_items = CartItem.where(cart_id: @cart.id).order('id')
     end
-    @parts_products = PartsProduct.where(product_id: params[:product_id]).page(params[:page]).per(25).order('id ASC')
+    @parts_products = PartsProduct.where(product_id: params[:product_id]).page(params[:page]).per(10).order('id ASC')
     @part_amount = 0
     @parts_products.each do |part_product|
       if part_product.part.category_id == params[:category_id].to_i
@@ -30,12 +30,12 @@ class PartsController < ApplicationController
   end
 
   def new
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
     @part = Part.new
   end
 
   def create
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
     params[:part][:category_id] = params[:category_id]
     params[:part][:device_id] = params[:device_id]
     price = params[:part][:price].to_s.gsub(',', '.').to_f
@@ -64,12 +64,12 @@ class PartsController < ApplicationController
   end
 
   def edit
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
     @part = Part.find(params[:id])
   end
 
   def update
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
     @part = Part.find(params[:id])
     condition = params[:part][:condition]
     condition_select = params[:part][:condition_select]
@@ -90,7 +90,7 @@ class PartsController < ApplicationController
   end
 
   def destroy
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
     part = Part.find(params[:id])
     part.destroy
     redirect_to device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])

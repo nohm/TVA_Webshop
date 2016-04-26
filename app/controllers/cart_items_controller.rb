@@ -54,6 +54,7 @@ class CartItemsController < ApplicationController
 		if params[:cart_item][:amount].to_i <= PartStock.where(part_id: cart_item.part.id).sum('stock')
 			if params[:cart_item][:amount].to_i > 0	
 				params[:cart_item][:discount_tier] = DiscountPrice.where(part_id: cart_item.part_id, amount: 0..(params[:cart_item][:amount].to_i)).last.amount
+				params[:cart_item][:price_tier_discount] = DiscountPrice.where(part_id: cart_item.part_id, amount: 0..(params[:cart_item][:amount].to_i)).last.price
 		    if cart_item.update_attributes(cart_item_params)
 		      render inline: "Succeeded"
 		    else

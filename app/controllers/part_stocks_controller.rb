@@ -1,16 +1,16 @@
 class PartStocksController < ApplicationController
 	def index
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
-		@part_stocks = PartStock.where(part_id: params[:part_id]).page(params[:page]).per(25).order('id ASC')
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
+		@part_stocks = PartStock.where(part_id: params[:part_id]).page(params[:page]).per(10).order('id ASC')
 	end
 
 	def new
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		@part_stock = PartStock.new
 	end
 
 	def create
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		@part_stock = PartStock.new(part_stock_params)
 		if @part_stock.save
       redirect_to device_product_category_part_part_stocks_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])
@@ -21,12 +21,12 @@ class PartStocksController < ApplicationController
 	end
 
 	def edit
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		@part_stock = PartStock.find(params[:id])
 	end
 
 	def update
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		@part_stock = PartStock.find(params[:id])
 
 		if PartStock.where(part_id: @part_stock.part_id).sum('stock') == 0 && params[:part_stock][:stock].to_i > 0
@@ -49,7 +49,7 @@ class PartStocksController < ApplicationController
 	end
 
 	def destroy
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		part_stock = PartStock.find(params[:id])
 		part_stock.destroy
 		redirect_to device_product_category_part_part_stocks_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id])

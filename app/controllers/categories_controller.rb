@@ -4,12 +4,12 @@ class CategoriesController < ApplicationController
   end
 
 	def new
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		@category = Category.new
 	end
 
 	def create
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		params[:category][:product_id] = params[:product_id]
     params[:category][:device_id] = params[:device_id]
 
@@ -24,12 +24,12 @@ class CategoriesController < ApplicationController
   end
 
   def edit
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
     @category = Category.find(params[:id])
   end
 
   def update
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
     @category = Category.find(params[:id])
     if @category.update(category_params)
       @category.update_attribute(:name,  @category.product.device.name.titleize + ' ' + @category.name) unless @category.name.include?(@category.product.device.name.titleize)
@@ -41,7 +41,7 @@ class CategoriesController < ApplicationController
   end
 
   def destroy
-    redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+    redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
     category = Category.find(params[:id])
     category.destroy
     redirect_to device_product_categories_path(params[:device_id], params[:product_id])

@@ -5,7 +5,7 @@
     <%= bootstrap_form_for(@part, :url => device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], params[:id])) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
 
-      <%= f.text_field    :name %>
+      <%= f.text_field    :name, autofocus: true %>
       <%= f.text_field    :brand %>
       <%= f.select(:condition_select, options_for_select(Part.order('condition').uniq.pluck(:condition).collect { |condition| [condition] }, @part.condition), { include_blank: "Select an existing condition", :label => 'Condition <small>Either select an existing condition or create a new one</small>'.html_safe}) %>
       <%= f.text_field    :condition, :value => nil, :hide_label => true %>

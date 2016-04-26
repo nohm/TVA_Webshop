@@ -1,45 +1,48 @@
 <% provide(:title, "Part Stock") %>
 <% breadcrumb :part_stocks, @part_stocks %>
-  <div class="panel-body panel-table">
+<div class="panel-body panel-table">
     
-    <% if @part_stocks.blank? %>
-      <p class="empty_list"> No stock found for this part </p>
-    <% else %>
-      <div class="table-responsive col-md-6 col-md-offset-3">
-        <table class="table table-hover">
-          <thead>
+  <% if @part_stocks.blank? %>
+    <p class="empty_list"> No stock found for this part </p>
+  <% else %>
+    <div class="table-responsive col-md-6 col-md-offset-3">
+      <table class="table table-hover borderGray">
+        <thead>
+          <tr>
+            <th>Location</th>
+            <th>Stock</th>
+            <th class="small-col"></th>
+            <th class="small-col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @part_stocks.each do |part_stock| %>
+            <% location = Location.find(part_stock.location_id) %>
             <tr>
-              <th>Location</th>
-              <th>Stock</th>
-              <th class="small-col"></th>
-              <th class="small-col"></th>
+              <td><%= "#{location.city}, #{location.street}" %></td>
+              <td><%= part_stock.stock %></td>
+              <td>
+                <%= link_to edit_device_product_category_part_part_stock_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], part_stock.id) do %>
+                  <span class="glyphicon glyphicon-pencil" title="Edit"></span>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to device_product_category_part_part_stock_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], part_stock.id), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                  <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                <% end %>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            <% @part_stocks.each do |part_stock| %>
-              <% location = Location.find(part_stock.location_id) %>
-              <tr>
-                <td><%= "#{location.city}, #{location.street}" %></td>
-                <td><%= part_stock.stock %></td>
-                <td>
-                  <%= link_to edit_device_product_category_part_part_stock_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], part_stock.id) do %>
-                    <span class="glyphicon glyphicon-pencil" title="Edit"></span>
-                  <% end %>
-                </td>
-                <td>
-                  <%= link_to device_product_category_part_part_stock_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], part_stock.id), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
-                    <span class="glyphicon glyphicon-remove" title="Delete"></span>
-                  <% end %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% end %>
-  </div>
-  <div class="panel-footer col-md-offset-3">
-    <% if logged_in? && current_user.manager? %>
-      <%= link_to("Add stock", new_device_product_category_part_part_stock_path, :class => 'btn btn-mini btn-primary') %>
-    <% end %>
-  </div>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>
+<div class="panel-footer col-md-offset-3">
+  <% unless (paginate @part_stocks).blank? %>
+    <%= paginate @part_stocks %><br>
+  <% end %>
+  <% if logged_in? && current_user.manager? %>
+    <%= link_to("Add stock", new_device_product_category_part_part_stock_path, :class => 'btn btn-mini btn-primary') %>
+  <% end %>
+</div>

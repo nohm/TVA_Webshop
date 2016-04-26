@@ -6,7 +6,7 @@
       <%= f.alert_message "Please fix the errors below." %>
 
       <% if @discount_price.amount != 1 %>
-      	<%= f.number_field :amount, :autofocus => true, :required => 'required' %>
+      	<%= f.number_field :amount, :autofocus => true, :required => 'required', autofocus: true %>
       <% else %>
       	<%= f.number_field :amount, :disabled => 'disabled' %>
       <% end %>

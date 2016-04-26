@@ -1,16 +1,16 @@
 class LocationsController < ApplicationController
 	def index
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
-		@locations = Location.all.page(params[:page]).per(25).order('id ASC')
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
+		@locations = Location.all.page(params[:page]).per(10).order('id ASC')
 	end
 
 	def new
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		@location = Location.new
 	end
 
 	def create
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		@location = Location.new(location_params)
 		if @location.save
       redirect_to locations_path
@@ -21,12 +21,12 @@ class LocationsController < ApplicationController
 	end
 
 	def edit
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		@location = Location.find(params[:id])
 	end
 
 	def update
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		@location = Location.find(params[:id])
     if @location.update(location_params)
       redirect_to locations_path
@@ -37,7 +37,7 @@ class LocationsController < ApplicationController
 	end
 
 	def destroy
-		redirect_to root_path, :alert => "Unauthorized" and return unless logged_in? && current_user.manager?
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		location = Location.find(params[:id])
 		location.destroy
 		redirect_to locations_path

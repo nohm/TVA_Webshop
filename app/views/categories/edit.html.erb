@@ -5,7 +5,7 @@
     <%= bootstrap_form_for(@category, url: device_product_category_path(params[:device_id], params[:product_id], params[:id])) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
       <%= image_tag @category.cimg.url(:medium), class: "borderGray" %>
-      <%= f.text_field :name %>
+      <%= f.text_field :name, autofocus: true %>
       <%= f.file_field :cimg, class: "big", label: "Placeholder image" %>
 
       <%= f.submit "Edit category", class: "btn btn-primary" %>

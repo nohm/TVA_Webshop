@@ -10,80 +10,85 @@
     <% breadcrumb :product_brand, @products %>
   <% end %>
 <% end %>
-  <div class="panel-body panel-table">
-    <% if @products.length == 0 %>
-      <p class="empty_list">
-        <%= "De lijst is leeg" %>
-      </p>
-    <% else %>
-      <% if logged_in? && current_user.role.name != "Client" %>
-        <div class="table-responsive">
-          <table class="table table-striped table-hover">
-            <thead>
-              <tr>
-                <th class="small-col">Id</th>
-                <th>Brand</th>
-                <th>Model</th>
-                <th>Model extended</th>
-                <th>Type</th>
-                <th>Part number</th>
+<div class="panel-body panel-table">
+  <% if @products.length == 0 %>
+    <p class="empty_list">
+      <%= "De lijst is leeg" %>
+    </p>
+  <% else %>
+    <% if logged_in? && current_user.role.name != "Client" %>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover borderGray">
+          <thead>
+            <tr>
+              <th class="small-col">Id</th>
+              <th>Brand</th>
+              <th>Model</th>
+              <th>Model extended</th>
+              <th>Type</th>
+              <th>Part number</th>
+              <th class="small-col"></th>
+              <% if logged_in? && current_user.manager? %>
                 <th class="small-col"></th>
+                <th class="small-col"></th>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody>
+            <% @products.each do |product| %>
+              <tr>
+                <td><%= product.id %></td>
+                <td><%= product.brand %></td>
+                <td><%= product.model %></td>
+                <td><%= product.model_extended %></td>
+                <td><%= product.type_number %></td>
+                <td><%= product.partnumber %></td>
+                  <td>
+                    <%= link_to device_product_categories_path(params[:device_id], product) do %>
+                      <span class="glyphicon glyphicon-search" title="Show"></span>
+                    <% end %>
+                  </td>
                 <% if logged_in? && current_user.manager? %>
-                  <th class="small-col"></th>
-                  <th class="small-col"></th>
+                  <td>
+                    <%= link_to edit_device_product_path(params[:device_id], product) do %>
+                      <span class="glyphicon glyphicon-pencil" title="Edit"></span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <%= link_to(device_product_path(params[:device_id], product), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
+                      <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                    <% end %>
+                  </td>
                 <% end %>
               </tr>
-            </thead>
-            <tbody>
-              <% @products.each do |product| %>
-                <tr>
-                  <td><%= product.id %></td>
-                  <td><%= product.brand %></td>
-                  <td><%= product.model %></td>
-                  <td><%= product.model_extended %></td>
-                  <td><%= product.type_number %></td>
-                  <td><%= product.partnumber %></td>
-                    <td>
-                      <%= link_to device_product_categories_path(params[:device_id], product) do %>
-                        <span class="glyphicon glyphicon-search" title="Show"></span>
-                      <% end %>
-                    </td>
-                  <% if logged_in? && current_user.manager? %>
-                    <td>
-                      <%= link_to edit_device_product_path(params[:device_id], product) do %>
-                        <span class="glyphicon glyphicon-pencil" title="Edit"></span>
-                      <% end %>
-                    </td>
-                    <td>
-                      <%= link_to(device_product_path(params[:device_id], product), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
-                        <span class="glyphicon glyphicon-remove" title="Delete"></span>
-                      <% end %>
-                    </td>
-                  <% end %>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      <% else %>
-        <% @products.each do |product| %>
-          <% if product.has_attribute?(:model_extended) %>
-            <%= link_to product.model_extended, device_product_categories_path(params[:device_id], Product.where(model_extended: product.model_extended).first.id ) %><br>
-          <% elsif product.has_attribute?(:model) %>
-            <% if Product.where(model: product.model).first.model_extended.blank? %>
-              <%= link_to product.model, device_product_categories_path(params[:device_id], Product.where(model: product.model).first.id ) %><br>
-            <% else %>
-              <%= link_to product.model, device_products_path(params[:device_id], brand: product.brand, model: product.model)%><br>
             <% end %>
-          <% elsif product.has_attribute?(:brand) %>
-            <%= link_to product.brand, device_products_path(params[:device_id], brand: product.brand) %><br>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <% @products.each do |product| %>
+        <% if product.has_attribute?(:model_extended) %>
+          <%= link_to product.model_extended, device_product_categories_path(params[:device_id], Product.where(model_extended: product.model_extended).first.id ) %><br>
+        <% elsif product.has_attribute?(:model) %>
+          <% if Product.where(model: product.model).first.model_extended.blank? %>
+            <%= link_to product.model, device_product_categories_path(params[:device_id], Product.where(model: product.model).first.id ) %><br>
+          <% else %>
+            <%= link_to product.model, device_products_path(params[:device_id], brand: product.brand, model: product.model)%><br>
           <% end %>
+        <% elsif product.has_attribute?(:brand) %>
+          <%= link_to product.brand, device_products_path(params[:device_id], brand: product.brand) %><br>
         <% end %>
       <% end %>
     <% end %>
-  </div>
-  <div class="panel-footer">
-  <% if logged_in? && current_user.manager? %>
+  <% end %>
+</div>
+<div class="panel-footer noPadding">
+  <% if logged_in? && current_user.role.name != "Client" %>
+    <% unless @products.blank? %>
+      <%= paginate @products %><br>
+    <% end %>
+    <% if logged_in? && current_user.manager? %>
       <%= link_to("Add product", new_device_product_path, :class => 'btn btn-mini btn-primary') %>
     <% end %>
-  </div>
+  <% end %>
+</div>

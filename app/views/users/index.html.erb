@@ -1,72 +1,69 @@
 <% provide :title, "Users" %>
 <% breadcrumb :users, @users %>
 <div class="panel-body panel-table">
-      <div class="table-responsive">
-        <table class="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th class="small-col"><%= "Id" %></th>
-              <th><%= "Naam" %></th>
-              <th><%= "Email" %></th>
-              <th><%= "Role" %></th>
-              <th class="small-col"></th>
-              <th class="small-col"></th>
-              <th class="small-col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @users.each do |user| %>
-              <tr>
-                <td><%= user.id %></td>
-                <td><%= user.name %></td>
-                <td><%= user.email %></td>
-                <td><%= user.role.name %></td>
-                <td>
-                  <%= link_to(user_path(user)) do %>
-                    <span class="glyphicon glyphicon-search"></span>
-                  <% end %>
-                </td>
-                <% if user.id == 1 %>
-                  <td></td>
-                <% else %>
-                  <td>
-                    <a href="#" data-toggle="modal" data-target="#role-options-<%= user.id %>" type="button"><span class="glyphicon glyphicon-pencil"></span></a>
-                    <div id="role-options-<%= user.id %>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalLabel-user-<%= user.id%>" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <%= bootstrap_form_for user, :url => user_path(user), :html => {:method => :put, :class => 'form-horizontal' } do |f| %>
-                            <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                              <h4 class="modal-title" id="modalLabel-user-<%= user.id%>">Change role of <%= user.name %></h4>
-                            </div>
-                            <div class="modal-body">
-                              <%= f.label :role %>
-                              <%= collection_select :user, :role_id, Role.all, :id, :name, {:selected => user.role.id }, { class: 'form-control small' } %>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal"><%= "Close" %></button>
-                              <%= f.submit "Change role", :class => "btn btn-primary btn-sm" %>
-                            </div>
-                          <% end %>
-                        </div>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover borderGray">
+      <thead>
+        <tr>
+          <th class="small-col"><%= "Id" %></th>
+          <th><%= "Naam" %></th>
+          <th><%= "Email" %></th>
+          <th><%= "Role" %></th>
+          <th class="small-col"></th>
+          <th class="small-col"></th>
+          <th class="small-col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <tr>
+            <td><%= user.id %></td>
+            <td><%= user.name %></td>
+            <td><%= user.email %></td>
+            <td><%= user.role.name %></td>
+            <td>
+              <%= link_to(user_path(user)) do %>
+                <span class="glyphicon glyphicon-search"></span>
+              <% end %>
+            </td>
+            <td>
+              <a href="#" data-toggle="modal" data-target="#role-options-<%= user.id %>" type="button"><span class="glyphicon glyphicon-pencil"></span></a>
+              <div id="role-options-<%= user.id %>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalLabel-user-<%= user.id%>" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <%= bootstrap_form_for user, :url => user_path(user), :html => {:method => :put, :class => 'form-horizontal' } do |f| %>
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="modalLabel-user-<%= user.id%>">Change role of <%= user.name %></h4>
                       </div>
-                    </div>
-                  </td>
-                <% end %>
-                <% if user.id == 1 %>
-                  <td></td>
-                <% else %>
-                  <td>
-                    <% if !current_user?(user) %>
-                      <%= link_to(user_path(user), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
-                        <span class="glyphicon glyphicon-remove"></span>
-                      <% end %>
+                      <div class="modal-body">
+                        <%= f.label :role %>
+                        <%= collection_select :user, :role_id, Role.all, :id, :name, {:selected => user.role.id }, { class: 'form-control small' } %>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><%= "Close" %></button>
+                        <%= f.submit "Change role", :class => "btn btn-primary btn-sm" %>
+                      </div>
                     <% end %>
-                  </td>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <% if !current_user?(user) %>
+                <%= link_to(user_path(user), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
+                  <span class="glyphicon glyphicon-remove"></span>
                 <% end %>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   </div>
+</div>
+<div class="panel-footer noPadding">
+  <% unless (paginate @users).blank? %>
+    <%= paginate @users %><br>
+  <% end %>
+</div>
