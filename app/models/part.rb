@@ -12,7 +12,7 @@ class Part < ActiveRecord::Base
 
 	has_attached_file :partimagefull, styles: { thumb: "64x64#" }, default_url: "/images/missing.png"
 	validates_attachment_content_type :partimagefull, content_type: /\Aimage\/.*\Z/
-  validates_attachment_file_name :partimagefull, matches: [/png\Z/, /jpe?g\Z/, /gif\Z/]
+  validates_attachment_file_name :partimagefull, matches: [/png\Z/i, /jpe?g\Z/i, /gif\Z/i]
 	validates :partimagefull, dimensions: { width: 300, height: 300 }
 
 	validates :name, 				presence: true
@@ -21,7 +21,4 @@ class Part < ActiveRecord::Base
 	validates :location_id, presence: true, on: :create
 	validates :stock, 			presence: true, on: :create
 	validates :price, 			presence: true, format: { with: /\d+(?:\.\d{0,2})?/ }, on: :create
-
-	private
-
 end
