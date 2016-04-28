@@ -128,7 +128,11 @@
         </tr>
         <tr>
           <th>Warranty:</th>
-          <td><%= @part.warranty %></td>
+          <% if @part.warranty.blank? %>
+            <td>None<td>
+          <% else %>
+            <td><%= @part.warranty %></td>
+          <% end %>
         </tr>
       </tbody>
     </table>
