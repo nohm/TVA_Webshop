@@ -1,7 +1,7 @@
 class DiscountPricesController < ApplicationController
 	def index
 		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
-		@discount_prices = DiscountPrice.where(part_id: params[:part_id]).page(params[:page]).per(25)
+		@discount_prices = DiscountPrice.where(part_id: params[:part_id]).page(params[:page]).per(10)
 	end
 
 	def new

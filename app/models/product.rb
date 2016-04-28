@@ -6,7 +6,7 @@ class Product < ActiveRecord::Base
 	before_save :nil_if_blank
 
 	attr_accessor :brand_select
-	validates :type_number, 		presence: true, uniqueness: true
+	validates :type_number, 		presence: true
 	validates :partnumber, 			uniqueness: true, allow_blank: true
 	validates :model, 					presence: true
 	validates :model_extended, 	uniqueness: true, allow_blank: true

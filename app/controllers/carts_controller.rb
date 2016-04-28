@@ -247,10 +247,10 @@ class CartsController < ApplicationController
 						end
 					elsif cart.delivery_method == "Pick up"
 						location_stock = PartStock.find_by(part_id: part.id, location_id: cart.location_id)
-						if location_stock.stock > purchase_amount
+						if location_stock.stock >= purchase_amount
 							location_stock.stock -= item.amount
 							location_stock.save
-						elsif location_stock.stock < purchase_amount
+						else
 							purchase_amount -= location_stock.stock
 							location_stock.stock = 0
 							location_stock.save
