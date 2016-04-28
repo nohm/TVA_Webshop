@@ -17,7 +17,6 @@ class Part < ActiveRecord::Base
 
 	validates :name, 				presence: true
 	validates :brand, 			presence: true
-	validates :warranty
 	validates :weight, 			presence: true
 	validates :location_id, presence: true, on: :create
 	validates :stock, 			presence: true, on: :create
