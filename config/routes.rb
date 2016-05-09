@@ -29,8 +29,6 @@ Rails.application.routes.draw do
     get '/coupon_category' => 'coupons#coupon_category', :as => :coupon_category
     get '/coupon_part' => 'coupons#coupon_part', :as => :coupon_part
 
-    get '/carts' => 'home#carts'
-
     resources :coupons
 
     resources :users do

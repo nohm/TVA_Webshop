@@ -1,5 +1,7 @@
 class CartsController < ApplicationController
 	def index
+		@carts = Cart.all
+		if false
 		@cart = Cart.where(user_id: current_user.id, purchased: false).first
 		@cart_items = CartItem.where(cart_id: @cart.id ).order('id ASC') 
 		@coupon_code = @cart.coupon_code || "None"
@@ -120,6 +122,7 @@ class CartsController < ApplicationController
 
 		@cart.shipping_cost = @shipping_cost
 		@cart.save
+		end
 	end
 
 	def edit
@@ -132,7 +135,7 @@ def update
 		if @cart.update(cart_params)
 			@cart.coupon_code = nil
 			@cart.save
-      redirect_to carts_path
+      redirect_to user_carts_path(current_user)
       flash[:success] = "Cart updated"
     else
       render 'edit'
