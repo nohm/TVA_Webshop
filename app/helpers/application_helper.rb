@@ -9,7 +9,7 @@ module ApplicationHelper
   end
 
   def cart_count(user)
-  	cart = Cart.find_by(user_id: user.id, cart_status_id: 1)
+  	cart = Cart.find_by(user_id: user.id, purchased: false)
   	cart_items = CartItem.where(cart_id: cart.id)
   	return cart_items.count
   end

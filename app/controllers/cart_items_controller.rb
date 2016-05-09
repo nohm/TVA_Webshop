@@ -45,7 +45,7 @@ class CartItemsController < ApplicationController
 
 	def update
 		cart_item = CartItem.find(params[:id])
-		cart = Cart.where(user_id: current_user, cart_status_id: 1).first
+		cart = Cart.where(user_id: current_user, purchased: false).first
 		
 		unless cart.coupon_code.blank?
 			coupon = Coupon.where(code: cart.coupon_code).first

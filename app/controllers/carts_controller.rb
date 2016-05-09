@@ -1,6 +1,6 @@
 class CartsController < ApplicationController
 	def index
-		@cart = Cart.where(user_id: current_user.id, cart_status_id: 1).first
+		@cart = Cart.where(user_id: current_user.id, purchased: false).first
 		@cart_items = CartItem.where(cart_id: @cart.id ).order('id ASC') 
 		@coupon_code = @cart.coupon_code || "None"
 		@colspan = @cart.coupon_code.blank? ? 5 : 6
@@ -275,7 +275,7 @@ class CartsController < ApplicationController
 				end
 			end
 			if errors == false
-				cart.cart_status_id = 5
+				cart.purchased = true
 				cart.save
 				Invoice.create(user_id: current_user.id, cart_id: cart_id)
 				Cart.create(user_id: current_user.id, delivery_method: "Shipping", cart_status_id: 1)

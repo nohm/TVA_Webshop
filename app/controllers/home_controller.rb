@@ -2,7 +2,7 @@ class HomeController < ApplicationController
 
 	def search
   	if flash[:item_added]
-      @cart = Cart.where(user_id: current_user.id, cart_status_id: 1).first
+      @cart = Cart.where(user_id: current_user.id, purchased: false).first
       @cart_items = CartItem.where(cart_id: @cart.id).order('id')
     end
 		@reminder = Reminder.new
@@ -43,7 +43,7 @@ class HomeController < ApplicationController
 
 	def all_parts
   	if flash[:item_added]
-      @cart = Cart.where(user_id: current_user.id, cart_status_id: 1).first
+      @cart = Cart.where(user_id: current_user.id, purchased: false).first
       @cart_items = CartItem.where(cart_id: @cart.id).order('id')
     end
 		@reminder = Reminder.new
@@ -53,7 +53,7 @@ class HomeController < ApplicationController
 
 	def part
 		if flash[:item_added]
-      @cart = Cart.where(user_id: current_user.id, cart_status_id: 1).first
+      @cart = Cart.where(user_id: current_user.id, purchased: false).first
       @cart_items = CartItem.where(cart_id: @cart.id).order('id')
     end
 		@reminder = Reminder.new

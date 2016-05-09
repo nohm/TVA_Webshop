@@ -73,7 +73,7 @@
                 <%= text_field_tag "amount-#{item.part_id}", {}, value: item.amount, class: "width40px amount bottom-none", data: { cart: item.cart.id, part: item.part_id, id: item.id, url: user_cart_cart_item_path(current_user.id, item.cart.id, item) } %>
               </td>
               <td class="center">
-                <%= link_to user_cart_cart_item_path(params[:user_id], Cart.where(user_id: current_user.id, cart_status_id: 1).first.id, item), method: :delete do %>
+                <%= link_to user_cart_cart_item_path(params[:user_id], Cart.where(user_id: current_user.id, purchased: false).first.id, item), method: :delete do %>
                   <span class="glyphicon glyphicon-remove"></span>
                 <% end %>
               </td>
