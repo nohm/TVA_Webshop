@@ -6,7 +6,6 @@
       <%= f.alert_message "Please fix the errors below." %>
 
       <%= f.text_field :coupon_code, autofocus: true %>
-      <%= f.text_field :cart_status_id %>
 
       <%= f.submit "Add coupon", class: "btn btn-primary" %>
       <%= link_to("Cancel", user_carts_path(current_user), class: "btn btn-primary") %>

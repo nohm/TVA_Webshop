@@ -1,8 +1,6 @@
 class CartsController < ApplicationController
 	def index
-		@carts = Cart.all
-		if false
-		@cart = Cart.where(user_id: current_user.id, purchased: false).first
+		@cart = Cart.where(user_id: current_user.id, cart_status_id: 1).first
 		@cart_items = CartItem.where(cart_id: @cart.id ).order('id ASC') 
 		@coupon_code = @cart.coupon_code || "None"
 		@colspan = @cart.coupon_code.blank? ? 5 : 6
@@ -122,26 +120,15 @@ class CartsController < ApplicationController
 
 		@cart.shipping_cost = @shipping_cost
 		@cart.save
-		end
 	end
 
 	def edit
 		@cart = Cart.find(params[:id])
 	end
 
-def update
+	def update
 		@cart = Cart.find(params[:id])
 
-		if @cart.update(cart_params)
-			@cart.coupon_code = nil
-			@cart.save
-      redirect_to user_carts_path(current_user)
-      flash[:success] = "Cart updated"
-    else
-      render 'edit'
-    end
-
-	if false
 		if params[:cart][:delivery_method].blank? && params[:cart][:location_id].blank?
 			coupon = Coupon.where(code: params[:cart][:coupon_code]).first
 			cart_items = CartItem.where(cart_id: params[:id])
@@ -224,7 +211,6 @@ def update
 	  	render inline: 'Changed location' # Needed for Javascript response
 	  end
 	end
-end
 
 	def purchase
 		user = User.find(current_user.id)
@@ -290,9 +276,10 @@ end
 			end
 			if errors == false
 				cart.purchased = true
+				cart.cart_status_id = 5
 				cart.save
 				Invoice.create(user_id: current_user.id, cart_id: cart_id)
-				Cart.create(user_id: current_user.id, delivery_method: "Shipping", cart_status_id: 1)
+				Cart.create(user_id: current_user.id, delivery_method: "Shipping", purchased: true, cart_status_id: 1)
 				if !coupon.blank?
 					user.used_coupon_ids << coupon.id
 					user.save

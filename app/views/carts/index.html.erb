@@ -1,40 +1,3 @@
-<div class="panel-body panel-table">
-  <% if @carts.length == 0 %>
-    <p class="empty_list">
-      <%= "De lijst is leeg" %>
-    </p>
-  <% else %>
-      <div class="table-responsive">
-        <table class="table table-striped table-hover borderGray">
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Client</th>
-              <th>Purchased</th>
-              <th>Status id</th>
-              <th class="small-col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @carts.each do |cart| %>
-              <tr>
-                <td><%= cart.id %></td>
-                <td><%= User.find(cart.user_id).name %></td>
-                <td><%= cart.purchased %></td>
-                <td><%= cart.cart_status_id %></td>
-                <td>
-                  <%= link_to edit_user_cart_path(current_user, cart) do %>
-                    <span class="glyphicon glyphicon-pencil" title="Edit"></span>
-                  <% end %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-  <% end %>
-</div>
-<% if false %>
 <% provide(:title, "Shopping Cart") %>
 <% breadcrumb :carts, @cart %>
 <div class="panel-body panel-table">
@@ -110,7 +73,7 @@
                 <%= text_field_tag "amount-#{item.part_id}", {}, value: item.amount, class: "width40px amount bottom-none", data: { cart: item.cart.id, part: item.part_id, id: item.id, url: user_cart_cart_item_path(current_user.id, item.cart.id, item) } %>
               </td>
               <td class="center">
-                <%= link_to user_cart_cart_item_path(params[:user_id], Cart.where(user_id: current_user.id, purchased: false).first.id, item), method: :delete do %>
+                <%= link_to user_cart_cart_item_path(params[:user_id], Cart.where(user_id: current_user.id, cart_status_id: 1).first.id, item), method: :delete do %>
                   <span class="glyphicon glyphicon-remove"></span>
                 <% end %>
               </td>
@@ -195,4 +158,3 @@
 </div>
 <div class="panel-footer">
 </div>
-<% end %>

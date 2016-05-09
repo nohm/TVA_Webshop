@@ -4,7 +4,7 @@ class AccountActivationsController < ApplicationController
     if user && !user.activated? && user.authenticated?(:activation, params[:id])
       user.activate
       log_in user
-      Cart.create(user_id: user.id, delivery_method: "Shipping", cart_status_id: 1)
+      Cart.create(user_id: user.id, delivery_method: "Shipping", purchased: false, cart_status_id: 1)
       flash[:success] = "Account activated!"
       redirect_to root_url
     else
