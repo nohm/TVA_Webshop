@@ -1,5 +1,9 @@
 class HomeController < ApplicationController
 
+	def carts
+		@carts = Cart.all
+	end
+
 	def search
   	if flash[:item_added]
       @cart = Cart.where(user_id: current_user.id, purchased: false).first

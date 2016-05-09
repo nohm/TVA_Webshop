@@ -126,9 +126,19 @@ class CartsController < ApplicationController
 		@cart = Cart.find(params[:id])
 	end
 
-	def update
+def update
 		@cart = Cart.find(params[:id])
 
+		if @cart.update(cart_params)
+			@cart.coupon_code = nil
+			@cart.save
+      redirect_to carts_path
+      flash[:success] = "Cart updated"
+    else
+      render 'edit'
+    end
+
+	if false
 		if params[:cart][:delivery_method].blank? && params[:cart][:location_id].blank?
 			coupon = Coupon.where(code: params[:cart][:coupon_code]).first
 			cart_items = CartItem.where(cart_id: params[:id])
@@ -211,6 +221,7 @@ class CartsController < ApplicationController
 	  	render inline: 'Changed location' # Needed for Javascript response
 	  end
 	end
+end
 
 	def purchase
 		user = User.find(current_user.id)
@@ -297,6 +308,6 @@ class CartsController < ApplicationController
 	private
 
 	def cart_params
-		params.require(:cart).permit(:user_id, :purchased, :coupon_code, :delivery_method, :location_id)
+		params.require(:cart).permit(:user_id, :purchased, :coupon_code, :delivery_method, :location_id, :cart_status_id)
 	end
 end
