@@ -31,6 +31,8 @@ Rails.application.routes.draw do
 
     resources :coupons
 
+    resources :cart_statuses
+
     resources :users do
       resources :reminders
       resources :invoices

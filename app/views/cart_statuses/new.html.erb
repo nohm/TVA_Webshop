@@ -1,0 +1,14 @@
+<% provide(:title, 'Add status') %>
+<% breadcrumb :status, @status %>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= bootstrap_form_for(@status) do |f| %>
+      <%= f.alert_message "Please fix the errors below." %>
+
+      <%= f.text_field :name, autofocus: true %>
+
+      <%= f.submit "Add status", class: "btn btn-primary" %>
+      <%= link_to("Cancel", cart_statuses_path, class: "btn btn-primary") %>
+    <% end %>
+  </div>
+</div>

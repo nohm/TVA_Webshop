@@ -167,6 +167,10 @@ crumb :sublocations do
 	parent :locations
 end
 
+crumb :status do
+	link "Statuses", cart_statuses_path
+end
+
 # crumb :projects do
 #   link "Projects", projects_path
 # end

@@ -1,0 +1,45 @@
+<% provide(:title, "Status") %>
+<div class="panel-body panel-table">
+  <% if @statuses.length == 0 %>
+    <p class="empty_list">
+      <%= "De lijst is leeg" %>
+    </p>
+  <% else %>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover borderGray">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th class="small-col"></th>
+              <th class="small-col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @statuses.each do |status| %>
+              <tr>
+                <td><%= status.name %></td>
+                <td>
+                  <%= link_to edit_cart_status_path(status) do %>
+                    <span class="glyphicon glyphicon-pencil" title="Edit"></span>
+                  <% end %>
+                </td>
+                <td>
+                  <%= link_to cart_status_path(status), data: { confirm: "Are you sure?" }, method: :delete do %>
+                    <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+  <% end %>
+</div>
+<div class="panel-footer noPadding">
+  <% unless (paginate @statuses).blank? %>
+    <%= paginate @statuses %><br>
+  <% end %>
+  <% if logged_in? && current_user.admin? %>
+    <%= link_to("Add status", new_cart_status_path, class: 'btn btn-mini btn-primary') %>
+  <% end %>
+</div>

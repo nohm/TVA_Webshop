@@ -49,6 +49,9 @@
                   <li><%= link_to "Locations", locations_path %></li>
                   <li><%= link_to "Invoices",  invoices_path %></li>
                   <li><%= link_to "Users",     users_path %></li>
+                  <% if current_user.admin? %>
+                    <li><%= link_to "Statuses", cart_statuses_path %></li>
+                  <% end %>
               </ul>
             </li>
           <% end %>
