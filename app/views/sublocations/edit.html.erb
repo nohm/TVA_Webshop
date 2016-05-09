@@ -1,0 +1,15 @@
+<% provide(:title, 'Edit sublocation') %>
+<% breadcrumb :sublocations, @sublocation %>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= bootstrap_form_for(@sublocation, url: location_sublocations_path(params[:location_id], params[:id])) do |f| %>
+      <%= f.alert_message "Please fix the errors below." %>
+
+      <%= f.text_field :name, autofocus: true %>
+
+      <%= f.submit "Edit sublocation", class: "btn btn-primary" %>
+      <%= link_to("Cancel", location_sublocations_path(params[:location_id]), class: "btn btn-primary") %>
+    <% end %>
+  </div>
+</div>

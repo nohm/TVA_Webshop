@@ -23,7 +23,7 @@
             </td>
             <td>
               <% if d_price.amount != 1 %>
-                <%= link_to device_product_category_part_discount_price_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], d_price), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                <%= link_to device_product_category_part_discount_price_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], d_price), data: { confirm: "Are you sure?" }, method: :delete do %>
                   <span class="glyphicon glyphicon-remove" title="Delete"></span>
                 <% end %>
               <% end %>
@@ -38,5 +38,5 @@
   <% unless (paginate @discount_prices).blank? %>
     <%= paginate @discount_prices %><br>
   <% end %>
-  <%= link_to("Add price", new_device_product_category_part_discount_price_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id]), :class => 'btn btn-primary ') %>
+  <%= link_to("Add price", new_device_product_category_part_discount_price_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id]), class: 'btn btn-primary ') %>
 </div>

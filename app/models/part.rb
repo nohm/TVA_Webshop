@@ -1,5 +1,5 @@
 class Part < ActiveRecord::Base
-	attr_accessor :price, :condition_select, :location_id, :stock
+	attr_accessor :price, :condition_select, :location_id, :stock, :sublocation_id, :brand_select
 
 	belongs_to :category
 	has_many :parts_products, 	dependent: :destroy
@@ -15,10 +15,10 @@ class Part < ActiveRecord::Base
   validates_attachment_file_name :partimagefull, matches: [/png\Z/i, /jpe?g\Z/i, /gif\Z/i]
 	validates :partimagefull, dimensions: { width: 300, height: 300 }
 
-	validates :name, 				presence: true
-	validates :brand, 			presence: true
-	validates :weight, 			presence: true
-	validates :location_id, presence: true, on: :create
-	validates :stock, 			presence: true, on: :create
-	validates :price, 			presence: true, format: { with: /\d+(?:\.\d{0,2})?/ }, on: :create
+	validates :name, 						presence: true
+	validates :weight, 					presence: true
+	validates :location_id, 		presence: true, on: :create
+	validates :sublocation_id, 	presence: true, on: :create
+	validates :stock, 					presence: true, on: :create
+	validates :price, 					presence: true, format: { with: /\d+(?:\.\d{0,2})?/ }, on: :create
 end

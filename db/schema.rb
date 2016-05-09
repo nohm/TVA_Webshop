@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160425064904) do
+ActiveRecord::Schema.define(version: 20160506124108) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,12 @@ ActiveRecord::Schema.define(version: 20160425064904) do
     t.decimal "price_tier_discount",   precision: 10, scale: 2
   end
 
+  create_table "cart_statuses", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "carts", force: :cascade do |t|
     t.integer  "user_id"
     t.datetime "created_at",                                               null: false
@@ -37,7 +43,14 @@ ActiveRecord::Schema.define(version: 20160425064904) do
     t.string   "previous_url"
     t.integer  "location_id"
     t.decimal  "shipping_cost",   precision: 10, scale: 2
+    t.decimal  "tax",             precision: 10, scale: 2
+    t.decimal  "subtotal",        precision: 10, scale: 2
+    t.decimal  "total",           precision: 10, scale: 2
+    t.decimal  "coupon_discount", precision: 10, scale: 2
+    t.integer  "cart_status_id"
   end
+
+  add_index "carts", ["cart_status_id"], name: "index_carts_on_cart_status_id", using: :btree
 
   create_table "categories", force: :cascade do |t|
     t.integer  "product_id"
@@ -92,8 +105,9 @@ ActiveRecord::Schema.define(version: 20160425064904) do
     t.integer  "part_id"
     t.integer  "location_id"
     t.integer  "stock"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.integer  "sublocation_id"
   end
 
   create_table "part_subdescriptions", force: :cascade do |t|
@@ -128,6 +142,7 @@ ActiveRecord::Schema.define(version: 20160425064904) do
     t.datetime "partimagefull_updated_at"
     t.string   "brand"
     t.integer  "weight"
+    t.string   "partnumber"
   end
 
   create_table "parts_products", force: :cascade do |t|
@@ -137,11 +152,9 @@ ActiveRecord::Schema.define(version: 20160425064904) do
 
   create_table "products", force: :cascade do |t|
     t.string   "brand"
-    t.string   "type_number"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "device_id"
-    t.string   "partnumber"
     t.string   "model"
     t.string   "model_extended"
   end
@@ -155,6 +168,11 @@ ActiveRecord::Schema.define(version: 20160425064904) do
 
   create_table "roles", force: :cascade do |t|
     t.string "name"
+  end
+
+  create_table "sublocations", force: :cascade do |t|
+    t.string  "name"
+    t.integer "location_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -180,4 +198,5 @@ ActiveRecord::Schema.define(version: 20160425064904) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
 
+  add_foreign_key "carts", "cart_statuses"
 end

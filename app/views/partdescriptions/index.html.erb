@@ -34,7 +34,7 @@
                   <% end %>
                 </td>
                 <td>
-                  <%= link_to device_product_category_part_partdescription_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partdescription), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                  <%= link_to device_product_category_part_partdescription_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partdescription), data: { confirm: "Are you sure?" }, method: :delete do %>
                     <span class="glyphicon glyphicon-remove" title="Delete"></span>
                   <% end %>
                 </td>
@@ -52,7 +52,7 @@
       <%= paginate @partdescriptions %><br>
     <% end %>
     <% if logged_in? && current_user.manager? %>
-      <%= link_to("Add description", new_device_product_category_part_partdescription_path, :class => 'btn btn-mini btn-primary') %>
+      <%= link_to("Add description", new_device_product_category_part_partdescription_path, class: 'btn btn-mini btn-primary') %>
     <% end %>
   </div>
 </div>

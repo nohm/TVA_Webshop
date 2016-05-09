@@ -9,7 +9,6 @@ class Category < ActiveRecord::Base
 	validates :cimg, dimensions: { width: 300, height: 300 }, on: :create
 	validates :cimg, attachment_presence: true
 
-	validates :device_id, 	presence: true
-	validates :product_id, 	presence: true
-	validates :name, 				presence: true
+	validates :name, presence: true
+	validates_uniqueness_of :name, :scope => :device_id
 end

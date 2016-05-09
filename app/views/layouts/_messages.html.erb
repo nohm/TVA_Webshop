@@ -37,7 +37,7 @@
         </div>
       <% end %>
     <% elsif msg.is_a?(Array) %>
-      <% if name = "danger" %>
+      <% if name == "danger" %>
         <div class="alert alert-danger">
           <a class="close" data-dismiss="alert">&#215;</a>
           <div id="flash_<%= name %>">

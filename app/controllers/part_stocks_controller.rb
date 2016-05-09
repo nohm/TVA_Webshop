@@ -56,9 +56,18 @@ class PartStocksController < ApplicationController
 		flash[:success] = "Stock deleted"
 	end
 
+	def options_sublocation
+	  id = params[:id]
+
+ 	  unless id.blank?
+ 	  	@sublocations = Sublocation.where(location_id: id).order('name ASC')
+	    render :partial => 'options_sublocation'
+		end
+	end
+
 	private
 
 	def part_stock_params
-		params.require(:part_stock).permit(:part_id, :location_id, :stock)
+		params.require(:part_stock).permit(:part_id, :location_id, :stock, :sublocation_id)
 	end
 end

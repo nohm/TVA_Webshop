@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
     root                'static_pages#home'
-    get  'contact'   => 'static_pages#contact'
-    get  'signup'    => 'users#new'
-    get    'login'   => 'sessions#new'
-    post   'login'   => 'sessions#create'
-    delete 'logout'  => 'sessions#destroy'
-    get '/invoices' => 'home#invoices'
+    get     'contact'   => 'static_pages#contact'
+    get     'signup'    => 'users#new'
+    get     'login'   => 'sessions#new'
+    post    'login'   => 'sessions#create'
+    delete  'logout'  => 'sessions#destroy'
+    get     '/invoices' => 'home#invoices'
 
     get 'search' => 'home#search', :as => :search
     get '/search_model_extended' => 'home#search_model_extended', :as => :search_model_extended
@@ -16,6 +16,8 @@ Rails.application.routes.draw do
     get '/options_model' => 'home#options_model', :as => :options_model
     get '/options_model_extended' => 'home#options_model_extended', :as => :options_model_extended
     get '/options_device' => 'home#options_device', :as => :options_device
+
+    get '/options_sublocation' => 'part_stocks#options_sublocation', :as => :options_sublocation
 
     get '/connect_brand' => 'parts_products#connect_brand', :as => :connect_brand
     get '/connect_model' => 'parts_products#connect_model', :as => :connect_model
@@ -39,7 +41,9 @@ Rails.application.routes.draw do
     resources :password_resets,     only: [:new, :create, :edit, :update]
     resources :account_activations, only: [:edit]
 
-    resources :locations
+    resources :locations do
+      resources :sublocations
+    end
 
     resources :devices do
       resources :products do

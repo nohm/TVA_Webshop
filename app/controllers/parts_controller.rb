@@ -1,7 +1,7 @@
 class PartsController < ApplicationController
   def index
     if flash[:item_added]
-      @cart = Cart.where(user_id: current_user.id, purchased: false).first
+      @cart = Cart.where(user_id: current_user.id, cart_status_id: 1).first
       @cart_items = CartItem.where(cart_id: @cart.id).order('id')
     end
     @parts_products = PartsProduct.where(product_id: params[:product_id]).page(params[:page]).per(10).order('id ASC')
@@ -17,7 +17,7 @@ class PartsController < ApplicationController
 
   def show
     if flash[:item_added]
-      @cart = Cart.where(user_id: current_user.id, purchased: false).first
+      @cart = Cart.where(user_id: current_user.id, cart_status_id: 1).first
       @cart_items = CartItem.where(cart_id: @cart.id).order('id')
     end
     @part = Part.find(params[:id])
@@ -42,6 +42,13 @@ class PartsController < ApplicationController
     @part = Part.new(part_params)
     condition = params[:part][:condition]
     condition_select = params[:part][:condition_select]
+    brand = params[:part][:brand]
+    brand_select = params[:part][:brand_select]
+
+    if (brand.blank? && brand_select.blank?) || (!brand.blank? && !brand_select.blank?)
+      flash[:half_notice] = "Either choose an existing brand or create a new one"
+      render 'new' and return
+    end
 
     if (condition.blank? && condition_select.blank?) || (!condition.blank? && !condition_select.blank?)
       flash[:half_notice] = "Either choose an existing condition or create a new one"
@@ -49,16 +56,18 @@ class PartsController < ApplicationController
     end
 
     @part.condition = condition_select if condition.blank?
+    @part.brand = brand_select if brand.blank?
     
     if @part.save
       DiscountPrice.create(part_id: @part.id, amount: 1, price: price)
       PartsProduct.create(part_id: @part.id, product_id: params[:product_id])
-      PartStock.create(part_id: @part.id, stock: params[:part][:stock], location_id: params[:part][:location_id])
+      PartStock.create(part_id: @part.id, stock: params[:part][:stock], location_id: params[:part][:location_id], sublocation_id: params[:part][:sublocation_id])
       redirect_to device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])
       flash[:success] = "Part added"
     else
       @location_id = params[:part][:location_id]
       @condition = @part.condition
+      @brand = @part.brand
       render 'new'
     end
   end
@@ -73,6 +82,13 @@ class PartsController < ApplicationController
     @part = Part.find(params[:id])
     condition = params[:part][:condition]
     condition_select = params[:part][:condition_select]
+    brand = params[:part][:brand]
+    brand_select = params[:part][:brand_select]
+
+    if (brand.blank? && brand_select.blank?) || (!brand.blank? && !brand_select.blank?)
+      flash[:half_notice] = "Either choose an existing brand or create a new one"
+      render 'edit' and return
+    end
 
     if (condition.blank? && condition_select.blank?) || (!condition.blank? && !condition_select.blank?)
       flash[:half_notice] = "Either choose an existing condition or create a new one"
@@ -80,7 +96,8 @@ class PartsController < ApplicationController
     end
 
     params[:part][:condition] = condition_select if condition.blank?
-    
+    params[:part][:brand] = brand_select if brand.blank?
+
     if @part.update(part_params)
       redirect_to device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])
       flash[:success] = "Part updated"
@@ -109,6 +126,6 @@ class PartsController < ApplicationController
   private
 
   def part_params
-    params.require(:part).permit(:category_id, :name, :condition, :warranty, :price, :stock, :partimagefull, :brand, :weight, :location_id)
+    params.require(:part).permit(:category_id, :name, :condition, :warranty, :price, :stock, :partimagefull, :brand, :weight, :location_id, :sublocation_id, :partnumber)
   end
 end

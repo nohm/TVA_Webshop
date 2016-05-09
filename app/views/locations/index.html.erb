@@ -19,6 +19,7 @@
             <th>Phone number</th>
             <th class="small-col"></th>
             <th class="small-col"></th>
+            <th class="small-col"></th>
           </tr>
         </thead>
         <tbody>
@@ -31,12 +32,17 @@
               <td><%= ISO3166::Country[location.country] %></td>
               <td><%= location.phone_number %></td>
               <td>
+                <%= link_to location_sublocations_path(location.id) do %>
+                  <span class="glyphicon glyphicon-tent" title="Sublocations"></span>
+                <% end %>
+              </td>
+              <td>
                 <%= link_to edit_location_path(location.id) do %>
                   <span class="glyphicon glyphicon-pencil" title="Edit"></span>
                 <% end %>
               </td>
               <td>
-                <%= link_to location_path(location.id), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                <%= link_to location_path(location.id), data: { confirm: "Are you sure?" }, method: :delete do %>
                   <span class="glyphicon glyphicon-remove" title="Delete"></span>
                 <% end %>
               </td>
@@ -52,6 +58,6 @@
     <%= paginate @locations %><br>
   <% end %>
   <% if logged_in? && current_user.manager? %>
-    <%= link_to("Add location", new_location_path, :class => 'btn btn-mini btn-primary') %>
+    <%= link_to("Add location", new_location_path, class: 'btn btn-mini btn-primary') %>
   <% end %>
 </div>

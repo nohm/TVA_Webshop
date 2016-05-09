@@ -73,7 +73,7 @@
                 <%= text_field_tag "amount-#{item.part_id}", {}, value: item.amount, class: "width40px amount bottom-none", data: { cart: item.cart.id, part: item.part_id, id: item.id, url: user_cart_cart_item_path(current_user.id, item.cart.id, item) } %>
               </td>
               <td class="center">
-                <%= link_to user_cart_cart_item_path(params[:user_id], Cart.where(user_id: current_user.id, purchased: false).first.id, item), method: :delete do %>
+                <%= link_to user_cart_cart_item_path(params[:user_id], Cart.where(user_id: current_user.id, cart_status_id: 1).first.id, item), method: :delete do %>
                   <span class="glyphicon glyphicon-remove"></span>
                 <% end %>
               </td>
@@ -140,7 +140,9 @@
     
     <%= select_tag "delivery_method", options_for_select(["Shipping", "Pick up"], @cart.delivery_method), class: 'form-control small floatRight', data: { url: user_cart_path(current_user.id, @cart.id), cart: @cart.id } %>
 
-    <% if @cart.delivery_method == "Pick up" && @cart.location_id.blank? %>
+    <% if flash[:danger] %>
+      <%= link_to "Purchase", "#", { class: "btn btn-primary floatRight", title: "There are not enough products in stock", style: 'margin-right: 15px;', disabled: "disabled" } %>
+    <% elsif @cart.delivery_method == "Pick up" && @cart.location_id.blank? %>
       <%= link_to "Purchase", "#", { class: "btn btn-primary floatRight", title: "Please select a pick up location", style: 'margin-right: 15px;', disabled: "disabled" } %>
     <% else %>
       <%= link_to "Purchase", "#", { class: "btn btn-primary floatRight", id: "purchase", style: 'margin-right: 15px;', data: { user_id: current_user.id, cart_id: @cart.id, url: purchase_path, coupon: @cart.coupon_code } } %>

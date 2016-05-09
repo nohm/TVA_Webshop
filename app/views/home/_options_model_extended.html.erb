@@ -1,11 +1,11 @@
 <% if !@products.include?(nil) %>
 	<% if !params[:id].blank? %>
 		<%= bootstrap_form_tag url: search_path, method: 'GET', html: {class: "form-inline"} do |f| %>
-			<%= f.select :product_model_extended, options_for_select(@products.collect { |product| [product] }, :selected => params[:model_extended]), { prompt: "Choose model", hide_label: true}, { id: 'model_extended_select' } %>
+			<%= f.select :product_model_extended, options_for_select(@products.collect { |product| [product] }, selected: params[:model_extended]), { prompt: "Choose model", hide_label: true}, { id: 'model_extended_select' } %>
 		<% end %>
 	<% elsif !params[:p_id].blank? %>
 		<%= bootstrap_form_tag url: search_path, method: 'GET', html: {class: "form-inline"} do |f| %>
-			<%= f.select :product_model_extended, options_for_select(@products.collect { |product| [product] }, :selected => @product.model_extended), {prompt: "Choose model", hide_label: true}, { id: 'model_extended_select' } %>
+			<%= f.select :product_model_extended, options_for_select(@products.collect { |product| [product] }, selected: @product.model_extended), {prompt: "Choose model", hide_label: true}, { id: 'model_extended_select' } %>
 		<% end %>
 	<% elsif !params[:d_id].blank? %>
 		<%= bootstrap_form_tag url: search_path, method: 'GET', html: {class: "form-inline"} do |f| %>
@@ -14,6 +14,6 @@
 	<% end %>
 <% else %>
 <%= bootstrap_form_tag url: search_path, method: 'GET', html: {class: "form-inline"} do |f| %>
-	<%= f.select :product_model_extended, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'model_extended_select', disabled: "disabled", data: { 'url' => search_model_extended_path }} %>
+	<%= f.select :product_model_extended, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'model_extended_select', disabled: "disabled", data: { url: search_model_extended_path }} %>
 	<% end %>
 <% end %>

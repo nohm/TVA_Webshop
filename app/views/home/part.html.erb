@@ -9,7 +9,7 @@
           <%= image_tag "MissingLarge.png" %>
         <% else %>
           <a class="BigImgOriginal" style="display: inline-block;" href=<%= @partimages.first.pimg.url %>>
-            <%= image_tag @partimages.first.pimg.url(:large), :class => "BigImg borderGray", :title => @part.name %>
+            <%= image_tag @partimages.first.pimg.url(:large), class: "BigImg borderGray", title: @part.name %>
             <div class="bottomRight"><span class="glyphicon glyphicon-search"></span></div>
           </a>
         <% end %>
@@ -18,7 +18,7 @@
       <div style="min-width: 284px; min-height: 71px; ">
         <% @partimages.each do |image| %>
           <div class="smallImgContainer">
-            <%= image_tag image.pimg.url(:thumb), :data => {:hover => image.pimg.url(:large), :url => image.pimg.url}, :class => "SmallImg borderGray" %>
+            <%= image_tag image.pimg.url(:thumb), data: {hover: image.pimg.url(:large), url: image.pimg.url}, class: "SmallImg borderGray" %>
           </div>
         <% end %>
       </div>
@@ -56,25 +56,25 @@
           </table>
           <div style="clear: both;"></div> 
           <div class="col-xs-6 col-sm-offset-6 noPadding">
-          <%= bootstrap_form_for(@cart_item, :url => user_cart_cart_items_path(current_user, Cart.where(user_id: current_user.id, purchased: false).first.id)) do |f| %>
-            <%= f.hidden_field :cart_id, value: Cart.where(user_id: current_user.id, purchased: false).first.id %>
+          <%= bootstrap_form_for(@cart_item, url: user_cart_cart_items_path(current_user, Cart.where(user_id: current_user.id, cart_status_id: 1).first.id)) do |f| %>
+            <%= f.hidden_field :cart_id, value: Cart.where(user_id: current_user.id, cart_status_id: 1).first.id %>
             <%= f.hidden_field :part_id, value: @part.id %>
             <% if @stock > 0 %>
               <%= f.number_field :amount, min: 1, max: @stock, value: 1, required: 'required' %>
-              <%= button_tag( :class => "btn btn-primary big") do %>
+              <%= button_tag( class: "btn btn-primary big") do %>
                 <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
               <% end %>
             <% else %>
               <%= f.number_field :amount, min: 1, max: @stock, class: "cursorDisabled", disabled: "disabled", placeholder: "Out of stock" %>
-              <%= button_tag( :class => "btn btn-danger big cursorDisabled", :disabled => "disabled", :title => "Out of stock") do %>
+              <%= button_tag( class: "btn btn-danger big cursorDisabled", disabled: "disabled", title: "Out of stock") do %>
                 <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
               <% end %>
             <% end %>
           <% end %>
           <% if @stock == 0 %>
-            <%= bootstrap_form_for @reminder, :url => user_reminders_path(current_user), :html => { :class => 'form-horizontal center' } do |f| %>
-              <%= f.hidden_field :part_id, :value => @part.id %>
-              <%= f.hidden_field :user_id, :value => current_user.id %>
+            <%= bootstrap_form_for @reminder, url: user_reminders_path(current_user), html: { class: 'form-horizontal center' } do |f| %>
+              <%= f.hidden_field :part_id, value: @part.id %>
+              <%= f.hidden_field :user_id, value: current_user.id %>
 
               <%= f.submit "Remind me", class: 'btn btn-link btn-xs', style: 'width: 100%;', title: 'Sends you an email when the product is back in stock' %>
             <% end %>
@@ -129,7 +129,7 @@
         </tr>
         <tr>
           <th>Warranty:</th>
-          <td><%= @part.warranty %></td>
+          <td><%= @part.warranty.blank? ? 'None' : @part.warranty %></td>
         </tr>
       </tbody>
     </table>
@@ -153,7 +153,7 @@
         <% end %>
         <% if @part.parts_products.count > 10 %>
           <li class="listItem">
-            <%= link_to("And #{@part.parts_products.count() - 1} more products", suited_path(:part_id => @part.id)) %>
+            <%= link_to("And #{@part.parts_products.count() - 1} more products", suited_path(part_id: @part.id)) %>
           </li>
         <% end %>
       </ul>
@@ -161,5 +161,5 @@
   <% end %>
 </div>
 <% if flash[:item_added] %>
-  <%= render :partial => "parts/cart_show_modal", :locals => {:cart => @cart, :cart_items => @cart_items} %>
+  <%= render partial: "parts/cart_show_modal", locals: {cart: @cart, cart_items: @cart_items} %>
 <% end %>

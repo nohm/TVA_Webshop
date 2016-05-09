@@ -9,12 +9,12 @@
       <%= f.text_field :amount, label: "Amount of uses" %>
 
       <%= f.text_field :category_ids %>
-      <%= select("category", "device_id", Device.all.collect {|device| [ device.name.titleize, device.id ] }, { prompt: 'Choose device' }, { class: "form-control small inline", id: "c_device_select", data: { 'url' => coupon_category_path } }) %>
+      <%= select("category", "device_id", Device.all.collect {|device| [ device.name.titleize, device.id ] }, { prompt: 'Choose device' }, { class: "form-control small inline", id: "c_device_select", data: { url: coupon_category_path } }) %>
       <%= select("category", "category_id", "Nothing", {prompt: "Choose category", hide_label: true}, { id: 'c_category_select', class: 'form-control small inline', disabled: "disabled" }) %>
 
       <%= f.text_field :part_ids %>
-      <%= select("part", "device_id", Device.all.collect {|device| [ device.name.titleize, device.id ] }, { prompt: 'Choose device' }, { class: "form-control small inline", id: "p_device_select", data: { 'url' => coupon_category_path } }) %>
-      <%= select("part", "category_id", "Nothing", {prompt: "Choose category", hide_label: true}, { id: 'p_category_select', class: 'form-control small inline', disabled: "disabled", data: { 'url' => coupon_part_path } }) %>
+      <%= select("part", "device_id", Device.all.collect {|device| [ device.name.titleize, device.id ] }, { prompt: 'Choose device' }, { class: "form-control small inline", id: "p_device_select", data: { url: coupon_category_path } }) %>
+      <%= select("part", "category_id", "Nothing", {prompt: "Choose category", hide_label: true}, { id: 'p_category_select', class: 'form-control small inline', disabled: "disabled", data: { url: coupon_part_path } }) %>
       <%= select("part", "part_id", "Nothing", {prompt: "Choose part", hide_label: true}, { id: 'p_part_select', class: 'form-control small inline', disabled: "disabled" }) %>
 
       <%= f.text_field :user_ids %>

@@ -2,15 +2,15 @@
 <% breadcrumb :discount_prices, @discount_price %>
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
-    <%= bootstrap_form_for(@discount_price, :url => device_product_category_part_discount_price_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], params[:id])) do |f| %>
+    <%= bootstrap_form_for(@discount_price, url: device_product_category_part_discount_price_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], params[:id])) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
 
       <% if @discount_price.amount != 1 %>
-      	<%= f.number_field :amount, :autofocus => true, :required => 'required', autofocus: true %>
+      	<%= f.number_field :amount, autofocus: true, required: 'required' %>
       <% else %>
-      	<%= f.number_field :amount, :disabled => 'disabled' %>
+      	<%= f.number_field :amount, disabled: 'disabled' %>
       <% end %>
-      <%= f.text_field   :price, :prepend => '€', :placeholder => '0.00' %>
+      <%= f.text_field   :price, prepend: '€', placeholder: '0.00' %>
 
       <%= f.submit "Edit price", class: "btn btn-primary" %>
       <%= link_to("Cancel", device_product_category_part_discount_prices_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id]), class: "btn btn-primary") %>

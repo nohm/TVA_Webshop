@@ -1,4 +1,4 @@
-<% provide(:title, "Parts") %>
+<% provide(:title, "Images") %>
 <% breadcrumb :partimages, @partimages %>
 <div class="panel-body panel-table">
   <% if @partimages.length == 0 %>
@@ -10,8 +10,7 @@
       <table class="table table-hover borderGray">
         <thead>
           <tr>
-            <th class="small-col"><%= "Id" %></th>
-            <th><%= "Picture" %></th>
+            <th><%= "Image" %></th>
             <% if current_user.manager? %>
               <th class="small-col"></th>
               <th class="small-col"></th>
@@ -21,7 +20,6 @@
         <tbody>
           <% @partimages.each do |partimage| %>
             <tr>
-              <td><%= partimage.id %></td>
               <td><%= image_tag(partimage.pimg.url(:thumb), class: "borderGray") %></td>
               <% if current_user.manager? %>
                 <td>
@@ -30,7 +28,7 @@
                   <% end %>
                 </td>
                 <td>
-                  <%= link_to device_product_category_part_partimage_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partimage.id), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                  <%= link_to device_product_category_part_partimage_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], partimage.id), data: { confirm: "Are you sure?" }, method: :delete do %>
                     <span class="glyphicon glyphicon-remove" title="Delete"></span>
                   <% end %>
                 </td>
@@ -47,6 +45,6 @@
     <%= paginate @partimages %><br>
   <% end %>
   <% if current_user.manager? %>
-    <%= link_to("Add image", new_device_product_category_part_partimage_path, :class => 'btn btn-mini btn-primary') %>
+    <%= link_to("Add image", new_device_product_category_part_partimage_path, class: 'btn btn-mini btn-primary') %>
   <% end %>
 </div>

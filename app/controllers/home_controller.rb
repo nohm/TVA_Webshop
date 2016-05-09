@@ -2,7 +2,7 @@ class HomeController < ApplicationController
 
 	def search
   	if flash[:item_added]
-      @cart = Cart.where(user_id: current_user.id, purchased: false).first
+      @cart = Cart.where(user_id: current_user.id, cart_status_id: 1).first
       @cart_items = CartItem.where(cart_id: @cart.id).order('id')
     end
 		@reminder = Reminder.new
@@ -18,7 +18,7 @@ class HomeController < ApplicationController
 		@category_results = []
 		
 		if !@query.match(/([a-zA-Z0-9])+/).blank?
-			product_results += Product.where('brand ILIKE ? OR type_number ILIKE ? OR partnumber ILIKE ? OR model ILIKE ? OR model_extended ILIKE ?', search_condition, search_condition, search_condition, search_condition, search_condition).order('id')
+			product_results += Product.where('brand ILIKE ? OR model ILIKE ? OR model_extended ILIKE ?', search_condition, search_condition, search_condition).order('id')
 			part_results += Part.where('brand ILIKE ? OR name ILIKE ?', search_condition, search_condition).order('id')
 			category_results += Category.where('name ILIKE ?', search_condition).order('id')
 
@@ -43,8 +43,8 @@ class HomeController < ApplicationController
 
 	def all_parts
   	if flash[:item_added]
-      @cart = Cart.where(user_id: current_user.id, purchased: false).first
-      @cart_items = CartItem.where(:cart_id => @cart.id).order('id')
+      @cart = Cart.where(user_id: current_user.id, cart_status_id: 1).first
+      @cart_items = CartItem.where(cart_id: @cart.id).order('id')
     end
 		@reminder = Reminder.new
 		@cart_item = CartItem.new
@@ -53,7 +53,7 @@ class HomeController < ApplicationController
 
 	def part
 		if flash[:item_added]
-      @cart = Cart.where(user_id: current_user.id, purchased: false).first
+      @cart = Cart.where(user_id: current_user.id, cart_status_id: 1).first
       @cart_items = CartItem.where(cart_id: @cart.id).order('id')
     end
 		@reminder = Reminder.new

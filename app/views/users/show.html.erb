@@ -1,67 +1,66 @@
 <% provide(:title, @user.name) %>
 <% breadcrumb :user, @user %>
-<div class="row">
-  <aside class="col-md-12">
-    <section class="user_info top-none">
-      <h1><b>Personal details:</b></h1>
-      <%= @user.name %><br>
-      <%= @user.street %><br>
-      <%= @user.postal_code + ' ' + @user.city %><br>
-      <%= @country %><br>
-      Email: <%= @user.email %>
-      <% unless @user.phone_number.blank? %>
-        <br>Tel: <%= @user.phone_number %>
-      <% end %>
-      <% if params[:id].to_i == current_user.id %>
-        <br><%= link_to "Edit personal details", edit_user_path(params[:id]) %>
-      <% end %>
-    </section>
-  </aside>
-  <h1 class="col-md-12" style="text-align: left; padding-left: 15px">Purchase history</h1>
-  <% if @invoices.length == 0 %>
-    <p class="empty_list" style="padding-left: 15px">
-      <%= "There is no history to be found  " %>
-    </p>
-  <% else %>
-    <table class="table table-striped table-hover">
-        <thead>
-          <tr>
-            <th>Client</th>
-            <th>Purchase date</th>
-            <th class="small-col"></th>
-            <th class="small-col"></th>
-            <% if current_user.manager? %>
-              <th class="small-col"></th>
+<aside class="col-md-12 noPadding">
+  <section class="user_info top-none">
+    <h1><b>Personal details:</b></h1>
+    <%= @user.name %><br>
+    <%= @user.street %><br>
+    <%= @user.postal_code + ' ' + @user.city %><br>
+    <%= ISO3166::Country[@user.country] %><br>
+    Email: <%= @user.email %>
+    <% unless @user.phone_number.blank? %>
+      <br>Tel: <%= @user.phone_number %>
+    <% end %>
+    <% if params[:id].to_i == current_user.id %>
+      <br><%= link_to "Edit personal details", edit_user_path(params[:id]) %>
+    <% end %>
+  </section>
+</aside>
+<h1 class="bottom-15 left">Purchase history</h1>
+<% if @invoices.length == 0 %>
+  <p class="empty_list" style="padding-left: 15px">
+    <%= "There is no history to be found  " %>
+  </p>
+<% else %>
+  <table class="table table-striped table-hover borderGray">
+    <thead>
+      <tr>
+        <th>Client</th>
+        <th>Purchase date</th>
+        <th class="small-col"></th>
+        <th class="small-col"></th>
+        <% if current_user.manager? %>
+          <th class="small-col"></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% @invoices.each do |invoice| %>
+        <tr>
+          <td><%= invoice.user.name %></td>
+          <td><%= invoice.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S") %></td>
+          <td>
+            <%= link_to user_invoice_path(@user, invoice, type: 'slip') do %>
+              <span class="glyphicon glyphicon-send" title="Slip"></span>
             <% end %>
-          </tr>
-        </thead>
-        <tbody>
-          <% @invoices.each do |invoice| %>
-            <tr>
-              <td><%= invoice.user.name %></td>
-              <td><%= invoice.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S") %></td>
-              <td>
-                <%= link_to user_invoice_path(@user, invoice, :type => 'slip') do %>
-                  <span class="glyphicon glyphicon-send" title="Slip"></span>
-                <% end %>
-              </td>
-              <td>
-                <%= link_to user_invoice_path(@user, invoice) do %>
-                  <span class="glyphicon glyphicon-euro" title="Invoice"></span>
-                <% end %>
-              </td>
-              <% if current_user.manager? %>
-                <td>
-                  <%= link_to user_invoice_path(@user, invoice), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
-                    <span class="glyphicon glyphicon-remove" title="Delete"></span>
-                  <% end %>
-                </td>
+          </td>
+          <td>
+            <%= link_to user_invoice_path(@user, invoice) do %>
+              <span class="glyphicon glyphicon-euro" title="Invoice"></span>
+            <% end %>
+          </td>
+          <% if current_user.manager? %>
+            <td>
+              <%= link_to user_invoice_path(@user, invoice), data: { confirm: "Are you sure?" }, method: :delete do %>
+                <span class="glyphicon glyphicon-remove" title="Delete"></span>
               <% end %>
-            </tr>
+            </td>
           <% end %>
-        </tbody>
-      </table>
-      <% unless @invoices.length == 0 %>
-        <%= paginate @invoices %>
+        </tr>
       <% end %>
-  <% end %>        
+    </tbody>
+  </table>
+  <% unless @invoices.length == 0 %>
+    <%= paginate @invoices %>
+  <% end %>
+<% end %>        

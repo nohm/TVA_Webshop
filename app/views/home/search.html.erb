@@ -28,7 +28,7 @@
               <tr>
                 <td class="col-sm-5">
                   <div class="title">
-                    <%= link_to part_path(:part_id => part_result.id, :part_page => params[:part_page], :category_page => params[:category_page], :product_page => params[:product_page], :search_query => params[:search_query]) do %>
+                    <%= link_to part_path(part_id: part_result.id, part_page: params[:part_page], category_page: params[:category_page], product_page: params[:product_page], search_query: params[:search_query]) do %>
 											<%= part_result.name %>
 										<% end %>
                   </div>
@@ -48,7 +48,7 @@
                       </tr>
                       <tr>
                         <td><small>Warranty: </small></td>
-                        <td><small><%= part_result.warranty %></small></td>
+                        <td><small><%= part_result.warranty.blank? ? 'None' : part_result.warranty %></small></td>
                       </tr>
                     </tbody>
                   </table>
@@ -71,9 +71,9 @@
 	                <% if PartStock.where(part_id: part_result.id).sum('stock') == 0 %>
 	                  <td class="center">
 	                  	<p class="red bottom-none"><%= "Out of stock" %></p>
-	                  	<%= bootstrap_form_for @reminder, :url => user_reminders_path(current_user), :html => { :class => 'form-horizontal' } do |f| %>
-                        <%= f.hidden_field :part_id, :value => part_result.id %>
-                        <%= f.hidden_field :user_id, :value => current_user.id %>
+	                  	<%= bootstrap_form_for @reminder, url: user_reminders_path(current_user), html: { class: 'form-horizontal' } do |f| %>
+                        <%= f.hidden_field :part_id, value: part_result.id %>
+                        <%= f.hidden_field :user_id, value: current_user.id %>
 
                         <%= f.submit "Remind me", class: 'btn btn-link btn-xs', style: 'padding: 4px; width: auto;', title: 'Sends you an email when the product is back in stock' %>
                       <% end %>
@@ -86,7 +86,7 @@
                     <small style="font-size: 9px;">Excl 21% VAT</small>
 	                </td>
 	                <td class="center">
-                      <%= render :partial => "cart_modal", :locals => {:part => part_result }%>
+                      <%= render partial: "cart_modal", locals: {part: part_result }%>
                   </td>
 	              <% end %>
               </tr>
@@ -95,8 +95,8 @@
         </table>
       </div>
       <% unless @part_results.total_count == 0 %>
-      <%= paginate @part_results, :window => 2, :param_name => :part_page %>
-    <% end %>
+      	<%= paginate @part_results, window: 2, param_name: :part_page %>
+    	<% end %>
 		</div>
 	<% end %>
 
@@ -113,14 +113,14 @@
 					<ol class="noPadding" style="list-style-type:none;">	
 						<% @category_results.each do |category_result| %>
 							<li>
-								<%= link_to parts_path(:category_id => category_result.id, :part_page => params[:part_page], :category_page => params[:category_page], :product_page => params[:product_page], :search_query => params[:search_query]) do %>
+								<%= link_to parts_path(category_id: category_result.id, part_page: params[:part_page], category_page: params[:category_page], product_page: params[:product_page], search_query: params[:search_query]) do %>
 									<%= category_result.name %>
 							</li>
 							<% end %>
 						<% end %>
 					</ol>
 					<% unless @category_results.total_count == 0 %>
-      			<%= paginate @category_results, :window => 2, :param_name => :category_page %>
+      			<%= paginate @category_results, window: 2, param_name: :category_page %>
     			<% end %>
 				</div>
 			<% end %>
@@ -149,7 +149,7 @@
 						<% end %>
 					</ol>
 					<% unless @product_results.total_count == 0 %>
-      			<%= paginate @product_results, :window => 2, :param_name => :product_page %>
+      			<%= paginate @product_results, window: 2, param_name: :product_page %>
     			<% end %>
 				</div>
 			<% end %>
@@ -157,7 +157,7 @@
 	</div>
 <% end %>
 <% if flash[:item_added] %>
-  <%= render :partial => "parts/cart_show_modal", :locals => {:cart => @cart, :cart_items => @cart_items} %>
+  <%= render partial: "parts/cart_show_modal", locals: {cart: @cart, cart_items: @cart_items} %>
 <% end %>
 
 

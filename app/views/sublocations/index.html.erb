@@ -1,0 +1,47 @@
+<% provide(:title, "Sublocations") %>
+<% breadcrumb :sublocations, @sublocations %>
+<div class="panel-body panel-table">
+    
+  <% if @sublocations.blank? %>
+    <p class="empty_list">
+      <%= "No locations found" %>
+    </p>
+  <% else %>
+    <div class="table-responsive col-md-4 col-md-offset-4 noPadding">
+      <table class="table table-striped table-hover borderGray">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th class="small-col"></th>
+            <th class="small-col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @sublocations.each do |sublocation| %>
+            <tr>
+              <td><%= sublocation.name %></td>
+              <td>
+                <%= link_to edit_location_sublocation_path(params[:location_id], sublocation.id) do %>
+                  <span class="glyphicon glyphicon-pencil" title="Edit"></span>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to location_sublocation_path(params[:location_id], sublocation.id), data: { confirm: "Are you sure?" }, method: :delete do %>
+                  <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>
+<div class="panel-footer noPadding col-md-offset-4">
+  <% unless (paginate @sublocations).blank? %>
+    <%= paginate @sublocations %><br>
+  <% end %>
+  <% if logged_in? && current_user.manager? %>
+    <%= link_to("Add sublocation", new_location_sublocation_path(params[:location_id]), class: 'btn btn-mini btn-primary') %>
+  <% end %>
+</div>

@@ -1,4 +1,5 @@
 class Cart < ActiveRecord::Base
 	belongs_to :user
 	has_many :cart_items, dependent: :destroy
+	belongs_to :cart_status
 end

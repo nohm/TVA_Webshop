@@ -6,7 +6,6 @@ class InvoicesController < ApplicationController
 		@cart = Cart.find(@invoice.cart_id)
 		@cart_items = CartItem.where(cart_id: @invoice.cart_id)
 		@user = User.find(params[:user_id])
-		@country = ISO3166::Country[@user.country]
 		if @cart.delivery_method == "Pick up"
 			@location = Location.find(@cart.location_id)
 		end

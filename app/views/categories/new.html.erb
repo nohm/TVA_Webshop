@@ -5,7 +5,7 @@
     <%= bootstrap_form_for(@category, url: device_product_categories_path(params[:device_id], params[:product_id]), html: { multipart: true }) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
       
-      <%= f.text_field :name, placeholder: "Accu" %>
+      <%= f.text_field :name, placeholder: "Accu", autofocus: true %>
       <%= f.file_field :cimg, class: "big", label: "Placeholder image" %>
 
       <%= f.submit "Add category", class: "btn btn-primary" %>

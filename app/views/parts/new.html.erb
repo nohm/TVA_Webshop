@@ -2,19 +2,22 @@
 <% breadcrumb :parts, @parts %>
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
-    <%= bootstrap_form_for(@part, :url => device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])) do |f| %>
+    <%= bootstrap_form_for(@part, url: device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id])) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
       
       <%= f.text_field    :name, autofocus: true %>
-      <%= f.text_field    :brand %>
-      <%= f.select(:condition_select, options_for_select(Part.order('condition').uniq.pluck(:condition).collect { |condition| [condition] }, @condition), { include_blank: "Select an existing condition", :label => 'Condition <small>Either select an existing condition or create a new one</small>'.html_safe}) %>
-      <%= f.text_field    :condition, :value => nil, :hide_label => true %>
+      <%= f.text_field    :partnumber %>
+      <%= f.select(:brand_select, options_for_select(Part.order('brand').uniq.pluck(:brand).collect { |condition| [condition] }, @brand), { include_blank: "Select an existing brand", label: 'Brand <small>Either select an existing brand or create a new one</small>'.html_safe}) %>
+      <%= f.text_field    :brand, value: nil, hide_label: true %>
+      <%= f.select(:condition_select, options_for_select(Part.order('condition').uniq.pluck(:condition).collect { |condition| [condition] }, @condition), { include_blank: "Select an existing condition", label: 'Condition <small>Either select an existing condition or create a new one</small>'.html_safe}) %>
+      <%= f.text_field    :condition, value: nil, hide_label: true %>
       <%= f.text_field    :warranty %>
-      <%= f.number_field  :weight, :label => "Weight in grams", :value => 0, :min => 0 %>
-      <%= f.select :location_id, options_for_select(Location.all.order(city: :asc, street: :asc).collect {|location| [ "#{location.city}, #{location.street}", location.id ] }, @location_id), { include_blank: "Choose location", label: "Stock location"}, { id: 'location_select' } %>
-      <%= f.number_field  :stock, :value => 0, :min => 0 %>
-      <%= f.text_field    :price, :prepend => '€', :placeholder => '0.00' %>
-      <%= f.file_field    :partimagefull, :class => "big", :label => "Placeholder image" %>
+      <%= f.number_field  :weight, label: "Weight in grams", value: 0, min: 0 %>
+      <%= f.select :location_id, options_for_select(Location.all.order(city: :asc, street: :asc).collect {|location| [ "#{location.city}, #{location.street}", location.id ] }, @location_id), { include_blank: "Choose location", label: "Stock location"}, { id: 'location_select', data: { url: options_sublocation_path } } %>
+      <%= f.select :sublocation_id, "Nothing", {prompt: "Choose sublocation", hide_label: true}, { id: 'sublocation_select', disabled: "disabled" } %>
+      <%= f.number_field  :stock, value: 0, min: 0 %>
+      <%= f.text_field    :price, prepend: '€', placeholder: '0.00' %>
+      <%= f.file_field    :partimagefull, class: "big", label: "Placeholder image" %>
 
       <%= f.submit "Add part", class: "btn btn-primary" %>
       <%= link_to("Cancel", device_product_category_parts_path(params[:device_id], params[:product_id], params[:category_id]), class: "btn btn-primary") %>

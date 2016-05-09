@@ -155,7 +155,16 @@ crumb :coupons do
 end
 
 crumb :locations do
-	link "Locations", locations_path
+	if !params[:location_id].blank?
+		link Location.find(params[:location_id]).city + ', ' + Location.find(params[:location_id]).street, locations_path
+	else
+		link "Locations", locations_path
+	end
+end
+
+crumb :sublocations do
+	link "Sublocations", location_sublocations_path
+	parent :locations
 end
 
 # crumb :projects do

@@ -1,4 +1,4 @@
-<% provide(:title, 'New location') %>
+<% provide(:title, 'Edit location') %>
 <% breadcrumb :locations, @location %>
 
 <div class="row">
@@ -11,7 +11,7 @@
       <%= f.text_field      :street %>
       <%= f.text_field      :postal_code %>
       <%= f.label           :country %>
-      <%= f.country_select  :country,  {}, { :class => "form-control" } %>
+      <%= f.country_select  :country,  {}, { class: "form-control" } %>
       <%= f.text_field      :phone_number %>
 
       <%= f.submit "Edit location", class: "btn btn-primary" %>

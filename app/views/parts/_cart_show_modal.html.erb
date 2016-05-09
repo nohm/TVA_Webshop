@@ -21,7 +21,7 @@
               <tr>
                 <td><%= image_tag item.part.partimagefull.url(:thumb) %></td>
                 <td>
-                  <%= link_to part_path(:part_id => item.part_id) do %>
+                  <%= link_to part_path(part_id: item.part_id) do %>
                     <b><%= item.part.name %></b>
                   <% end %>
                 </td>

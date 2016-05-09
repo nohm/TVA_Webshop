@@ -1,0 +1,5 @@
+<% if @sublocations.length >= 1 %>
+	<%= select "part_stock", "sublocation_id", options_for_select(@sublocations.collect { |sublocation| [sublocation.name, sublocation.id] } ), { prompt: "Choose sublocation", hide_label: true}, { id: 'sublocation_select' } %> 
+<% else %>
+	<%= select "part_stock", "sublocation_id", "Nothing", {prompt: "No sublocations found", hide_label: true}, { id: 'sublocation_select' } %> 
+<% end %>

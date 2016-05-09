@@ -1,4 +1,4 @@
-<% provide(:title, "Part Stock") %>
+<% provide(:title, "Stock") %>
 <% breadcrumb :part_stocks, @part_stocks %>
 <div class="panel-body panel-table">
     
@@ -10,9 +10,12 @@
         <thead>
           <tr>
             <th>Location</th>
+            <th>Sublocation</th>
             <th>Stock</th>
             <th class="small-col"></th>
-            <th class="small-col"></th>
+            <% unless @part_stocks.length == 1 %>
+              <th class="small-col"></th>
+            <% end %>
           </tr>
         </thead>
         <tbody>
@@ -20,17 +23,20 @@
             <% location = Location.find(part_stock.location_id) %>
             <tr>
               <td><%= "#{location.city}, #{location.street}" %></td>
+              <td><%= part_stock.sublocation_id.blank? ? "" : Sublocation.find(part_stock.sublocation_id).name %></td>
               <td><%= part_stock.stock %></td>
               <td>
                 <%= link_to edit_device_product_category_part_part_stock_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], part_stock.id) do %>
                   <span class="glyphicon glyphicon-pencil" title="Edit"></span>
                 <% end %>
               </td>
-              <td>
-                <%= link_to device_product_category_part_part_stock_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], part_stock.id), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
-                  <span class="glyphicon glyphicon-remove" title="Delete"></span>
-                <% end %>
-              </td>
+              <% unless @part_stocks.length == 1 %>
+                <td>
+                  <%= link_to device_product_category_part_part_stock_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], part_stock.id), data: { confirm: "Are you sure?" }, method: :delete do %>
+                    <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                  <% end %>
+                </td>
+              <% end %>
             </tr>
           <% end %>
         </tbody>
@@ -43,6 +49,6 @@
     <%= paginate @part_stocks %><br>
   <% end %>
   <% if logged_in? && current_user.manager? %>
-    <%= link_to("Add stock", new_device_product_category_part_part_stock_path, :class => 'btn btn-mini btn-primary') %>
+    <%= link_to("Add stock", new_device_product_category_part_part_stock_path, class: 'btn btn-mini btn-primary') %>
   <% end %>
 </div>

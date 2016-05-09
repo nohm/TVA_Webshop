@@ -1,16 +1,16 @@
 <% if PartStock.where(part_id: part_product.part_id).sum('stock') > 0 %>
-  <%= button_tag( :href => "#", :type => "button",:class => "btn btn-primary small", :title => "Add to cart", :data => { :toggle => "modal", :target => "#add-to-cart-" + part_product.part.id.to_s}) do %>
+  <%= button_tag( href: "#", type: "button", class: "btn btn-primary small", title: "Add to cart", data: { toggle: "modal", target: "#add-to-cart-" + part_product.part.id.to_s}) do %>
     <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
   <% end %>
 <% else %>
-  <%= button_tag( :href => "#", :type => "button", :class => "btn btn-danger small cursorDisabled", :disabled => "disabled", :title => "Out of stock") do %>
+  <%= button_tag( href: "#", type: "button", class: "btn btn-danger small cursorDisabled", disabled: "disabled", title: "Out of stock") do %>
     <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
   <% end %>
 <% end %>
 <div id="add-to-cart-<%= part_product.part.id %>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalLabel-part-<%= part_product.part.id %>" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <%= bootstrap_form_for @cart_item, :url => user_cart_cart_items_path(current_user, Cart.where(user_id: current_user.id, purchased: false).first.id), :html => { :class => 'form-horizontal' } do |f| %>
+      <%= bootstrap_form_for @cart_item, url: user_cart_cart_items_path(current_user, Cart.where(user_id: current_user.id, cart_status_id: 1).first.id), html: { class: 'form-horizontal' } do |f| %>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title left" id="modalLabel-part-<%= part_product.part.id %>">Add to cart</h4>
@@ -49,18 +49,18 @@
                     </table>
                   </td>
                   <td>
-                    <%= f.number_field :amount, min: 1, max: PartStock.where(part_id: part_product.part_id).sum('stock'), :value => 1, :class => "smallNumber", :hide_label => true, required: 'required' %>        
+                    <%= f.number_field :amount, min: 1, max: PartStock.where(part_id: part_product.part_id).sum('stock'), value: 1, class: "smallNumber", hide_label: true, required: 'required' %>        
                   </td>    
                 </tr>
               </tbody>
             </table>
           </div>
-          <%= f.hidden_field :cart_id, :value => Cart.where(user_id: current_user.id, purchased: false).first.id %>
-          <%= f.hidden_field :part_id, :value => part_product.part.id %>
+          <%= f.hidden_field :cart_id, value: Cart.where(user_id: current_user.id, cart_status_id: 1).first.id %>
+          <%= f.hidden_field :part_id, value: part_product.part.id %>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= "Close" %></button>
-          <%= button_tag( :class => "btn btn-primary small") do %>
+          <%= button_tag( class: "btn btn-primary small") do %>
             <span class="glyphicon glyphicon-shopping-cart"></span>   Add to Cart
           <% end %>
         </div>

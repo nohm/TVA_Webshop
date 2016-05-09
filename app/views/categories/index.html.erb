@@ -3,29 +3,60 @@
 <div class="panel-body panel-table" id="Category">
   <% if @categories.length == 0 %>
     <p class="empty_list">
-      <%= "De lijst is leeg" %>
+      <%= "There are no categories for this product" %>
     </p>
   <% else %>
     <div class="overview-row row">
       <% @categories.each do |category| %>
-        <div class="col-sm-3 overview-tab category-tab" data-category-id="<%= category.id %>">
-          <div class="thumbnail">
-            <%= link_to device_product_category_parts_path(params[:device_id], params[:product_id], category) do %>
-              <%= image_tag category.cimg.url(:medium) %>
-            <% end %>
-            <div class="caption">
-              <p class="center"><b>Category: </b><%= category.name %></p>
-              <% if logged_in? && current_user.manager? %>
-                <%= link_to edit_device_product_category_path(params[:device_id], params[:product_id], category) do %>
-                  <span class="glyphicon glyphicon-pencil" title="Edit"></span>
-                <% end %>
-                <%= link_to device_product_category_path(params[:device_id], params[:product_id], category), data: { confirm: "Are you sure?" }, method: :delete do %>
-                  <span class="glyphicon glyphicon-remove" title="Delete"></span>
-                <% end %>
+        <% if !logged_in? || current_user.role.name == "Client" %>
+          <% category_contains_parts = false %>
+          <% category.parts.each do |part| %>
+            <% PartsProduct.where(part_id: part.id).each do |part_product| %> 
+              <% if part_product.product_id == params[:product_id].to_i %>
+                <% category_contains_parts = true %>
               <% end %>
+            <% end %>
+          <% end %>
+          <% if category_contains_parts == true %>
+            <div class="col-sm-3 overview-tab category-tab" data-category-id="<%= category.id %>">
+              <div class="thumbnail">
+                <%= link_to device_product_category_parts_path(params[:device_id], params[:product_id], category) do %>
+                  <%= image_tag category.cimg.url(:medium) %>
+                <% end %>
+                <div class="caption">
+                  <p class="center"><b>Category: </b><%= category.name %></p>
+                  <% if logged_in? && current_user.manager? %>
+                    <%= link_to edit_device_product_category_path(params[:device_id], params[:product_id], category) do %>
+                      <span class="glyphicon glyphicon-pencil" title="Edit"></span>
+                    <% end %>
+                    <%= link_to device_product_category_path(params[:device_id], params[:product_id], category), data: { confirm: "Are you sure?" }, method: :delete do %>
+                      <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="col-sm-3 overview-tab category-tab" data-category-id="<%= category.id %>">
+            <div class="thumbnail">
+              <%= link_to device_product_category_parts_path(params[:device_id], params[:product_id], category) do %>
+                <%= image_tag category.cimg.url(:medium) %>
+              <% end %>
+              <div class="caption">
+                <p class="center"><b>Category: </b><%= category.name %></p>
+                <% if logged_in? && current_user.manager? %>
+                  <%= link_to edit_device_product_category_path(params[:device_id], params[:product_id], category) do %>
+                    <span class="glyphicon glyphicon-pencil" title="Edit"></span>
+                  <% end %>
+                  <%= link_to device_product_category_path(params[:device_id], params[:product_id], category), data: { confirm: "Are you sure?" }, method: :delete do %>
+                    <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                  <% end %>
+                <% end %>
+              </div>
             </div>
           </div>
-        </div>
+        <% end %>
       <% end %>
     </div>
   <% end %>

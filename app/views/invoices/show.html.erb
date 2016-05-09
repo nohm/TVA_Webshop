@@ -28,7 +28,7 @@
         <%= @user.name %><br>
 		    <%= @user.street %><br>
 		    <%= @user.postal_code + " " + @user.city %><br>
-        <%= @country.name %><br>
+        <%= ISO3166::Country[@user.country] %><br>
 		    <%= @user.phone_number %>
       </p>
     </div>

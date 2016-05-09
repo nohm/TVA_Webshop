@@ -189,6 +189,26 @@ $(document).on('ready page:load', function () {
 
 
 
+	// AJAX GET request for filling sublocation_select with values
+	$("#location_select").change(function () {
+		var id = $(this).val();
+		var url = $(this).data('url');
+		if (id){
+			$.ajax({
+	      type: 'GET',
+	      url: url,
+	      data: { id: id },
+	      success: function(data){
+	        $('#sublocation_select').prop("disabled", false).html(data);
+	      },
+	      error: function(data){
+	      	$('#sublocation_select').prop("disabled", true).html('<option value="">Choose brand</option>');
+	      }
+	    })
+		}	
+	})	
+
+
 	// AJAX PUT request for updating cart amount in cart.
 	$(".amount").blur(function() {
 	  var $this = $(this);

@@ -1,6 +1,6 @@
 class CategoriesController < ApplicationController
 	def index
-    @categories = Category.where(:device_id => params[:device_id]).page(params[:page]).per(25).order('id ASC')
+    @categories = Category.where(device_id: params[:device_id]).page(params[:page]).per(25).order('id ASC')
   end
 
 	def new

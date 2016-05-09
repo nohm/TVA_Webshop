@@ -45,7 +45,7 @@ class CartItemsController < ApplicationController
 
 	def update
 		cart_item = CartItem.find(params[:id])
-		cart = Cart.where(user_id: current_user, purchased: false).first
+		cart = Cart.where(user_id: current_user, cart_status_id: 1).first
 		
 		unless cart.coupon_code.blank?
 			coupon = Coupon.where(code: cart.coupon_code).first
@@ -65,7 +65,8 @@ class CartItemsController < ApplicationController
 		   	render inline: "Amount is not valid"
 		  end
 	  else
-	  	flash[:notice] = "There are only " + PartStock.where(part_id: cart_item.part.id).sum('stock').to_s + " parts remaining for this product."
+	  	flash[:not_enough_items] = "Not enough items in stock"
+	  	flash[:notice] = "There are only " + PartStock.where(part_id: cart_item.part.id).sum('stock').to_s + " parts remaining for '#{cart_item.name}'."
 	  	render inline: "Not enough products"
 	  end
 	end

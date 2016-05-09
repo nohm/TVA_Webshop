@@ -4,7 +4,7 @@
     
   <% if @part_amount == 0 %>
     <p class="empty_list">
-      <%= "No products found for this category" %>
+      <%= "There are no parts this category" %>
     </p>
   <% else %>
     <div class="table-responsive">
@@ -52,7 +52,7 @@
                       </tr>
                       <tr>
                         <td><small>Warranty: </small></td>
-                        <td><small><%= part_product.part.warranty %></small></td>
+                        <td><small><%= part_product.part.warranty.blank? ? 'None' : part_product.part.warranty %></small></td>
                       </tr>
                     </tbody>
                   </table>
@@ -73,14 +73,14 @@
                 </td>
                 <% if logged_in? %>
                   <td>
-                    <%= render :partial => "tell_a_friend_modal", :locals => {:part_product => part_product}%>
+                    <%= render partial: "tell_a_friend_modal", locals: { part_product: part_product } %>
                   </td>
                   <% if PartStock.where(part_id: part_product.part_id).sum('stock') == 0 %>
                     <td class="center">
                       <p class="red bottom-none">Out of stock</p>
-                      <%= bootstrap_form_for @reminder, :url => user_reminders_path(current_user), :html => { :class => 'form-horizontal' } do |f| %>
-                        <%= f.hidden_field :part_id, :value => part_product.part.id %>
-                        <%= f.hidden_field :user_id, :value => current_user.id %>
+                      <%= bootstrap_form_for @reminder, url: user_reminders_path(current_user), html: { class: 'form-horizontal' } do |f| %>
+                        <%= f.hidden_field :part_id, value: part_product.part.id %>
+                        <%= f.hidden_field :user_id, value: current_user.id %>
 
                         <%= f.submit "Remind me", class: 'btn btn-link btn-xs', style: 'padding: 4px; width: auto;', title: 'Sends you an email when the product is back in stock' %>
                       <% end %>
@@ -94,7 +94,7 @@
                     <small style="font-size: 9px;">Excl 21% VAT</small>
                   </td>
                   <td class="center">
-                    <%= render :partial => "cart_modal", :locals => {:part_product => part_product}%>
+                    <%= render partial: "cart_modal", locals: { part_product: part_product } %>
                   </td>
                   <% if current_user.manager? %>
                     <td>
@@ -128,7 +128,7 @@
                       <% end %>
                     </td>
                     <td>
-                      <%= link_to device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], part_product.part.id), :data => { :confirm => "Are you sure?" }, :method => :delete do %>
+                      <%= link_to device_product_category_part_path(params[:device_id], params[:product_id], params[:category_id], part_product.part.id), data: { confirm: "Are you sure?" }, method: :delete do %>
                         <span class="glyphicon glyphicon-remove" title="Delete"></span>
                       <% end %>
                     </td>
@@ -147,10 +147,10 @@
     <%= paginate @parts_products %><br>
   <% end %>
   <% if logged_in? && current_user.manager? %>
-    <%= link_to("Add part", new_device_product_category_part_path, :class => 'btn btn-mini btn-primary') %>
+    <%= link_to("Add part", new_device_product_category_part_path, class: 'btn btn-mini btn-primary') %>
   <% end %>
 </div>
 <% if flash[:item_added] %>
-  <%= render :partial => "cart_show_modal", :locals => {:cart => @cart, :cart_items => @cart_items} %>
+  <%= render partial: "cart_show_modal", locals: { cart: @cart, cart_items: @cart_items} %>
 <% end %>
   

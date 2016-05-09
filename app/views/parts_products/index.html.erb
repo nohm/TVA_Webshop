@@ -1,4 +1,4 @@
-<% provide(:title, "Part connections") %>
+<% provide(:title, "Connections") %>
 <% breadcrumb :parts_products, @parts_products %>
 <div class="panel-body panel-table">
   <div class="table-responsive">
@@ -27,7 +27,7 @@
             <td><%= part_product.product.partnumber %></td>
             <% if @parts_products.length != 1 %>  
               <td>
-                <%= link_to(device_product_category_part_parts_product_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], part_product), :data => { :confirm => "Are you sure?" }, :method => :delete) do %>
+                <%= link_to(device_product_category_part_parts_product_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], part_product), data: { confirm: "Are you sure?" }, method: :delete) do %>
                   <span class="glyphicon glyphicon-remove" title="Delete"></span>
                 <% end %>
               </td>
@@ -42,5 +42,5 @@
   <% unless (paginate @parts_products).blank? %>
     <%= paginate @parts_products %><br>
   <% end %>
-  <%= link_to("Add connection", new_device_product_category_part_parts_product_path, :class => 'btn btn-mini btn-primary') %>
+  <%= link_to("Add connection", new_device_product_category_part_parts_product_path, class: 'btn btn-mini btn-primary') %>
 </div>

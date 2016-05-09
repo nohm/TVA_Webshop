@@ -14,16 +14,16 @@
           <%= bootstrap_form_tag url: search_path, method: 'GET', html: {class: "form-inline"} do |f| %>
             <div class="input-group">
               <% if !params[:p_id].blank? %>
-                <%= f.select :product_device_id, options_for_select(Device.all.collect { |device| [device.name.titleize, device.id] }, Product.find(params[:p_id]).device_id), { prompt: "Choose device", hide_label: true}, { id: 'device_select', data: { 'url' => options_brand_path, 'urlself' => options_device_path } } %>
+                <%= f.select :product_device_id, options_for_select(Device.all.collect { |device| [device.name.titleize, device.id] }, Product.find(params[:p_id]).device_id), { prompt: "Choose device", hide_label: true}, { id: 'device_select', data: { url: options_brand_path, urlself: options_device_path } } %>
               <% else %>
-                <%= f.select :product_device_id, options_for_select(Device.all.collect { |device| [device.name.titleize, device.id] } ), { prompt: "Choose device", hide_label: true}, { id: 'device_select', data: { 'url' => options_brand_path, 'urlself' => options_device_path } } %>
+                <%= f.select :product_device_id, options_for_select(Device.all.collect { |device| [device.name.titleize, device.id] } ), { prompt: "Choose device", hide_label: true}, { id: 'device_select', data: { url: options_brand_path, urlself: options_device_path } } %>
               <% end %>
 
-              <%= f.select :product_brand, "Nothing", {prompt: "Choose brand", hide_label: true}, { id: 'brand_select', disabled: "disabled", data: { 'url' => options_model_path } } %>
+              <%= f.select :product_brand, "Nothing", {prompt: "Choose brand", hide_label: true}, { id: 'brand_select', disabled: "disabled", data: { url: options_model_path } } %>
         
-              <%= f.select :product_model, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'model_select', disabled: "disabled", data: { 'url' => options_model_extended_path }} %>
+              <%= f.select :product_model, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'model_select', disabled: "disabled", data: { url: options_model_extended_path }} %>
 
-              <%= f.select :product_model_extended, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'model_extended_select', disabled: "disabled", data: { 'url' => search_model_extended_path }} %>
+              <%= f.select :product_model_extended, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'model_extended_select', disabled: "disabled", data: { url: search_model_extended_path }} %>
             </div>
             <div class="input-group">
               <%= f.text_field :search_query, hide_label: true, class: "small" %>
@@ -37,7 +37,7 @@
         </li>
         <li><%= link_to "Home", root_path %></li>
         <% if logged_in? %>
-          <li><%= link_to "Cart", user_carts_path(current_user) %></li>
+          <li><%= link_to "My Cart (#{cart_count(current_user)}) ", user_carts_path(current_user) %></li>
           <% if current_user.manager? %>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">

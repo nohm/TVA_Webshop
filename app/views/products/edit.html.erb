@@ -2,15 +2,13 @@
 <% breadcrumb :products, @products %>
 <div class="row">
   <div class="col-sm-6 col-sm-offset-3">
-    <%= bootstrap_form_for(@product, :url => device_product_path(params[:device_id], params[:id])) do |f| %>
+    <%= bootstrap_form_for(@product, url: device_product_path(params[:device_id], params[:id])) do |f| %>
       <%= f.alert_message "Please fix the errors below." %>
     	
       <%= f.text_field :brand, label: 'Brand <small>Only pick one</small>'.html_safe, autofocus: true %>
       <%= f.select(:brand_select, Product.order('brand').uniq.pluck(:brand), { include_blank: true, hide_label: true}) %>
       <%= f.text_field :model %>
       <%= f.text_field :model_extended %>
-      <%= f.text_field :type_number %>
-      <%= f.text_field :partnumber %>
 
       <%= f.submit "Edit product", class: "btn btn-primary" %>
       <%= link_to("Cancel", device_products_path(params[:device_id]), class: "btn btn-primary") %>
