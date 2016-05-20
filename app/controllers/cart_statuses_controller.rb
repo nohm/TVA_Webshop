@@ -1,4 +1,10 @@
 class CartStatusesController < ApplicationController
+	def show
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.admin?
+		@status = CartStatus.find(params[:id])
+		@carts = Cart.where(cart_status_id: @status.id).order("id DESC")
+	end
+
 	def index
 		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.admin?
 		@statuses = CartStatus.all.page(params[:page]).per(10)

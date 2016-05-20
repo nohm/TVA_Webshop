@@ -13,8 +13,8 @@ class SessionsController < ApplicationController
       if user.activated?
         log_in user
         params[:session][:remember_me] == '1' ? remember(user) : forget(user)
-        if Cart.find_by(user_id: user.id, cart_status_id: 1).blank?
-          Cart.create(user_id: user.id, delivery_method: "Shipping", purchased: false, cart_status_id: 1)
+        if Cart.find_by(user_id: user.id, cart_status_id: search_status_id("In progress")).blank?
+          Cart.create(user_id: user.id, delivery_method: "Shipping", purchased: false, cart_status_id: search_status_id("In progress"))
         end
         redirect_to root_path
       else

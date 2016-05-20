@@ -1,5 +1,5 @@
 <% provide(:title, 'Edit status') %>
-<% breadcrumb :status, @status %>
+<% breadcrumb :statuses, @status %>
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     <%= bootstrap_form_for(@status, url: cart_status_path(@status)) do |f| %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160506124108) do
+ActiveRecord::Schema.define(version: 20160519133143) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,7 +40,6 @@ ActiveRecord::Schema.define(version: 20160506124108) do
     t.boolean  "purchased",                                default: false
     t.string   "coupon_code"
     t.string   "delivery_method"
-    t.string   "previous_url"
     t.integer  "location_id"
     t.decimal  "shipping_cost",   precision: 10, scale: 2
     t.decimal  "tax",             precision: 10, scale: 2
@@ -48,6 +47,7 @@ ActiveRecord::Schema.define(version: 20160506124108) do
     t.decimal  "total",           precision: 10, scale: 2
     t.decimal  "coupon_discount", precision: 10, scale: 2
     t.integer  "cart_status_id"
+    t.datetime "order_made_at"
   end
 
   add_index "carts", ["cart_status_id"], name: "index_carts_on_cart_status_id", using: :btree
@@ -73,6 +73,15 @@ ActiveRecord::Schema.define(version: 20160506124108) do
     t.integer  "category_ids",                             default: [], array: true
     t.integer  "part_ids",                                 default: [], array: true
     t.integer  "user_ids",                                 default: [], array: true
+  end
+
+  create_table "deliveries", force: :cascade do |t|
+    t.integer "cart_item_id"
+    t.integer "shipping_from_location"
+    t.integer "amount"
+    t.integer "shipping_to_location"
+    t.integer "shipping_to_user"
+    t.integer "cart_status_id"
   end
 
   create_table "devices", force: :cascade do |t|
@@ -194,6 +203,7 @@ ActiveRecord::Schema.define(version: 20160506124108) do
     t.datetime "activated_at"
     t.string   "reset_digest"
     t.datetime "reset_sent_at"
+    t.string   "previous_url"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

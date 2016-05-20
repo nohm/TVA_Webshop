@@ -1,7 +1,7 @@
 class PartsController < ApplicationController
   def index
     if flash[:item_added]
-      @cart = Cart.where(user_id: current_user.id, cart_status_id: 1).first
+      @cart = Cart.find_by(user_id: current_user.id, cart_status_id: search_status_id("In progress"))
       @cart_items = CartItem.where(cart_id: @cart.id).order('id')
     end
     @parts_products = PartsProduct.where(product_id: params[:product_id]).page(params[:page]).per(10).order('id ASC')
@@ -17,7 +17,7 @@ class PartsController < ApplicationController
 
   def show
     if flash[:item_added]
-      @cart = Cart.where(user_id: current_user.id, cart_status_id: 1).first
+      @cart = Cart.find_by(user_id: current_user.id, cart_status_id: search_status_id("In progress"))
       @cart_items = CartItem.where(cart_id: @cart.id).order('id')
     end
     @part = Part.find(params[:id])

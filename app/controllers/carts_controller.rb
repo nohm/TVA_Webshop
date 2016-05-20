@@ -1,6 +1,7 @@
 class CartsController < ApplicationController
 	def index
-		@cart = Cart.where(user_id: current_user.id, cart_status_id: 1).first
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && params[:user_id].to_i == current_user.id
+		@cart = Cart.find_by(user_id: current_user.id, cart_status_id: search_status_id("In progress"))
 		@cart_items = CartItem.where(cart_id: @cart.id ).order('id ASC') 
 		@coupon_code = @cart.coupon_code || "None"
 		@colspan = @cart.coupon_code.blank? ? 5 : 6
@@ -13,6 +14,7 @@ class CartsController < ApplicationController
 		total_weight = 0
 		message = []
 		is_already_saved = false
+
 		@cart_items.each do |item|
 			item.discount_tier = DiscountPrice.where(part_id: item.part_id, amount: 0..(item.amount)).last.amount
 			item.price_tier_discount = DiscountPrice.where(part_id: item.part_id, amount: 0..(item.amount)).last.price
@@ -129,7 +131,15 @@ class CartsController < ApplicationController
 	def update
 		@cart = Cart.find(params[:id])
 
-		if params[:cart][:delivery_method].blank? && params[:cart][:location_id].blank?
+		if !params[:cart][:cart_status_id].blank?
+			if @cart.update(cart_params)
+	      redirect_to request.referrer
+	      flash[:success] = "Status updated"
+	    else
+	      redirect_to request.referrer
+	      flash[:notice] = "Error while updating"
+	    end
+		elsif params[:cart][:delivery_method].blank? && params[:cart][:location_id].blank?
 			coupon = Coupon.where(code: params[:cart][:coupon_code]).first
 			cart_items = CartItem.where(cart_id: params[:id])
 
@@ -219,6 +229,9 @@ class CartsController < ApplicationController
 		cart = Cart.find(cart_id)
 		cart_items = CartItem.where(cart_id: cart_id)
 		errors = false
+		ready_for_delivery = false
+		not_ready_for_delivery = false
+		delivery_ids = []
 		if !Invoice.where(user_id: current_user.id, cart_id: cart.id).exists?
 			cart_items.each do |item|
 				part = Part.find(item.part_id)
@@ -231,36 +244,51 @@ class CartsController < ApplicationController
 							if (part_stock.stock - item.amount) >= 0
 								part_stock.stock -= item.amount
 								part_stock.save
+								delivery = Delivery.create(cart_item_id: item.id, shipping_from_location: part_stock.location_id, shipping_to_user: cart.user_id, amount: item.amount, cart_status_id: search_status_id("Ready for shipping to client"))
+								delivery_ids << delivery.id
 								break
 							else
 								if part_stock.stock < purchase_amount
+									delivery = Delivery.create(cart_item_id: item.id, shipping_from_location: part_stock.location_id, shipping_to_user: cart.user_id, amount: part_stock.stock, cart_status_id: search_status_id("Ready for shipping to client"))
+									delivery_ids << delivery.id
 									purchase_amount -= part_stock.stock
 									part_stock.stock = 0
 									part_stock.save
 								else
+									delivery = Delivery.create(cart_item_id: item.id, shipping_from_location: part_stock.location_id, shipping_to_user: cart.user_id, amount: purchase_amount, cart_status_id: search_status_id("Ready for shipping to client"))
+									delivery_ids << delivery.id
 									part_stock.stock -= purchase_amount
 									part_stock.save
 									purchase_amount = 0
-									break
 								end
 							end
 						end
+						ready_for_delivery = true
 					elsif cart.delivery_method == "Pick up"
 						location_stock = PartStock.find_by(part_id: part.id, location_id: cart.location_id)
 						if location_stock.stock >= purchase_amount
+							delivery = Delivery.create(cart_item_id: item.id, shipping_from_location: location_stock.location_id, shipping_to_location: location_stock.location_id, amount: purchase_amount, cart_status_id: search_status_id("Waiting for pick up"))
+							delivery_ids << delivery.id
 							location_stock.stock -= item.amount
 							location_stock.save
+							ready_for_delivery = true
 						else
 							purchase_amount -= location_stock.stock
+							delivery = Delivery.create(cart_item_id: item.id, shipping_from_location: location_stock.location_id, shipping_to_location: location_stock.location_id, amount: location_stock.stock, cart_status_id: search_status_id("Waiting for pick up"))
+							delivery_ids << delivery.id
 							location_stock.stock = 0
 							location_stock.save
 							if purchase_amount != 0
 								part_stocks.each do |part_stock|
 									if part_stock.stock < purchase_amount
+										delivery = Delivery.create(cart_item_id: item.id, shipping_from_location: part_stock.location_id, shipping_to_location: location_stock.location_id, amount: part_stock.stock, cart_status_id: search_status_id("Ready for internal shipping"))
+										delivery_ids << delivery.id
 										purchase_amount -= part_stock.stock
 										part_stock.stock = 0
 										part_stock.save
 									else
+										delivery = Delivery.create(cart_item_id: item.id, shipping_from_location: part_stock.location_id, shipping_to_location: location_stock.location_id, amount: purchase_amount, cart_status_id: search_status_id("Ready for internal shipping"))
+										delivery_ids << delivery.id
 										part_stock.stock -= purchase_amount
 										part_stock.save
 										purchase_amount = 0
@@ -268,18 +296,37 @@ class CartsController < ApplicationController
 									end
 								end
 							end
+							not_ready_for_delivery = true
 						end
 					end
 				else
 					errors = true
 				end
 			end
+
 			if errors == false
+				if ready_for_delivery == true && not_ready_for_delivery == false
+					if cart.delivery_method == "Shipping"
+						cart.cart_status_id = search_status_id("Ready for shipping to client")
+					elsif cart.delivery_method == "Pick up"
+						cart.cart_status_id = search_status_id("Waiting for pick up")
+					end
+					cart.save
+				else
+					if cart.delivery_method == "Pick up"
+						cart.cart_status_id = search_status_id("Ready for internal shipping")
+						cart.save
+					end
+				end
+
 				cart.purchased = true
-				cart.cart_status_id = 5
+				cart.order_made_at = Time.now.utc
+				if cart.cart_status_id == search_status_id("In progress")
+					cart.cart_status_id = search_status_id("Completed")
+				end
 				cart.save
 				Invoice.create(user_id: current_user.id, cart_id: cart_id)
-				Cart.create(user_id: current_user.id, delivery_method: "Shipping", purchased: true, cart_status_id: 1)
+				Cart.create(user_id: current_user.id, delivery_method: "Shipping", purchased: false, cart_status_id: search_status_id("In progress"))
 				if !coupon.blank?
 					user.used_coupon_ids << coupon.id
 					user.save
@@ -287,6 +334,11 @@ class CartsController < ApplicationController
 				if !coupon.blank? && coupon.amount > 0
 					coupon.amount -= 1
 					coupon.save
+				end
+			else
+				deliveries = Delivery.find(delivery_ids)
+				deliveries.each do |delivery|
+					delivery.destroy
 				end
 			end
 			render inline: 'Purchase succeeded' # Needed for Javascript response
@@ -298,6 +350,6 @@ class CartsController < ApplicationController
 	private
 
 	def cart_params
-		params.require(:cart).permit(:user_id, :purchased, :coupon_code, :delivery_method, :location_id, :cart_status_id)
+		params.require(:cart).permit(:user_id, :purchased, :coupon_code, :delivery_method, :location_id, :cart_status_id, :order_made_at)
 	end
 end

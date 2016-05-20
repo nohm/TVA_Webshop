@@ -4,6 +4,7 @@ class CartItemsController < ApplicationController
 		part_id = params[:cart_item][:part_id]
 		amount = params[:cart_item][:amount].to_i
 		cart = Cart.find(cart_id)
+		user = current_user
 
 		if CartItem.where(part_id: part_id, cart_id: cart_id).exists?
 			cart_item = CartItem.find_by(cart_id: cart_id, part_id: part_id)
@@ -16,7 +17,7 @@ class CartItemsController < ApplicationController
 				discount_price = DiscountPrice.where(part_id: part_id, amount: 0..(cart_item.amount + amount)).last
 				cart_item.update_columns(amount: (cart_item.amount + amount), price_tier_discount: discount_price.price, discount_tier: discount_price.amount)
 			end
-			cart.update_attribute(:previous_url, request.referrer)
+			user.update_attribute(:previous_url, request.referrer)
 			flash[:item_added] = "Toggle modal"
 			redirect_to :back
 		else
@@ -26,7 +27,7 @@ class CartItemsController < ApplicationController
 			params[:cart_item][:price_tier_discount] = DiscountPrice.where(part_id: part_id, amount: 0..(amount)).last.price
 			cart_item = CartItem.new(cart_item_params)
 			if cart_item.save
-				cart.update_attribute(:previous_url, request.referrer)
+				user.update_attribute(:previous_url, request.referrer)
 				flash[:item_added] = "Toggle modal"
 		    redirect_to :back
 		  end
@@ -45,7 +46,7 @@ class CartItemsController < ApplicationController
 
 	def update
 		cart_item = CartItem.find(params[:id])
-		cart = Cart.where(user_id: current_user, cart_status_id: 1).first
+		cart = Cart.find_by(user_id: current_user, cart_status_id: search_status_id("In progress"))
 		
 		unless cart.coupon_code.blank?
 			coupon = Coupon.where(code: cart.coupon_code).first

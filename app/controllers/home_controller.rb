@@ -1,12 +1,7 @@
 class HomeController < ApplicationController
-
-	def carts
-		@carts = Cart.all
-	end
-
 	def search
   	if flash[:item_added]
-      @cart = Cart.where(user_id: current_user.id, cart_status_id: 1).first
+      @cart = Cart.find_by(user_id: current_user.id, cart_status_id: search_status_id("In progress"))
       @cart_items = CartItem.where(cart_id: @cart.id).order('id')
     end
 		@reminder = Reminder.new
@@ -47,7 +42,7 @@ class HomeController < ApplicationController
 
 	def all_parts
   	if flash[:item_added]
-      @cart = Cart.where(user_id: current_user.id, cart_status_id: 1).first
+      @cart = Cart.find_by(user_id: current_user.id, cart_status_id: search_status_id("In progress"))
       @cart_items = CartItem.where(cart_id: @cart.id).order('id')
     end
 		@reminder = Reminder.new
@@ -57,7 +52,7 @@ class HomeController < ApplicationController
 
 	def part
 		if flash[:item_added]
-      @cart = Cart.where(user_id: current_user.id, cart_status_id: 1).first
+      @cart = Cart.find_by(user_id: current_user.id, cart_status_id: search_status_id("In progress"))
       @cart_items = CartItem.where(cart_id: @cart.id).order('id')
     end
 		@reminder = Reminder.new
@@ -76,7 +71,7 @@ class HomeController < ApplicationController
 
 	def invoices
 		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
-		@invoices = Invoice.all.page(params[:page]).per(10)
+		@invoices = Invoice.all.order('id DESC').page(params[:page]).per(10)
 	end
 
 	def options_device

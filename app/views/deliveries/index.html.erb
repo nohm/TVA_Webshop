@@ -1,0 +1,101 @@
+<% provide(:title, "Order details") %>
+<% breadcrumb :order_details, @deliveries %>
+<div class="panel-body panel-table">
+  
+  <p>Entire order:</p>
+  <% if @cart_items.length == 0 %>
+    <p class="empty_list">
+      <%= "There are no " %>
+    </p>
+  <% else %>
+    <div class="table-responsive bottom-15">
+      <table class="table table-striped table-hover borderGray">
+        <thead>
+          <tr>
+            <th>Part</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @cart_items.each do |item| %>
+            <td class="width50"><%= item.name %></td>
+            <td class="width50"><%= item.amount %></td>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
+  <p>Actions:</p>
+  <% if @deliveries.length == 0 %>
+    <p class="empty_list">
+      <%= "There are no deliveries" %>
+    </p>
+  <% else %>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover borderGray">
+        <thead>
+          <tr>
+            <th>Part</th>
+            <th>Amount</th>
+            <th>Shipping from</th>
+            <th>Shipping to</th>
+            <th>Status</th>
+            <th class="small-col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @deliveries.each do |delivery| %>
+            <tr>
+              <td><%= delivery.cart_item.part.name %></td>
+              <td><%= delivery.amount %></td>
+              <td>
+                <%= Location.find(delivery.shipping_from_location).street + ", " + Location.find(delivery.shipping_from_location).postal_code + " " + Location.find(delivery.shipping_from_location).city %>
+              </td>
+              <td>
+                <% if delivery.shipping_to_location.blank? %>
+                  <%= User.find(delivery.shipping_to_user).street + ", " + User.find(delivery.shipping_to_user).postal_code + " " + User.find(delivery.shipping_to_user).city %>
+                <% else %>
+                  <% if delivery.shipping_to_location == delivery.shipping_from_location %>
+                    N/A
+                  <% else %>
+                    <%= Location.find(delivery.shipping_to_location).street + ", " + Location.find(delivery.shipping_to_location).postal_code + " " + Location.find(delivery.shipping_to_location).city %>
+                  <% end %>
+                <% end %>
+              </td>
+              <td><%= delivery.cart_status.name %></td>
+              <td>
+                  <a href="#" data-toggle="modal" data-target="#role-options-<%= delivery.id %>" type="button"><span class="glyphicon glyphicon-pencil"></span></a>
+                  <div id="role-options-<%= delivery.id %>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalLabel-delivery-<%= delivery.id%>" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <%= bootstrap_form_for delivery, url: cart_status_delivery_path(params[:cart_status_id], delivery), html: { method: :put, class: 'form-horizontal' } do |f| %>
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="modalLabel-delivery-<%= delivery.id%>">Change status of action <%= delivery.id %></h4>
+                          </div>
+                          <div class="modal-body">
+                            <%= f.label :role %>
+                            <%= collection_select :delivery, :cart_status_id, CartStatus.where.not(name: "In progress"), :id, :name, { selected: delivery.cart_status_id }, { class: 'form-control width50' } %>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><%= "Close" %></button>
+                            <%= f.submit "Change status", class: "btn btn-primary btn-sm" %>
+                          </div>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>
+<div class="panel-footer noPadding">
+  <% unless (paginate @deliveries).blank? %>
+    <%= paginate @deliveries %><br>
+  <% end %>
+</div>

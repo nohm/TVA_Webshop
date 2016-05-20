@@ -73,7 +73,7 @@
                 <%= text_field_tag "amount-#{item.part_id}", {}, value: item.amount, class: "width40px amount bottom-none", data: { cart: item.cart.id, part: item.part_id, id: item.id, url: user_cart_cart_item_path(current_user.id, item.cart.id, item) } %>
               </td>
               <td class="center">
-                <%= link_to user_cart_cart_item_path(params[:user_id], Cart.where(user_id: current_user.id, cart_status_id: 1).first.id, item), method: :delete do %>
+                <%= link_to user_cart_cart_item_path(params[:user_id], Cart.find_by(user_id: current_user.id, cart_status_id: search_status_id("In progress")).id, item), method: :delete do %>
                   <span class="glyphicon glyphicon-remove"></span>
                 <% end %>
               </td>
@@ -127,17 +127,17 @@
       <% end %>
     </table>
   </div>
+
+  <% unless current_user.previous_url.nil? %>
+    <%= link_to current_user.previous_url, class: "btn btn-primary" do %>
+      <span class="glyphicon glyphicon-shopping-cart"></span> Continue shopping
+    <% end %>
+  <% end %>  
       
   <% if @cart_items.length == 0 %>
     <button class="btn btn-primary" disabled="disabled" style="float: right">Purchase</button>
     <button class="btn btn-danger" disabled="disabled" style="float: right; margin-right: 10px">Current coupon: None</button>
   <% else %>
-    <% unless @cart.previous_url.nil? %>
-      <%= link_to @cart.previous_url, class: "btn btn-primary" do %>
-        <span class="glyphicon glyphicon-shopping-cart"></span> Continue shopping
-      <% end %>
-    <% end %>  
-    
     <%= select_tag "delivery_method", options_for_select(["Shipping", "Pick up"], @cart.delivery_method), class: 'form-control small floatRight', data: { url: user_cart_path(current_user.id, @cart.id), cart: @cart.id } %>
 
     <% if flash[:danger] %>
