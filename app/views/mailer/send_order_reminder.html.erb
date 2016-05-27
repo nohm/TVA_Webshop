@@ -1,0 +1,10 @@
+<h1>Smart Parts</h1>
+
+<p>Hello <%= @user.name %>,</p>
+
+<p>
+Your order (#<%= @cart.id %>) made at <%= @cart.order_made_at %> is ready for you to come pick up.<br>
+Make sure to remember your order number.<br><br>
+
+The order can be picked up at <%= Location.find(@cart.location_id).street + ", " + Location.find(@cart.location_id).postal_code + " " + Location.find(@cart.location_id).city %> 
+</p>

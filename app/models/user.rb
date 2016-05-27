@@ -1,6 +1,5 @@
 class User < ActiveRecord::Base
-  attr_accessor :remember_token, :activation_token, :reset_token
-  attr_accessor :current_password
+  attr_accessor :remember_token, :activation_token, :reset_token, :current_password 
 
   has_many :cart,       dependent: :destroy
   has_many :invoices,   dependent: :destroy
@@ -20,12 +19,15 @@ class User < ActiveRecord::Base
 	validates :password,    length: { minimum: 6 }, on: :create
   validate  :current_password_is_correct,      on: :update
 
+  # Check if passwords match when updating user settings.
   def current_password_is_correct
     # Get a reference to the user since the "authenticate" method always returns false when calling on itself (for some reason).
     user = User.find_by_id(id)
     
+    # Checks if user.used_coupon_ids is equal to used_coupon_ids (To check if you're only updating settings).
     if ((user.used_coupon_ids <=> used_coupon_ids) == 0)
       url = $request.path_info
+      # Checks to see if the URL doesn't include 'password_reset' (To check if you're only updating settings).
       unless url.include?('password_reset')
         # Check if the user CANNOT be authenticated with the entered current password
         if (user.authenticate(current_password) == false)
@@ -70,6 +72,7 @@ class User < ActiveRecord::Base
     BCrypt::Password.new(digest).is_password?(token)
   end
 
+  # Checks if a password reset has expired.
   def password_reset_expired?
     reset_sent_at < 2.hours.ago
   end

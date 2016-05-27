@@ -10,11 +10,12 @@
         <table class="table table-striped table-hover borderGray">
           <thead>
             <tr>
-              <th>Id</th>
-              <th>Order for</th>
-              <th>Order made at</th>
-              <th>Delivery method</th>
-              <th>Total actions</th>
+              <th><b>Id</b></th>
+              <th><b>Order for</b></th>
+              <th><b>Order made at</b></th>
+              <th><b>Delivery method</b></th>
+              <th><b>Total actions</b></th>
+              <th><b>Actions needed from</b></th>
               <th class="small-col"></th>
               <th class="small-col"></th>
             </tr>
@@ -22,20 +23,30 @@
           <tbody>
             <% @carts.each do |cart| %>
               <tr>
+                <% cart_item_ids = [] %>
+                <% cart.cart_items.each do |item| %>
+                  <% cart_item_ids << item.id %>
+                <% end %>
+                <% deliveries = Delivery.where(cart_item_id: cart_item_ids) %>
                 <td><%= cart.id %></td>
                 <td><%= User.find(cart.user_id).name %></td>
                 <td><%= cart.order_made_at.localtime.strftime("%Y-%m-%d %H:%M:%S") %></td>
                 <td><%= cart.delivery_method %></td>
+                <td><%= deliveries.length %></td>
                 <td>
-                  <% cart_item_ids = [] %>
-                  <% cart.cart_items.each do |item| %>
-                    <% cart_item_ids << item.id %>
+                  <% Delivery.where(cart_item_id: cart_item_ids).select("distinct shipping_from_location").each do |delivery| %>
+                    <%= Location.find(delivery.shipping_from_location).street + ', ' + Location.find(delivery.shipping_from_location).postal_code + ' ' + Location.find(delivery.shipping_from_location).city %><br>
                   <% end %>
-                  <%= Delivery.where(cart_item_id: cart_item_ids).length %>
                 </td>
                 <td>
-                  <%= link_to cart_status_deliveries_path(params[:id], cart: cart.id) do %>
-                    <span class="glyphicon glyphicon-search" title="Show"></span>
+                  <% if params[:user].blank? %>
+                    <%= link_to cart_status_deliveries_path(params[:id], cart: cart.id) do %>
+                      <span class="glyphicon glyphicon-search" title="Show"></span>
+                    <% end %>
+                  <% else %>
+                    <%= link_to cart_status_deliveries_path(params[:id], cart: cart.id, user: params[:user]) do %>
+                      <span class="glyphicon glyphicon-search" title="Show"></span>
+                    <% end %>
                   <% end %>
                 </td>
                 <td>

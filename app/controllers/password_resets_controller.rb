@@ -3,9 +3,6 @@ class PasswordResetsController < ApplicationController
   before_action :valid_user, only: [:edit, :update]
   before_action :check_expiration, only: [:edit, :update]
 
-  def new
-  end
-
   def create
   	@user = User.find_by(email: params[:password_reset][:email].downcase)
    if @user
@@ -45,13 +42,14 @@ class PasswordResetsController < ApplicationController
       @user = User.find_by(email: params[:email])
     end
 
-    # Confirms a valid user.
+    # Confirms a valid user
     def valid_user
       unless (@user && @user.activated? && @user.authenticated?(:reset, params[:id]))
         redirect_to root_url
       end
     end
 
+    # Checks if a reset has expired
     def check_expiration
     	if @user.password_reset_expired?
     		flash[:notice] = "Password reset has expired"

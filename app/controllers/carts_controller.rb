@@ -1,7 +1,12 @@
 class CartsController < ApplicationController
 	def index
 		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && params[:user_id].to_i == current_user.id
-		@cart = Cart.find_by(user_id: current_user.id, cart_status_id: search_status_id("In progress"))
+		# Checks if user already has a cart, if not create one
+		if Cart.find_by(user_id: current_user.id, cart_status_id: search_status_id("In progress")).blank?
+      @cart = Cart.create(user_id: current_user.id, delivery_method: "Shipping", purchased: false, cart_status_id: search_status_id("In progress"))
+    else
+    	@cart = Cart.find_by(user_id: current_user.id, cart_status_id: search_status_id("In progress"))
+    end
 		@cart_items = CartItem.where(cart_id: @cart.id ).order('id ASC') 
 		@coupon_code = @cart.coupon_code || "None"
 		@colspan = @cart.coupon_code.blank? ? 5 : 6
@@ -14,12 +19,14 @@ class CartsController < ApplicationController
 		total_weight = 0
 		message = []
 		is_already_saved = false
+		pick_up_ready = true
 
 		@cart_items.each do |item|
 			item.discount_tier = DiscountPrice.where(part_id: item.part_id, amount: 0..(item.amount)).last.amount
 			item.price_tier_discount = DiscountPrice.where(part_id: item.part_id, amount: 0..(item.amount)).last.price
 			item.save
 
+			# Checks if the item amount in the cart isn't higher than the stock
 			part = Part.find(item.part_id)
 			stock = PartStock.where(part_id: part.id).sum('stock')
 			if item.amount > stock
@@ -31,8 +38,21 @@ class CartsController < ApplicationController
 				flash.now[:danger] = message
 			end
 
+			# Checks if the pick up location has enough products in stock
+			if @cart.delivery_method == "Pick up" && !@cart.location_id.blank?
+				part_stock = PartStock.where(part_id: item.part_id, location_id: @cart.location_id)
+				if part_stock.blank?
+					pick_up_ready = false
+				elsif item.amount > part_stock.sum('stock') 
+					pick_up_ready = false
+				end
+			end
+
  			if !coupon.blank?
+ 				# Checks if coupon is still valid
 	 			if coupon.amount > 0 && coupon.expiration_date > Time.now.utc
+					# Checks if the coupon only have user_ids and than does a check if the coupon can be used on the current cart
+					# Used if entire cart can get a discount for only certain users
 					if coupon.part_ids.empty? && coupon.category_ids.empty? && !coupon.user_ids.empty?	
 						if coupon.user_ids.include?(@cart.user_id)
 							if !coupon.price.blank?
@@ -47,7 +67,10 @@ class CartsController < ApplicationController
 							item.price_coupon_discount = nil
 							item.save
 						end
+					# Checks if user_ids are empty
 					elsif coupon.user_ids.empty?
+						# Checks if the current item either has a category id or part id that is included in the coupon
+						# Used if items can get a discount based on their category / part id
 						if coupon.category_ids.include?(item.part.category_id) || coupon.part_ids.include?(item.part.id)
 							if !coupon.price.blank?
 								item.price_coupon_discount = item.price_tier_discount - coupon.price
@@ -61,7 +84,10 @@ class CartsController < ApplicationController
 							item.price_coupon_discount = nil
 							item.save
 						end
+					# Checks if user_ids, part_ids and category_ids / user_ids and category_ids / user_ids and part_ids are filled in
 					elsif (!coupon.user_ids.empty? && !coupon.part_ids.empty? && !coupon.category_ids.empty?) || (!coupon.user_ids.empty? && !coupon.category_ids.empty?) || (!coupon.user_ids.empty? && !coupon.part_ids.empty?)
+						# Checks if the current user and the current item has a category / part id that are included in the coupon 
+						# Used if certain users can get a discount on specific categories / parts
 						if (coupon.category_ids.include?(item.part.category_id) && coupon.user_ids.include?(@cart.user_id)) || (coupon.part_ids.include?(item.part.id) && coupon.user_ids.include?(@cart.user_id))
 							if !coupon.price.blank?
 								item.price_coupon_discount = item.price_tier_discount - coupon.price
@@ -76,6 +102,7 @@ class CartsController < ApplicationController
 							item.save
 						end
 					end
+
 					if is_already_saved == false
 						@cart.coupon_code = nil
 						@cart.save
@@ -112,6 +139,7 @@ class CartsController < ApplicationController
 			@cart_price_total_discount = @cart_price_total
 		end
 		
+		# Determines shipping cost based on total weight
 		if total_weight.between?(weight_array[0], weight_array[1] - 1)
 			@shipping_cost = shipping_array[0]
 		elsif total_weight.between?(weight_array[1], weight_array[2] - 1)
@@ -122,6 +150,13 @@ class CartsController < ApplicationController
 
 		@cart.shipping_cost = @shipping_cost
 		@cart.save
+
+		# If the pick up location doesn't have enough products in stock show an information alert
+		if @cart.delivery_method == "Pick up" && !@cart.location_id.blank?
+			if pick_up_ready == false
+				flash.now[:info] = "Some products are not in stock at the chosen pick up location, you will have to wait a while for it to get shipped. When it arrives you will receive an email."
+			end
+		end
 	end
 
 	def edit
@@ -131,21 +166,29 @@ class CartsController < ApplicationController
 	def update
 		@cart = Cart.find(params[:id])
 
+		# Checks if update is for updating cart_status_id
 		if !params[:cart][:cart_status_id].blank?
 			if @cart.update(cart_params)
+				if params[:cart][:cart_status_id].to_i == search_status_id("Waiting for pick up")
+					Mailer.send_order_reminder(@cart).deliver_now
+				end
 	      redirect_to request.referrer
 	      flash[:success] = "Status updated"
 	    else
 	      redirect_to request.referrer
 	      flash[:notice] = "Error while updating"
 	    end
+	  # Checks if update is for updating coupon_code
 		elsif params[:cart][:delivery_method].blank? && params[:cart][:location_id].blank?
 			coupon = Coupon.where(code: params[:cart][:coupon_code]).first
 			cart_items = CartItem.where(cart_id: params[:id])
-
 			is_already_saved = false
+
+			# Checks if coupon is still valid
 			if !coupon.blank? && coupon.amount > 0 && coupon.expiration_date > Time.now.utc && !current_user.used_coupon_ids.include?(coupon.id)
 				cart_items.each do |item|
+					# Checks if the coupon only have user_ids and than does a check if the coupon can be used on the current cart
+					# Used if entire cart can get a discount for only certain users
 					if coupon.part_ids.empty? && coupon.category_ids.empty? && !coupon.user_ids.empty?	
 						if coupon.user_ids.include?(@cart.user_id)
 							if !coupon.price.blank?
@@ -161,7 +204,10 @@ class CartsController < ApplicationController
 							item.price_coupon_discount = nil
 							item.save
 						end
+					# Checks if user_ids are empty
 					elsif coupon.user_ids.empty?
+						# Checks if the current item either has a category id or part id that is included in the coupon
+						# Used if items can get a discount based on their category / part id
 						if coupon.category_ids.include?(item.part.category_id) || coupon.part_ids.include?(item.part.id)
 							if !coupon.price.blank?
 								item.price_coupon_discount = item.price_tier_discount - coupon.price
@@ -176,7 +222,10 @@ class CartsController < ApplicationController
 							item.price_coupon_discount = nil
 							item.save
 						end
+					# Checks if user_ids, part_ids and category_ids / user_ids and category_ids / user_ids and part_ids are filled in
 					elsif (!coupon.user_ids.empty? && !coupon.part_ids.empty? && !coupon.category_ids.empty?) || (!coupon.user_ids.empty? && !coupon.category_ids.empty?) || (!coupon.user_ids.empty? && !coupon.part_ids.empty?)
+						# Checks if the current user and the current item has a category / part id that are included in the coupon 
+						# Used if certain users can get a discount on specific categories / parts
 						if (coupon.category_ids.include?(item.part.category_id) && coupon.user_ids.include?(@cart.user_id)) || (coupon.part_ids.include?(item.part.id) && coupon.user_ids.include?(@cart.user_id))
 							if !coupon.price.blank?
 								item.price_coupon_discount = item.price_tier_discount - coupon.price
@@ -212,10 +261,12 @@ class CartsController < ApplicationController
 	      redirect_to user_carts_path(current_user)
 	      flash[:notice] = "Coupon invalid"
 	    end
+	  # Checks if update is for updating delivery_method
 		elsif params[:cart][:location_id].blank?
 		  params[:cart][:location_id] = nil
 		  @cart.update(cart_params)
 		  render inline: 'Changed delivery method' # Needed for Javascript response
+	  # Checks if update is for updating location
 	  elsif params[:cart][:delivery_method].blank?
 	  	@cart.update(cart_params)
 	  	render inline: 'Changed location' # Needed for Javascript response
@@ -232,22 +283,27 @@ class CartsController < ApplicationController
 		ready_for_delivery = false
 		not_ready_for_delivery = false
 		delivery_ids = []
-		if !Invoice.where(user_id: current_user.id, cart_id: cart.id).exists?
+
+		# Checks if there isn't already an invoice with the same user and cart
+		if !Invoice.where(user_id: user.id, cart_id: cart.id).exists?
 			cart_items.each do |item|
 				part = Part.find(item.part_id)
 				part_stocks = PartStock.where(part_id: part.id).order('stock DESC')
 				purchase_amount = item.amount
-
-				if (part_stocks.sum('stock') - item.amount) >= 0
+				
+				# Checks if the entire stock for a part is higher or equal to the amount being purchased
+				if part_stocks.sum('stock') >= item.amount
 					if cart.delivery_method == "Shipping"
 						part_stocks.each do |part_stock|
-							if (part_stock.stock - item.amount) >= 0
+							# Checks if the stock in a specific location is higher or equal to the amount being purchased
+							if part_stock.stock >= item.amount
 								part_stock.stock -= item.amount
 								part_stock.save
 								delivery = Delivery.create(cart_item_id: item.id, shipping_from_location: part_stock.location_id, shipping_to_user: cart.user_id, amount: item.amount, cart_status_id: search_status_id("Ready for shipping to client"))
 								delivery_ids << delivery.id
 								break
 							else
+								# Checks if the stock in a specific location is lower to the amount being purchased
 								if part_stock.stock < purchase_amount
 									delivery = Delivery.create(cart_item_id: item.id, shipping_from_location: part_stock.location_id, shipping_to_user: cart.user_id, amount: part_stock.stock, cart_status_id: search_status_id("Ready for shipping to client"))
 									delivery_ids << delivery.id
@@ -266,28 +322,34 @@ class CartsController < ApplicationController
 						ready_for_delivery = true
 					elsif cart.delivery_method == "Pick up"
 						location_stock = PartStock.find_by(part_id: part.id, location_id: cart.location_id)
-						if location_stock.stock >= purchase_amount
-							delivery = Delivery.create(cart_item_id: item.id, shipping_from_location: location_stock.location_id, shipping_to_location: location_stock.location_id, amount: purchase_amount, cart_status_id: search_status_id("Waiting for pick up"))
+						# Checks if the location has any stock for the part and if the location stock is higher or equal to the amount being purchased
+						if !location_stock.blank? && location_stock.stock >= purchase_amount
+							delivery = Delivery.create(cart_item_id: item.id, shipping_from_location: cart.location_id, shipping_to_location: cart.location_id, amount: purchase_amount, cart_status_id: search_status_id("Waiting for pick up"))
 							delivery_ids << delivery.id
 							location_stock.stock -= item.amount
 							location_stock.save
 							ready_for_delivery = true
 						else
-							purchase_amount -= location_stock.stock
-							delivery = Delivery.create(cart_item_id: item.id, shipping_from_location: location_stock.location_id, shipping_to_location: location_stock.location_id, amount: location_stock.stock, cart_status_id: search_status_id("Waiting for pick up"))
-							delivery_ids << delivery.id
-							location_stock.stock = 0
-							location_stock.save
+							# Checks if the location has any stock for the part
+							if !location_stock.blank?
+								purchase_amount -= location_stock.stock
+								delivery = Delivery.create(cart_item_id: item.id, shipping_from_location: cart.location_id, shipping_to_location: cart.location_id, amount: location_stock.stock, cart_status_id: search_status_id("Waiting for pick up"))
+								delivery_ids << delivery.id
+								location_stock.stock = 0
+								location_stock.save
+							end
+							# Checks if the amount being purchased is not 0
 							if purchase_amount != 0
 								part_stocks.each do |part_stock|
+									# Checks if the location stock is lower than the amount being purchased
 									if part_stock.stock < purchase_amount
-										delivery = Delivery.create(cart_item_id: item.id, shipping_from_location: part_stock.location_id, shipping_to_location: location_stock.location_id, amount: part_stock.stock, cart_status_id: search_status_id("Ready for internal shipping"))
+										delivery = Delivery.create(cart_item_id: item.id, shipping_from_location: part_stock.location_id, shipping_to_location: cart.location_id, amount: part_stock.stock, cart_status_id: search_status_id("Ready for internal shipping"))
 										delivery_ids << delivery.id
 										purchase_amount -= part_stock.stock
 										part_stock.stock = 0
 										part_stock.save
 									else
-										delivery = Delivery.create(cart_item_id: item.id, shipping_from_location: part_stock.location_id, shipping_to_location: location_stock.location_id, amount: purchase_amount, cart_status_id: search_status_id("Ready for internal shipping"))
+										delivery = Delivery.create(cart_item_id: item.id, shipping_from_location: part_stock.location_id, shipping_to_location: cart.location_id, amount: purchase_amount, cart_status_id: search_status_id("Ready for internal shipping"))
 										delivery_ids << delivery.id
 										part_stock.stock -= purchase_amount
 										part_stock.save
@@ -304,12 +366,15 @@ class CartsController < ApplicationController
 				end
 			end
 
+			# If errors is false complete the purchase
 			if errors == false
+				# Determines which status a cart gets
 				if ready_for_delivery == true && not_ready_for_delivery == false
 					if cart.delivery_method == "Shipping"
 						cart.cart_status_id = search_status_id("Ready for shipping to client")
 					elsif cart.delivery_method == "Pick up"
 						cart.cart_status_id = search_status_id("Waiting for pick up")
+						Mailer.send_order_reminder(cart).deliver_now
 					end
 					cart.save
 				else
@@ -325,15 +390,17 @@ class CartsController < ApplicationController
 					cart.cart_status_id = search_status_id("Completed")
 				end
 				cart.save
-				Invoice.create(user_id: current_user.id, cart_id: cart_id)
-				Cart.create(user_id: current_user.id, delivery_method: "Shipping", purchased: false, cart_status_id: search_status_id("In progress"))
+				Invoice.create(user_id: user.id, cart_id: cart_id)
+				Cart.create(user_id: user.id, delivery_method: "Shipping", purchased: false, cart_status_id: search_status_id("In progress"))
+
+				# Check if the cart has a coupon or not
 				if !coupon.blank?
 					user.used_coupon_ids << coupon.id
 					user.save
-				end
-				if !coupon.blank? && coupon.amount > 0
-					coupon.amount -= 1
-					coupon.save
+					if coupon.amount > 0
+						coupon.amount -= 1
+						coupon.save
+					end
 				end
 			else
 				deliveries = Delivery.find(delivery_ids)

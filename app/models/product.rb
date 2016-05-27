@@ -11,6 +11,7 @@ class Product < ActiveRecord::Base
 
 	protected
 
+	# Method for putting model_extended to nil if it is empty
 	def nil_if_blank
 		self.model_extended = nil if self.model_extended.empty?
 	end

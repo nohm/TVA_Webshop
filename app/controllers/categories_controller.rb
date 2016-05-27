@@ -14,6 +14,7 @@ class CategoriesController < ApplicationController
     params[:category][:device_id] = params[:device_id]
 
     @category = Category.new(category_params)
+    # Change the name of a category to include the device name in front of it if it doesn't already contain it
     @category.name = @category.product.device.name.titleize + ' ' + @category.name unless @category.name.include?(@category.product.device.name.titleize)
     if @category.save
       redirect_to device_product_categories_path(params[:device_id], params[:product_id])
@@ -32,6 +33,7 @@ class CategoriesController < ApplicationController
     redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
     @category = Category.find(params[:id])
     if @category.update(category_params)
+      # Change the name of a category to include the device name in front of it if it doesn't already contain it
       @category.update_attribute(:name,  @category.product.device.name.titleize + ' ' + @category.name) unless @category.name.include?(@category.product.device.name.titleize)
       redirect_to device_product_categories_path(params[:device_id], params[:product_id])
       flash[:success] = "Category updated"

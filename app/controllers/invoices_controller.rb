@@ -1,15 +1,14 @@
 class InvoicesController < ApplicationController
-
 	def show
 		redirect_to root_path, :notice => "Unauthorized" and return unless (logged_in? && params[:user_id].to_i == current_user.id) || (logged_in? && current_user.manager?)
 		@invoice = Invoice.find(params[:id])
 		@cart = Cart.find(@invoice.cart_id)
 		@cart_items = CartItem.where(cart_id: @invoice.cart_id)
 		@user = User.find(params[:user_id])
+
 		if @cart.delivery_method == "Pick up"
 			@location = Location.find(@cart.location_id)
 		end
-
 
 		@cart_amount_total = 0
 		@cart_price_total = 0
@@ -17,7 +16,8 @@ class InvoicesController < ApplicationController
 		@cart_price_total_discount = 0
 		@cart_items.each do |item|
 			@cart_amount_total += item.amount
-			@cart_price_total += item.price_tier_discount * item.amount #(item.price_coupon_discount || item.price) * item.amount
+			@cart_price_total += item.price_tier_discount * item.amount
+			# Check if the item has a discount
 			if !item.price_coupon_discount.blank?
 				@cart_price_discount += ((item.price_tier_discount * item.amount) - (item.price_coupon_discount * item.amount))
 			end
@@ -39,6 +39,7 @@ class InvoicesController < ApplicationController
 	end
 
 	def create
+		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.admin?
 		@invoice = Invoice.new(invoice_params)
 	end
 

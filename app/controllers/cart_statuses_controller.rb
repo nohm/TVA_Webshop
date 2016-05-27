@@ -1,8 +1,27 @@
 class CartStatusesController < ApplicationController
+	# Method for searching an order by their id or searching orders based on a user's name
+	def search_order
+		cart = Cart.find_by(id: params[:cart_query])
+		user = User.find_by('lower(name) = ?', params[:cart_query])
+
+		if !cart.blank?
+			redirect_to cart_status_deliveries_path(cart.cart_status_id, cart: cart.id)
+		elsif !user.blank?
+			redirect_to cart_statuses_path(user: user.id)
+		elsif cart.blank? && user.blank?
+			redirect_to cart_statuses_path
+			flash[:notice] = "Couldn't find any orders"
+		end
+	end
+
 	def show
 		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.admin?
 		@status = CartStatus.find(params[:id])
-		@carts = Cart.where(cart_status_id: @status.id).order("id DESC")
+		if params[:user].blank?
+			@carts = Cart.where(cart_status_id: @status.id).order("id DESC")
+		else
+			@carts = Cart.where(cart_status_id: @status.id, user_id: params[:user]).order("id DESC")
+		end
 	end
 
 	def index

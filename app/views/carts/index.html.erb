@@ -5,16 +5,16 @@
     <table class="table">
       <thead>
         <tr class="active">
-          <th colspan="2">Description</th>
+          <th colspan="2"><b>Description</b></th>
           <% unless @cart.coupon_code.blank? %>
-            <th class="center">Coupon</th>
+            <th class="center"><b>Coupon</b></th>
           <% end %>
-          <th class="center">Amount</th>
+          <th class="center"><b>Amount</b></th>
           <th></th>
-          <th class="center">Price</th>
-          <th class="center">Tier</th>
-          <th class="center">Discount price</th>
-          <th class="right">Total</th>
+          <th class="center"><b>Price</b></th>
+          <th class="center"><b>Tier</b></th>
+          <th class="center"><b>Discount price</b></th>
+          <th class="right"><b>Total</b></th>
         </tr>
       </thead>
       <% if @cart_items.length == 0 %>

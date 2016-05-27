@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   
   before_filter :beforeFilter
 
+  # Makes request available to be used in models
   def beforeFilter
     $request = request
   end

@@ -6,6 +6,7 @@ class CartItemsController < ApplicationController
 		cart = Cart.find(cart_id)
 		user = current_user
 
+		# If the cart_item already exists update it otherwise make a new cart_item
 		if CartItem.where(part_id: part_id, cart_id: cart_id).exists?
 			cart_item = CartItem.find_by(cart_id: cart_id, part_id: part_id)
 			part = Part.find(part_id)
@@ -19,7 +20,7 @@ class CartItemsController < ApplicationController
 			end
 			user.update_attribute(:previous_url, request.referrer)
 			flash[:item_added] = "Toggle modal"
-			redirect_to :back
+			redirect_to request.referrer
 		else
 			params[:cart_item][:price] = DiscountPrice.where(part_id: part_id, amount: 0..(amount)).first.price
 			params[:cart_item][:name] = Part.find(part_id).name
@@ -29,7 +30,7 @@ class CartItemsController < ApplicationController
 			if cart_item.save
 				user.update_attribute(:previous_url, request.referrer)
 				flash[:item_added] = "Toggle modal"
-		    redirect_to :back
+		    redirect_to request.referrer
 		  end
 		end
 	end
@@ -52,6 +53,7 @@ class CartItemsController < ApplicationController
 			coupon = Coupon.where(code: cart.coupon_code).first
 		end
 
+		# Checks if item amount in the cart is lower than the entire stock for that part
 		if params[:cart_item][:amount].to_i <= PartStock.where(part_id: cart_item.part.id).sum('stock')
 			if params[:cart_item][:amount].to_i > 0	
 				params[:cart_item][:discount_tier] = DiscountPrice.where(part_id: cart_item.part_id, amount: 0..(params[:cart_item][:amount].to_i)).last.amount
@@ -66,7 +68,6 @@ class CartItemsController < ApplicationController
 		   	render inline: "Amount is not valid"
 		  end
 	  else
-	  	flash[:not_enough_items] = "Not enough items in stock"
 	  	flash[:notice] = "There are only " + PartStock.where(part_id: cart_item.part.id).sum('stock').to_s + " parts remaining for '#{cart_item.name}'."
 	  	render inline: "Not enough products"
 	  end

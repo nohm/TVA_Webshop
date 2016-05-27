@@ -5,12 +5,10 @@
     <table class="table table-hover borderGray">
       <thead>
         <tr>
-          <th>Device</th>
-          <th>Brand</th>
-          <th>Model</th>
-          <th>Model extended</th>
-          <th>Type</th>
-          <th>Part number</th>
+          <th><b>Device</b></th>
+          <th><b>Brand</b></th>
+          <th><b>Model</b></th>
+          <th><b>Model extended</b></th>
           <% if @parts_products.length != 1 %>
             <th class="small-col"></th>
           <% end %>
@@ -23,8 +21,6 @@
             <td><%= part_product.product.brand %></td>
             <td><%= part_product.product.model %></td>
             <td><%= part_product.product.model_extended %></td>
-            <td><%= part_product.product.type_number %></td>
-            <td><%= part_product.product.partnumber %></td>
             <% if @parts_products.length != 1 %>  
               <td>
                 <%= link_to(device_product_category_part_parts_product_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], part_product), data: { confirm: "Are you sure?" }, method: :delete) do %>

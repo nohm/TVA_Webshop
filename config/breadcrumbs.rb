@@ -169,17 +169,25 @@ end
 
 crumb :statuses do
 	if !params[:cart_status_id].blank? || !params[:id].blank?
-		link CartStatus.find(params[:cart_status_id] || params[:id]).name, cart_statuses_path
+		if params[:user].blank?
+			link CartStatus.find(params[:cart_status_id] || params[:id]).name, cart_statuses_path
+		else
+			link CartStatus.find(params[:cart_status_id] || params[:id]).name, cart_statuses_path(user: params[:user])
+		end
 	else
 		link "Statuses", cart_statuses_path
 	end
 end
 
 crumb :status do
-	if params[:cart].blank?
-		link "Orders", cart_status_path(params[:cart_status_id] || params[:id])
+	if !params[:cart].blank?
+		if params[:user].blank?
+			link "Order " + params[:cart], cart_status_path(params[:cart_status_id] || params[:id])
+		else
+			link "Order " + params[:cart], cart_status_path(params[:cart_status_id] || params[:id], user: params[:user])
+		end
 	else
-		link "Order " + "" + params[:cart], cart_status_path(params[:cart_status_id] || params[:id])
+		link "Orders", cart_status_path(params[:cart_status_id] || params[:id])
 	end
 	parent :statuses
 end

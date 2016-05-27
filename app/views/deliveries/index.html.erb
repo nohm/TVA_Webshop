@@ -12,14 +12,25 @@
       <table class="table table-striped table-hover borderGray">
         <thead>
           <tr>
-            <th>Part</th>
-            <th>Amount</th>
+            <th><b>Part</b></th>
+            <th><b>Amount</b></th>
           </tr>
         </thead>
         <tbody>
           <% @cart_items.each do |item| %>
-            <td class="width50"><%= item.name %></td>
-            <td class="width50"><%= item.amount %></td>
+            <tr>
+              <td class="width50"><%= item.name %></td>
+              <td class="width50"><%= item.amount %></td>
+            </tr>
+          <% end %>
+          <% if @cart.delivery_method == "Shipping" %>
+            <tr>
+              <td colspan="2"><b>Delivery method:</b> 'Shipping' to <%= User.find(@cart.user_id).street + ", " + User.find(@cart.user_id).postal_code + " " + User.find(@cart.user_id).city  %></td>
+            </tr>
+          <% else %>
+            <tr>
+              <td colspan="2"><b>Delivery method:</b> 'Pick up' from <%= Location.find(@cart.location_id).street + ", " + Location.find(@cart.location_id).postal_code + " " + Location.find(@cart.location_id).city  %></td>
+            </tr>
           <% end %>
         </tbody>
       </table>
@@ -36,11 +47,11 @@
       <table class="table table-striped table-hover borderGray">
         <thead>
           <tr>
-            <th>Part</th>
-            <th>Amount</th>
-            <th>Shipping from</th>
-            <th>Shipping to</th>
-            <th>Status</th>
+            <th><b>Part</b></th>
+            <th><b>Amount</b></th>
+            <th><b>Shipping from</b></th>
+            <th><b>Shipping to<b></th>
+            <th><b>Status<b></th>
             <th class="small-col"></th>
           </tr>
         </thead>

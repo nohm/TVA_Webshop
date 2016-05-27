@@ -1,11 +1,15 @@
 class PartsController < ApplicationController
   def index
+    # Checks if it can find the flash
     if flash[:item_added]
+      # Parameters used for the modal _cart_show_modal.html.erb inside parts view
       @cart = Cart.find_by(user_id: current_user.id, cart_status_id: search_status_id("In progress"))
       @cart_items = CartItem.where(cart_id: @cart.id).order('id')
     end
+
     @parts_products = PartsProduct.where(product_id: params[:product_id]).page(params[:page]).per(10).order('id ASC')
     @part_amount = 0
+    # Check which part_products belongs to the category someone is viewing
     @parts_products.each do |part_product|
       if part_product.part.category_id == params[:category_id].to_i
         @part_amount += 1
@@ -16,7 +20,9 @@ class PartsController < ApplicationController
   end
 
   def show
+    # Checks if it can find the flash
     if flash[:item_added]
+      # Parameters used for the modal _cart_show_modal.html.erb inside parts view
       @cart = Cart.find_by(user_id: current_user.id, cart_status_id: search_status_id("In progress"))
       @cart_items = CartItem.where(cart_id: @cart.id).order('id')
     end
@@ -38,6 +44,7 @@ class PartsController < ApplicationController
     redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
     params[:part][:category_id] = params[:category_id]
     params[:part][:device_id] = params[:device_id]
+    # Replace comma's with dots
     price = params[:part][:price].to_s.gsub(',', '.').to_f
     @part = Part.new(part_params)
     condition = params[:part][:condition]
@@ -45,11 +52,13 @@ class PartsController < ApplicationController
     brand = params[:part][:brand]
     brand_select = params[:part][:brand_select]
 
+    # Custom validation to see if both brand_select and brand are empty or both filled in
     if (brand.blank? && brand_select.blank?) || (!brand.blank? && !brand_select.blank?)
       flash[:half_notice] = "Either choose an existing brand or create a new one"
       render 'new' and return
     end
 
+    # Custom validation to see if both condition_select and condition are empty or both filled in
     if (condition.blank? && condition_select.blank?) || (!condition.blank? && !condition_select.blank?)
       flash[:half_notice] = "Either choose an existing condition or create a new one"
       render 'new' and return
@@ -85,11 +94,13 @@ class PartsController < ApplicationController
     brand = params[:part][:brand]
     brand_select = params[:part][:brand_select]
 
+    # Custom validation to see if both brand_select and brand are empty or both filled in
     if (brand.blank? && brand_select.blank?) || (!brand.blank? && !brand_select.blank?)
       flash[:half_notice] = "Either choose an existing brand or create a new one"
       render 'edit' and return
     end
 
+    # Custom validation to see if both condition_select and condition are empty or both filled in
     if (condition.blank? && condition_select.blank?) || (!condition.blank? && !condition_select.blank?)
       flash[:half_notice] = "Either choose an existing condition or create a new one"
       render 'edit' and return
@@ -120,7 +131,7 @@ class PartsController < ApplicationController
     email = params[:tell_a_friend][:email]
     Mailer.send_tell_a_friend(user, email, part).deliver_now
     flash[:success] = "Email has been sent"
-    redirect_to :back
+    redirect_to request.referrer
   end
 
   private

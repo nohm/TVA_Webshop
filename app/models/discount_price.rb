@@ -9,12 +9,14 @@ class DiscountPrice < ActiveRecord::Base
 
 	private
 
+	# Checks if amount is higher than 0
 	def higher_amount
 		if amount <= 0
 			errors.add(:amount, "has to be higher than 0")
 		end
 	end
 
+	# Checks if price is higher than 0
 	def price_not_nil
 		if price <= 0
 			errors.add(:price, "has to be higher than 0")

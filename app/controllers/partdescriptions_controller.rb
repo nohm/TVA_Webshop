@@ -48,6 +48,6 @@ class PartdescriptionsController < ApplicationController
   private
 
   def partdescription_params
-    params.require(:partdescription).permit(:part_id, :title, :value)
+    params.require(:partdescription).permit(:part_id, :title)
   end
 end

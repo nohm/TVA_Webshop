@@ -6,47 +6,73 @@
       <%= "There are no statuses" %>
     </p>
   <% else %>
-      <div class="table-responsive">
-        <table class="table table-striped table-hover borderGray">
-          <thead>
+    <p><b>Search on 'order number' or 'name'</b></p>
+    <%= bootstrap_form_tag url: search_order_path, method: 'GET', html: {class: "form-inline"} do |f| %>
+      <div class="input-group">
+        <%= f.text_field :cart_query, hide_label: true, class: "small" %>
+        <div class="input-group-btn">
+          <button class="btn btn-default btn-search" type="submit">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+        </div>
+      </div>
+    <% end %>
+
+    <br>
+    
+    <div class="table-responsive">
+      <table class="table table-striped table-hover borderGray">
+        <thead>
+          <tr>
+            <th><b>Name</b></th>
+            <th><b>Total orders</b></th>
+            <th class="small-col"></th>
+            <th class="small-col"></th>
+            <th class="small-col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @statuses.each do |status| %>
             <tr>
-              <th>Name</th>
-              <th>Total orders</th>
-              <th class="small-col"></th>
-              <th class="small-col"></th>
-              <th class="small-col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @statuses.each do |status| %>
-              <tr>
-                <td><%= status.name %></td>
-                <% if status.name == "In progress" %>
-                  <td></td>
-                  <td></td>
-                <% else %>
-                  <td><%= Cart.where(cart_status_id: search_status_id(status.name)).length %></td>
-                  <td>
+              <td><%= status.name %></td>
+              <% if status.name == "In progress" %>
+                <td></td>
+                <td></td>
+              <% else %>
+                <td>
+                  <% if params[:user].blank? %>
+                    <%= Cart.where(cart_status_id: search_status_id(status.name)).length %>
+                  <% else %>
+                    <%= Cart.where(cart_status_id: search_status_id(status.name), user_id: params[:user]).length %>
+                  <% end %>
+                </td>
+                <td>
+                  <% if params[:user].blank? %>
                     <%= link_to cart_status_path(status) do %>
                       <span class="glyphicon glyphicon-search" title="Show"></span>
                     <% end %>
-                  </td>
+                  <% else %>
+                    <%= link_to cart_status_path(status, user: params[:user]) do %>
+                      <span class="glyphicon glyphicon-search" title="Show"></span>
+                    <% end %>
+                  <% end %>
+                </td>
+              <% end %>
+              <td>
+                <%= link_to edit_cart_status_path(status) do %>
+                  <span class="glyphicon glyphicon-pencil" title="Edit"></span>
                 <% end %>
-                <td>
-                  <%= link_to edit_cart_status_path(status) do %>
-                    <span class="glyphicon glyphicon-pencil" title="Edit"></span>
-                  <% end %>
-                </td>
-                <td>
-                  <%= link_to cart_status_path(status), data: { confirm: "Are you sure?" }, method: :delete do %>
-                    <span class="glyphicon glyphicon-remove" title="Delete"></span>
-                  <% end %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
+              </td>
+              <td>
+                <%= link_to cart_status_path(status), data: { confirm: "Are you sure?" }, method: :delete do %>
+                  <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   <% end %>
 </div>
 <div class="panel-footer noPadding">

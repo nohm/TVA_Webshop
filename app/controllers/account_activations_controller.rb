@@ -1,6 +1,8 @@
 class AccountActivationsController < ApplicationController
-	def edit
+  def edit
+    # Gets user by email
     user = User.find_by(email: params[:email])
+    # Checks if user is valid, not activated and the activation hash is the same as in the URL. If so activate the account
     if user && !user.activated? && user.authenticated?(:activation, params[:id])
       user.activate
       log_in user
@@ -8,7 +10,7 @@ class AccountActivationsController < ApplicationController
       flash[:success] = "Account activated!"
       redirect_to root_url
     else
-      flash[:danger] = "Invalid activation link"
+      flash[:notice] = "Invalid activation link"
       redirect_to root_url
     end
   end

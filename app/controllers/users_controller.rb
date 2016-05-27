@@ -33,7 +33,7 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    @user.role_id = 3
+    @user.role_id = Role.find_by(name: "Client").id
     if @user.save
       Mailer.send_account_activation(@user).deliver_now
       flash[:info] = "Please check your email to activate your account."

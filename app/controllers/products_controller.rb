@@ -1,11 +1,13 @@
 class ProductsController < ApplicationController
 	def index
+    # Check if the current_user is a client or not
     if logged_in? && current_user.role.name != "Client"
       @products = Product.where(device_id: params[:device_id]).page(params[:page]).per(25).order('id')
     else
       device_id = params[:device_id]
       brand = params[:brand]
       model = params[:model]
+      # Checks which parameters are available and than find products based on the parameters that are available
       if !device_id.nil? && !brand.nil? && !model.nil?
         @products = Product.where(device_id: device_id, brand: brand, model: model).select([:device_id, :model, :brand, :model_extended]).group(:device_id, :model, :brand, :model_extended)
       elsif !device_id.nil? && !brand.nil?
@@ -28,6 +30,7 @@ class ProductsController < ApplicationController
     brand = params[:product][:brand]
     brand_select = params[:product][:brand_select]
 
+    # Custom validation to see if both brand_select and brand are empty or both filled in
     if (brand.blank? && brand_select.blank?) || (!brand.blank? && !brand_select.blank?)
       flash[:half_notice] = "Choose one brand"
       render 'new' and return
@@ -55,6 +58,7 @@ class ProductsController < ApplicationController
     brand = params[:product][:brand]
     brand_select = params[:product][:brand_select]
 
+    # Custom validation to see if both brand_select and brand are empty or both filled in
     if (brand.blank? && brand_select.blank?) || (!brand.blank? && !brand_select.blank?)
       flash[:half_notice] = "Choose one brand"
       render 'edit' and return

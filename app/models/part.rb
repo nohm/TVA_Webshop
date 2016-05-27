@@ -10,9 +10,11 @@ class Part < ActiveRecord::Base
 	has_many :discount_prices, 	dependent: :destroy
 	has_many :part_stocks,			dependent: :destroy
 
+	# Validations for uploading files to the database. (Check Paperclip gem)
 	has_attached_file :partimagefull, styles: { thumb: "64x64#" }, default_url: "/images/missing.png"
 	validates_attachment_content_type :partimagefull, content_type: /\Aimage\/.*\Z/
   validates_attachment_file_name :partimagefull, matches: [/png\Z/i, /jpe?g\Z/i, /gif\Z/i]
+  # Custom validation for checking that an image is atleast 300x300
 	validates :partimagefull, dimensions: { width: 300, height: 300 }
 
 	validates :name, 						presence: true

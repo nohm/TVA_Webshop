@@ -1,5 +1,4 @@
 class PartsProductsController < ApplicationController
-
 	def index
 		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
 		@parts_products = PartsProduct.where(part_id: params[:part_id]).page(params[:page]).per(10)
@@ -16,6 +15,8 @@ class PartsProductsController < ApplicationController
 		@part_product = PartsProduct.new
 		@model = params[:parts_product][:product_id]
 		part_id = Part.find_by(name: params[:parts_product][:part_id]).id
+
+		# Checks if a product can be found based on model_extended or if it can only be found based on model
 		if !Product.find_by(device_id: params[:device_id], model: @model).nil? && Product.find_by(device_id: params[:device_id], model: @model).model_extended.blank?
 			product_id = Product.find_by(device_id: params[:device_id], model: @model).id
 		else
@@ -42,7 +43,7 @@ class PartsProductsController < ApplicationController
 	def connect_brand
     id = params[:id]
 
-    # Fill in #brand_select
+    # If id isn't blank than fill in #connection_brand_select
     if !id.blank?
 	    @product = Product.where(device_id: id).pluck(:brand).uniq
 	    render :partial => 'connect_brand'
@@ -53,7 +54,7 @@ class PartsProductsController < ApplicationController
 		id = params[:id]
 		brand = params[:brand]
 
-		# Fill in #model_select
+		# If brand isn't blank than fill in #connection_model_select
 		if !brand.blank?
 			@product = Product.where(device_id: id, brand: brand).pluck(:model).uniq
 			render :partial => 'connect_model'
@@ -66,12 +67,14 @@ class PartsProductsController < ApplicationController
 		model = params[:model]
 		@part_product = PartsProduct.new
 
+		# Check if model isn't blank and see if the product doesn't have a model_extended
 		if !model.blank? && !Product.where(model: model, device_id: id).pluck(:model_extended).any?
 			@product_id = Product.find_by(device_id: id, brand: brand, model: model)
 			unless @product_id.blank?
  				render inline: 'No model_extended' # Needed for Javascript response
 			end
 		else
+			# Fill in #connection_model_extended_select
 			@product = Product.where(device_id: id, brand: brand, model: model).pluck(:model_extended)
 			render :partial => 'connect_model_extended'
 		end
