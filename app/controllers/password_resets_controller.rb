@@ -5,7 +5,7 @@ class PasswordResetsController < ApplicationController
 
   def create
   	@user = User.find_by(email: params[:password_reset][:email].downcase)
-   if @user
+    if @user
       @user.create_reset_digest
       Mailer.send_password_reset(@user).deliver_now
       flash[:info] = "An email has been sent with password reset instructions"
@@ -14,9 +14,6 @@ class PasswordResetsController < ApplicationController
       flash.now[:notice] = "Email address not found"
       render 'new'
     end
-  end
-
-  def edit
   end
 
   def update

@@ -12,9 +12,7 @@
 <% end %>
 <div class="panel-body panel-table">
   <% if @products.length == 0 %>
-    <p class="empty_list">
-      <%= "De lijst is leeg" %>
-    </p>
+    <p class="empty_list">There are no products for this device</p>
   <% else %>
     <% if logged_in? && current_user.role.name != "Client" %>
       <div class="table-responsive">

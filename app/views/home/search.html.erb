@@ -18,6 +18,7 @@
             <th>Description</th>
             <th></th>
             <% if logged_in? %>
+            	<th class="small-col"></th>
 	          	<th class="center">Stock</th>
 	          	<th class="center">Price</th>
 	          	<th></th>
@@ -68,9 +69,12 @@
                   </a>
                 </td>
                 <% if logged_in? %>
+	                <td>
+	                  <%= render partial: "parts/tell_a_friend_modal", locals: { part: part_result } %>
+	                </td>
 	                <% if PartStock.where(part_id: part_result.id).sum('stock') == 0 %>
 	                  <td class="center">
-	                  	<p class="red bottom-none"><%= "Out of stock" %></p>
+	                  	<p class="red bottom-none">Out of stock</p>
 	                  	<%= bootstrap_form_for @reminder, url: user_reminders_path(current_user), html: { class: 'form-horizontal' } do |f| %>
                         <%= f.hidden_field :part_id, value: part_result.id %>
                         <%= f.hidden_field :user_id, value: current_user.id %>

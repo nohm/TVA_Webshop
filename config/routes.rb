@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     get '/search_order' => 'cart_statuses#search_order', :as => :search_order
 
     resources :coupons
+    resources :part_recommendations
 
     resources :cart_statuses do
       resources :deliveries

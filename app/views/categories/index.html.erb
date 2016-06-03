@@ -2,9 +2,7 @@
 <% breadcrumb :categories, @categories %>
 <div class="panel-body panel-table" id="Category">
   <% if @categories.length == 0 %>
-    <p class="empty_list">
-      <%= "There are no categories for this product" %>
-    </p>
+    <p class="empty_list">There are no categories for this product</p>
   <% else %>
     <div class="overview-row row">
       <% @categories.each do |category| %>

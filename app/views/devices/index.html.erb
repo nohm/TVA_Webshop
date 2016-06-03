@@ -2,9 +2,7 @@
 <% breadcrumb :devices, @devices %>
 <div class="panel-body panel-table">
   <% if @devices.length == 0 %>
-    <p class="empty_list">
-      <%= "De lijst is leeg" %>
-    </p>
+    <p class="empty_list">There are no devices</p>
   <% else %>
     <% if logged_in? && current_user.role.name != "Client" %>
       <div class="table-responsive">

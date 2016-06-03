@@ -2,9 +2,7 @@
 <% breadcrumb :subdescriptions, @descriptions %>
 <div class="panel-body panel-table">
   <% if @descriptions.length == 0 %>
-    <p class="empty_list">
-      <%= "De lijst is leeg" %>
-    </p>
+    <p class="empty_list">There are no descriptions for this part</p>
   <% else %>
     <div class="table-responsive col-md-6 col-md-offset-3">
       <table class="table table-hover borderGray">

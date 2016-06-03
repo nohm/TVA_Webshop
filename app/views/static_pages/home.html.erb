@@ -1,4 +1,50 @@
-<div class="center jumbotron">
-	<h1>Smart Parts Webshop</h1>
-  <%= link_to "Sign up now!", signup_path, class: "btn btn-lg btn-primary" %>
+<div class="col-sm-offset-1 borderBlack" style="height: 750px; width: 220px; float: left;">
+	
 </div>
+
+<div class="noPadding" style="height: 100%; margin-left: 10px; margin-right: 10px; width: 660px; float: left;">
+	<%# <div class="col-sm-12 borderBlack" style="height: 10%; margin-top: 10px"></div> %>
+	<div class="col-sm-12 borderBlack" style="height: 368px; margin-bottom: 14px;">
+		<p style="margin-bottom: 0px"><b>Our recommendations:</b></p>
+		<ul style="list-style-type: none; padding: 0px; margin: 0px;">
+			<% @partrecommendations.each do |recommendation| %>
+				<li class="smallImgContainer" style="margin-right: 10px">
+		      <a href="<%= device_product_category_part_path(recommendation.part.category.product.device.id, recommendation.part.category.product.id, recommendation.part.category.id, recommendation.part.id ) %>">
+		      	<% if recommendation.part.partimagefull_file_name.nil? %>
+		          <%= image_tag "missingSmall.png", class: "SmallImg borderGray" %>
+		        <% else %>
+			      	<%= image_tag recommendation.part.partimagefull.url(:small), class: "SmallImg borderGray" %>
+			      <% end %>
+			    </a><br>
+			    <div style="width: 140px">
+			      <small><b><a href="<%= device_product_category_part_path(recommendation.part.category.product.device.id, recommendation.part.category.product.id, recommendation.part.category.id, recommendation.part.id ) %>" title="<%= recommendation.part.name %>"><%= truncate(recommendation.part.name, length: 35) %></a></b></small><br>
+			      <small><b><%= number_to_currency(recommendation.part.discount_prices.first.price, unit: "€") %></b></small>
+			    </div>
+	    	</li>
+
+	    	<li class="smallImgContainer" style="margin-right: 10px">
+		      <a href="<%= device_product_category_part_path(recommendation.part.category.product.device.id, recommendation.part.category.product.id, recommendation.part.category.id, recommendation.part.id ) %>">
+		      	<% if recommendation.part.partimagefull_file_name.nil? %>
+		          <%= image_tag "missingSmall.png", class: "SmallImg borderGray" %>
+		        <% else %>
+			      	<%= image_tag recommendation.part.partimagefull.url(:small), class: "SmallImg borderGray" %>
+			      <% end %>
+			    </a><br>
+			    <div style="width: 140px">
+			      <small><b><a href="<%= device_product_category_part_path(recommendation.part.category.product.device.id, recommendation.part.category.product.id, recommendation.part.category.id, recommendation.part.id ) %>" title="<%= recommendation.part.name %>"><%= truncate(recommendation.part.name, length: 35) %></a></b></small><br>
+			      <small><b><%= number_to_currency(recommendation.part.discount_prices.first.price, unit: "€") %></b></small>
+			    </div>
+	    	</li>
+	    <% end %>	
+    </ul>
+	</div>
+	<div class="col-sm-12 borderBlack" style="height: 368px; margin-bottom: 0px;"></div>
+</div>
+
+<div class="borderBlack" style="height: 750px; width: 220px; float: left;">
+	
+</div>
+
+<div style="clear: both;"></div> 
+
+<%= render 'layouts/footer' %>

@@ -4,9 +4,7 @@
   
   <p>Entire order:</p>
   <% if @cart_items.length == 0 %>
-    <p class="empty_list">
-      <%= "There are no " %>
-    </p>
+    <p class="empty_list">There is no order</p>
   <% else %>
     <div class="table-responsive bottom-15">
       <table class="table table-striped table-hover borderGray">
@@ -39,9 +37,7 @@
 
   <p>Actions:</p>
   <% if @deliveries.length == 0 %>
-    <p class="empty_list">
-      <%= "There are no deliveries" %>
-    </p>
+    <p class="empty_list">There are no deliveries</p>
   <% else %>
     <div class="table-responsive">
       <table class="table table-striped table-hover borderGray">
@@ -90,7 +86,7 @@
                             <%= collection_select :delivery, :cart_status_id, CartStatus.where.not(name: "In progress"), :id, :name, { selected: delivery.cart_status_id }, { class: 'form-control width50' } %>
                           </div>
                           <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><%= "Close" %></button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <%= f.submit "Change status", class: "btn btn-primary btn-sm" %>
                           </div>
                         <% end %>

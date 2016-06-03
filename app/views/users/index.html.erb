@@ -39,7 +39,7 @@
                         <%= collection_select :user, :role_id, Role.all, :id, :name, { selected: user.role.id }, { class: 'form-control small' } %>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal"><%= "Close" %></button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <%= f.submit "Change role", class: "btn btn-primary btn-sm" %>
                       </div>
                     <% end %>

@@ -2,9 +2,7 @@
 <% breadcrumb :statuses, @status %>
 <div class="panel-body panel-table">
   <% if @statuses.length == 0 %>
-    <p class="empty_list">
-      <%= "There are no statuses" %>
-    </p>
+    <p class="empty_list">There are no statuses</p>
   <% else %>
     <p><b>Search on 'order number' or 'name'</b></p>
     <%= bootstrap_form_tag url: search_order_path, method: 'GET', html: {class: "form-inline"} do |f| %>

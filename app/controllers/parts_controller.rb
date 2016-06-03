@@ -17,6 +17,7 @@ class PartsController < ApplicationController
     end
     @cart_item = CartItem.new
     @reminder = Reminder.new
+    @partrecommendation = PartRecommendation.new
   end
 
   def show

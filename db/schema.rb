@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160519133143) do
+ActiveRecord::Schema.define(version: 20160603084719) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,17 +35,12 @@ ActiveRecord::Schema.define(version: 20160519133143) do
 
   create_table "carts", force: :cascade do |t|
     t.integer  "user_id"
-    t.datetime "created_at",                                               null: false
-    t.datetime "updated_at",                                               null: false
-    t.boolean  "purchased",                                default: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
     t.string   "coupon_code"
     t.string   "delivery_method"
     t.integer  "location_id"
     t.decimal  "shipping_cost",   precision: 10, scale: 2
-    t.decimal  "tax",             precision: 10, scale: 2
-    t.decimal  "subtotal",        precision: 10, scale: 2
-    t.decimal  "total",           precision: 10, scale: 2
-    t.decimal  "coupon_discount", precision: 10, scale: 2
     t.integer  "cart_status_id"
     t.datetime "order_made_at"
   end
@@ -108,6 +103,12 @@ ActiveRecord::Schema.define(version: 20160519133143) do
     t.string "city"
     t.string "country"
     t.string "phone_number"
+  end
+
+  create_table "part_recommendations", force: :cascade do |t|
+    t.integer  "part_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "part_stocks", force: :cascade do |t|

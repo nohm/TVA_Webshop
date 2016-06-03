@@ -20,12 +20,13 @@ class HomeController < ApplicationController
 		@part_results = []
 		@category_results = []
 		
-		# Checks if the query isn't blank and than starts looking for results based on the query
+		# Checks if the query isn't blank and than starts looking for results based on the query and adds the records found to @product_results, @part_results and @category_results
 		if !@query.match(/([a-zA-Z0-9])+/).blank?
 			@product_results += Product.where('brand ILIKE ? OR model ILIKE ? OR model_extended ILIKE ?', search_condition, search_condition, search_condition).order('id')
 			@part_results += Part.where('brand ILIKE ? OR name ILIKE ? OR partnumber ILIKE ?', search_condition, search_condition, search_condition).order('id')
 			@category_results += Category.where('name ILIKE ?', search_condition).order('id')
 
+			# Paginate the results
 			@product_results = Kaminari.paginate_array(@product_results).page(params[:product_page]).per(10)
 			@part_results = Kaminari.paginate_array(@part_results).page(params[:part_page]).per(5)
 			@category_results = Kaminari.paginate_array(@category_results).page(params[:category_page]).per(10)
@@ -95,12 +96,14 @@ class HomeController < ApplicationController
 		# Used in AJAX request to fill in #device_select in the header
 
 		# Check which id got sent with the AJAX request
+		# params[:id] is the id that gets send from clicking in the dynamic search
 		if !params[:id].blank?
 	    id = params[:id]
 
  		  if !id.blank?
 		    render :partial => 'options_device'
 			end
+		# params[:p_id] is params[:product_id] in the url
 		elsif !params[:p_id].blank?
 			id = params[:p_id]
 
@@ -110,6 +113,7 @@ class HomeController < ApplicationController
 	    	@device = Device.find(product.device_id)  
 		    render :partial => 'options_device'
 			end
+		# params[:d_id] is params[:device_id] in the url
 		elsif !params[:d_id].blank?
 			id = params[:d_id]
 
@@ -125,6 +129,7 @@ class HomeController < ApplicationController
 		# Used in AJAX request to fill in #brand_select in the header
 
 		# Check which id got sent with the AJAX request
+		# params[:id] is the id that gets send from clicking in the dynamic search
 		if !params[:id].blank?
 	    id = params[:id]
 
@@ -133,6 +138,7 @@ class HomeController < ApplicationController
 		    @products = Product.where(device_id: id).pluck(:brand).uniq
 		    render :partial => 'options_brand'
 			end
+		# params[:p_id] is params[:product_id] in the url
 		elsif !params[:p_id].blank?
 			id = params[:p_id]
 
@@ -142,6 +148,7 @@ class HomeController < ApplicationController
 		    @products = Product.where(device_id: @product.device_id).pluck(:brand).uniq
 		    render :partial => 'options_brand'
 			end
+		# params[:d_id] is params[:device_id] in the url
 		elsif !params[:d_id].blank?
 			id = params[:d_id]
 			
@@ -158,6 +165,7 @@ class HomeController < ApplicationController
 		# Used in AJAX request to fill in #model_select in the header
 
 		# Check which id got sent with the AJAX request
+		# params[:id] is the id that gets send from clicking in the dynamic search
 		if !params[:id].blank?	
 			id = params[:id]
 			brand = params[:brand]
@@ -167,6 +175,7 @@ class HomeController < ApplicationController
 				@products = Product.where(device_id: id, brand: brand).pluck(:model).uniq
 				render :partial => 'options_model'
 			end
+		# params[:p_id] is params[:product_id] in the url
 		elsif !params[:p_id].blank?
 			id = params[:p_id]
 			
@@ -176,6 +185,7 @@ class HomeController < ApplicationController
 				@products = Product.where(device_id: @product.device_id, brand: @product.brand).pluck(:model).uniq
 				render :partial => 'options_model'
 			end
+		# # params[:d_id] is params[:device_id] in the url
 		elsif !params[:d_id].blank?
 			id = params[:d_id]
 
@@ -192,6 +202,7 @@ class HomeController < ApplicationController
 		# Used in AJAX request to fill in #model_extended_select in the header
 
 		# Check which id got sent with the AJAX request
+		# params[:id] is the id that gets send from clicking in the dynamic search
 		if !params[:id].blank?
 			id = params[:id]
 			brand = params[:brand]
@@ -212,6 +223,7 @@ class HomeController < ApplicationController
 				@products = Product.where(device_id: id, brand: brand, model: model).pluck(:model_extended).uniq
 				render :partial => 'options_model_extended'
 			end
+		# params[:p_id] is params[:product_id] in the url
 		elsif !params[:p_id].blank?
 			id = params[:p_id]
 
@@ -225,6 +237,7 @@ class HomeController < ApplicationController
 					render inline: 'No Extended' # Needed for Javascript response
 				end
 			end
+		# params[:d_id] is params[:device_id] in the url
 		elsif !params[:d_id].blank?
 			id = params[:d_id]
 

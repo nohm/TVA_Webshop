@@ -3,9 +3,7 @@
 <div class="panel-body panel-table">
     
   <% if @part_amount == 0 %>
-    <p class="empty_list">
-      <%= "There are no parts this category" %>
-    </p>
+    <p class="empty_list">There are no parts this category</p>
   <% else %>
     <div class="table-responsive">
       <table class="table table-hover borderGray">
@@ -19,6 +17,7 @@
               <th class="center"><b>Price</b></th>
               <th></th>
               <% if current_user.manager? %>
+                <th class="small-col"></th>
                 <th class="small-col"></th>
                 <th class="small-col"></th>
                 <th class="small-col"></th>
@@ -73,7 +72,7 @@
                 </td>
                 <% if logged_in? %>
                   <td>
-                    <%= render partial: "tell_a_friend_modal", locals: { part_product: part_product } %>
+                    <%= render partial: "tell_a_friend_modal", locals: { part: part_product.part } %>
                   </td>
                   <% if PartStock.where(part_id: part_product.part_id).sum('stock') == 0 %>
                     <td class="center">
@@ -86,7 +85,6 @@
                       <% end %>
                     </td>
                   <% else %>
-                    
                     <td class="center"><%= PartStock.where(part_id: part_product.part_id).sum('stock') %></td>
                   <% end %>
                   <td class="center">
@@ -97,6 +95,15 @@
                     <%= render partial: "cart_modal", locals: { part_product: part_product } %>
                   </td>
                   <% if current_user.manager? %>
+                    <td class="center">
+                      <%= bootstrap_form_for @partrecommendation, url: part_recommendations_path, html: { class: 'form-horizontal' } do |f| %>
+                        <%= f.hidden_field :part_id, value: part_product.part.id %>
+                
+                        
+
+                        <%= f.submit "Recommend", class: 'btn btn-link btn-xs', style: 'padding: 4px; width: auto;', title: 'Adds the product to the recommended items' %>
+                      <% end %>
+                    </td>
                     <td>
                       <%= link_to device_product_category_part_part_stocks_path(params[:device_id], params[:product_id], params[:category_id], part_product.part) do %>
                         <span class="glyphicon glyphicon-gift" title="Stock"></span>

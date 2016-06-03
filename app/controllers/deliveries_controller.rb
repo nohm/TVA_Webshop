@@ -20,7 +20,7 @@ class DeliveriesController < ApplicationController
 		if @delivery.update(delivery_params)
 			# Check if all the deliveries are the same status
 	  	if @deliveries.select(:cart_status_id).distinct.length == 1
-	  		# Check if the cart_status_id params are the same as the "Waiting for pick up" status
+	  		# Check if the cart_status_id params are the same as the "Waiting for pick up" status, if so send a mail to the customer with a reminder that they can pick up their order
 	  		if params[:delivery][:cart_status_id].to_i == search_status_id("Waiting for pick up")
 	  			Mailer.send_order_reminder(@cart).deliver_now
 	  		end
