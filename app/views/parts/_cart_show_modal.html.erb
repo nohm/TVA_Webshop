@@ -26,7 +26,13 @@
                   <% end %>
                 </td>
                 <td class="center"><%= item.amount %></td>
-                <td class="center"><%= number_to_currency(item.price_tier_discount * item.amount, unit: "€") %></td>
+                <td class="center">
+                  <% if item.price_sale.nil? %>
+                    <%= number_to_currency(item.price_tier_discount * item.amount, unit: "€") %>
+                  <% else %>
+                    <%= number_to_currency(item.price_sale * item.amount, unit: "€") %>
+                  <% end %>
+                </td>
               </tr>
               <% end %>
             </tbody>

@@ -77,16 +77,20 @@
                   <span class="glyphicon glyphicon-remove"></span>
                 <% end %>
               </td>
-              <td class="center"><%= number_to_currency(item.price, unit: "€") %></td>
-              <td class="center">
-                <%= item.discount_tier.to_s + "+" %>
-              </td>
-              <td class="center">
-                <%= number_to_currency(item.price_tier_discount, unit: "€") %>
-              </td>
-              <td class="right">
-                <%= number_to_currency(item.price_tier_discount * item.amount, unit: "€") %>
-              </td>
+              <% if item.price_sale.nil? %>
+                <td class="center"><%= number_to_currency(item.price, unit: "€") %></td>
+                <td class="center"><%= item.discount_tier.to_s + "+" %></td>
+                <td class="center"><%= number_to_currency(item.price_tier_discount, unit: "€") %></td>
+                <td class="right"><%= number_to_currency(item.price_tier_discount * item.amount, unit: "€") %></td>
+              <% else %>
+                <td class="center">
+                  <span class="background"><%= number_to_currency(item.price, unit: "€") %></span>
+                  <span><%= number_to_currency(item.price_sale, unit: "€") %></span>
+                </td>
+                <td class="center">N/A</td>
+                <td class="center">N/A</td>
+                <td class="right"><%= number_to_currency(item.price_sale * item.amount, unit: "€") %></td>
+              <% end %>
             </tr>
           <% end %>
         </tbody>

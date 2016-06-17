@@ -131,6 +131,11 @@ crumb :discount_prices do
 	parent :parts
 end
 
+crumb :actions do
+	link "Actions", actions_path
+	parent :parts
+end
+
 crumb :search do
 	link "Search", search_path(:part_page => params[:part_page], :category_page => params[:category_page], :search_query => params[:search_query])
 end

@@ -1,0 +1,51 @@
+<% provide(:title, "Actions") %>
+<%# breadcrumb :actions, @part_actions %>
+<div class="panel-body panel-table">
+  <% if @part_actions.length == 0 %>
+    <p class="empty_list">There are no actions</p>
+  <% else %>
+    <div class="table-responsive col-md-6 col-md-offset-3">
+      <table class="table table-hover borderGray">
+        <thead>
+          <tr>
+            <th><b>Name</b></th>
+            <th></th>
+            <th><b>Price</b></th>
+            <th class="small-col"></th>
+            <th class="small-col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @part_actions.each do |action| %>
+            <tr>
+              <td><%= truncate(action.part.name, length: 50) %></td>
+              <td>
+                <div class="col-md-6 width66px noPadding">
+                  <%= image_tag action.part.partimagefull.url(:thumb), class: "borderGray" %>
+                </div>
+              </td>
+              <td><%= number_to_currency(action.price, unit: '€') %></td>
+              <td>
+                <%= link_to edit_device_product_category_part_part_action_path(action.part.category.product.device.id, action.part.category.product.id, action.part.category.id, action.part.id, action.id)  do %>
+                  <span class="glyphicon glyphicon-pencil" title="Edit"></span>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to device_product_category_part_part_action_path(action.part.category.product.device.id, action.part.category.product.id, action.part.category.id, action.part.id, action.id), data: { confirm: "Are you sure?" }, method: :delete do %>
+                  <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %> 
+</div>
+<div class="panel-footer noPadding">
+  <div class="col-md-6 col-md-offset-3">
+    <% unless (paginate @part_actions).blank? %>
+      <%= paginate @part_actions %><br>
+    <% end %>
+  </div>
+</div>

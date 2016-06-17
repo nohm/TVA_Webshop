@@ -31,6 +31,8 @@ Rails.application.routes.draw do
 
     get '/search_order' => 'cart_statuses#search_order', :as => :search_order
 
+    get '/actions' => 'part_actions#index', :as => :actions
+
     resources :coupons
     resources :part_recommendations
 
@@ -60,6 +62,7 @@ Rails.application.routes.draw do
             resources :partimages
             resources :discount_prices
             resources :part_stocks
+            resources :part_actions
             resources :partdescriptions do
               resources :part_subdescriptions
             end

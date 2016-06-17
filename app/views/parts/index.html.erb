@@ -25,6 +25,7 @@
                 <th class="small-col"></th>
                 <th class="small-col"></th>
                 <th class="small-col"></th>
+                <th class="small-col"></th>
               <% end %>
             <% end %>
           </tr>
@@ -88,7 +89,12 @@
                     <td class="center"><%= PartStock.where(part_id: part_product.part_id).sum('stock') %></td>
                   <% end %>
                   <td class="center">
-                    <%= number_to_currency(DiscountPrice.where(part_id: part_product.part, amount: 1).first.price, unit: "€") %><br>
+                    <% if PartAction.find_by(part_id: part_product.part_id).nil? %>
+                      <%= number_to_currency(DiscountPrice.where(part_id: part_product.part, amount: 1).first.price, unit: "€") %><br>
+                    <% else %>
+                      <span class="background"><%= number_to_currency(DiscountPrice.where(part_id: part_product.part, amount: 1).first.price, unit: "€") %></span>
+                      <%= number_to_currency(PartAction.find_by(part_id: part_product.part_id).price, unit: "€") %><br>
+                    <% end %>
                     <small style="font-size: 9px;">Excl 21% VAT</small>
                   </td>
                   <td class="center">
@@ -98,8 +104,6 @@
                     <td class="center">
                       <%= bootstrap_form_for @partrecommendation, url: part_recommendations_path, html: { class: 'form-horizontal' } do |f| %>
                         <%= f.hidden_field :part_id, value: part_product.part.id %>
-                
-                        
 
                         <%= f.submit "Recommend", class: 'btn btn-link btn-xs', style: 'padding: 4px; width: auto;', title: 'Adds the product to the recommended items' %>
                       <% end %>
@@ -112,6 +116,17 @@
                     <td>
                       <%= link_to device_product_category_part_discount_prices_path(params[:device_id], params[:product_id], params[:category_id], part_product.part) do %>
                         <span class="glyphicon glyphicon-euro" title="Prices"></span>
+                      <% end %>
+                    </td>
+                    <td>
+                      <% if PartAction.where(part_id: part_product.part_id).any? %>
+                        <%= link_to edit_device_product_category_part_part_action_path(params[:device_id], params[:product_id], params[:category_id], part_product.part, PartAction.find_by(part_id: part_product.part_id).id) do %>
+                          <span class="glyphicon glyphicon-star" title="Edit action"></span>
+                        <% end %>
+                      <% else %>
+                        <%= link_to new_device_product_category_part_part_action_path(params[:device_id], params[:product_id], params[:category_id], part_product.part) do %>
+                          <span class="glyphicon glyphicon-star-empty" title="Create an action for this part"></span>
+                        <% end %>
                       <% end %>
                     </td>
                     <td>

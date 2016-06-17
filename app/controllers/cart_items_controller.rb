@@ -22,6 +22,9 @@ class CartItemsController < ApplicationController
 			flash[:item_added] = "Toggle modal"
 			redirect_to request.referrer
 		else
+			unless PartAction.find_by(part_id: part_id).nil?
+				params[:cart_item][:price_sale] = PartAction.find_by(part_id: part_id).price
+			end
 			params[:cart_item][:price] = DiscountPrice.where(part_id: part_id, amount: 0..(amount)).first.price
 			params[:cart_item][:name] = Part.find(part_id).name
 			params[:cart_item][:discount_tier] = DiscountPrice.where(part_id: part_id, amount: 0..(amount)).last.amount
@@ -76,6 +79,6 @@ class CartItemsController < ApplicationController
 	private
 
 	def cart_item_params
-		params.require(:cart_item).permit(:cart_id, :part_id, :amount, :price, :name, :discount_tier, :price_tier_discount)
+		params.require(:cart_item).permit(:cart_id, :part_id, :amount, :price, :name, :discount_tier, :price_tier_discount, :price_sale)
 	end
 end

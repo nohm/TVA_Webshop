@@ -86,7 +86,12 @@
 	                  <td class="center"><%= PartStock.where(part_id: part_result.id).sum('stock') %></td>
 	                <% end %>
 	                <td class="center">
-	                	<%= number_to_currency(DiscountPrice.where(part_id: part_result.id, amount: 1).first.price, unit: "€") %><br>
+	                	<% if PartAction.find_by(part_id: part_result.id).nil? %>
+                      <%= number_to_currency(DiscountPrice.where(part_id: part_result.id, amount: 1).first.price, unit: "€") %><br>
+                    <% else %>
+                      <span class="background"><%= number_to_currency(DiscountPrice.where(part_id: part_result.id, amount: 1).first.price, unit: "€") %></span>
+                      <%= number_to_currency(PartAction.find_by(part_id: part_result.id).price, unit: "€") %><br>
+                    <% end %>
                     <small style="font-size: 9px;">Excl 21% VAT</small>
 	                </td>
 	                <td class="center">

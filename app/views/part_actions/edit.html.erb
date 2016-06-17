@@ -1,0 +1,15 @@
+<% provide(:title, 'Edit action') %>
+<% breadcrumb :actions, @part_action %>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= bootstrap_form_for(@part_action, url: device_product_category_part_part_action_path(params[:device_id], params[:product_id], params[:category_id], params[:part_id], params[:id]), html: { multipart: true }) do |f| %>
+      <%= f.alert_message "Please fix the errors below." %>
+      
+      <%= f.hidden_field :part_id, value: params[:part_id] %>
+      <%= f.text_field :price, autofocus: true %>
+
+      <%= f.submit "Edit action", class: "btn btn-primary" %>
+      <%= link_to("Cancel", actions_path, class: "btn btn-primary") %>
+    <% end %>
+  </div>
+</div>

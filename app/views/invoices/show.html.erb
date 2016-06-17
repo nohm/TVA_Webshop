@@ -78,10 +78,17 @@
             <tr>
               <td class="width40"><%= item.name %></td>
               <td class="width12"><%= item.amount.to_s + "x" %></td>
-              <td class="width12"><%= number_to_currency(item.price, unit: '€') %></td>
-              <td class="width12"><%= item.discount_tier.to_s + "+" %></td>
-              <td class="width12"><%= number_to_currency(item.price_tier_discount, unit: "€") %></td>
-              <td class="width12"><%= number_to_currency(item.price_tier_discount * item.amount, unit: "€") %></td>
+              <% if PartAction.find_by(part_id: item.part_id).nil? %>
+                <td class="width12"><%= number_to_currency(item.price, unit: '€') %></td>
+                <td class="width12"><%= item.discount_tier.to_s + "+" %></td>
+                <td class="width12"><%= number_to_currency(item.price_tier_discount, unit: "€") %></td>
+                <td class="width12"><%= number_to_currency(item.price_tier_discount * item.amount, unit: "€") %></td>
+              <% else %>
+                <td class="width12"><%= number_to_currency(item.price_sale, unit: '€') %></td>
+                <td class="width12">N/A</td>
+                <td class="width12">N/A</td>
+                <td class="width12"><%= number_to_currency(item.price_sale * item.amount, unit: "€") %></td>
+              <% end %>
             </tr>
           <% end %>
         <% end %>

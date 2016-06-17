@@ -136,11 +136,21 @@ class CartsController < ApplicationController
 			end
 
 			# Add the current item price to the total price
-			@cart_price_total += (item.price_tier_discount * item.amount)
+			if PartAction.find_by(part_id: item.part_id).nil?
+				@cart_price_total += (item.price_tier_discount * item.amount)
+			else
+				@cart_price_total += (item.price_sale * item.amount)
+			end
 
 			# If the delivery method is "Shipping" add the current items weight to the total weight
 			if @cart.delivery_method == "Shipping"
 				total_weight += (item.part.weight * item.amount)
+			end
+
+			# Checks if the item has an action ongoing, if so remove the discount from a coupon
+			if !PartAction.find_by(part_id: item.part_id).nil?
+				item.price_coupon_discount = nil
+				item.save
 			end
 
 			# If the item has a discounted price because of a coupon, add the discount from the current item to the total discount
