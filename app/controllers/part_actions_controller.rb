@@ -11,8 +11,15 @@ class PartActionsController < ApplicationController
 
 	def create
 		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
+    params[:part_action][:price] = params[:part_action][:price].to_s.gsub(',', '.').to_f
     @part_action = PartAction.new(part_action_params)
 	  if @part_action.save
+	  	carts = Cart.where(cart_status_id: search_status_id("In progress"))
+			cart_items = CartItem.where(cart_id: carts.ids, part_id: @part_action.part_id)
+			cart_items.each do |item|
+				item.price_sale = @part_action.price
+				item.save
+			end
 	    redirect_to actions_path
 	    flash[:success] = "Action created"
 	  else
@@ -28,7 +35,14 @@ class PartActionsController < ApplicationController
 	def update
 		redirect_to root_path, :notice => "Unauthorized" and return unless logged_in? && current_user.manager?
     @part_action = PartAction.find(params[:id])
+    params[:part_action][:price] = params[:part_action][:price].to_s.gsub(',', '.').to_f
     if @part_action.update(part_action_params)
+      carts = Cart.where(cart_status_id: search_status_id("In progress"))
+			cart_items = CartItem.where(cart_id: carts.ids, part_id: @part_action.part_id)
+			cart_items.each do |item|
+				item.price_sale = @part_action.price
+				item.save
+			end
       redirect_to actions_path
       flash[:success] = "Action updated"
     else
