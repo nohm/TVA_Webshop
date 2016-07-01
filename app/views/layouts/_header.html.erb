@@ -6,7 +6,7 @@
         <div class="headerItems">
           <div class="inline-block">
 
-            <div class="itemAccount">
+            <div class="items">
               <% if logged_in? %>
                 <div class="inline-block">
                   <span class="glyphicon glyphicon-user orange font-size-40"></span>
@@ -40,7 +40,7 @@
               <% end %>
             </div>
 
-            <div class="itemCart">
+            <div class="items">
               <% if logged_in? %>
                 <div class="inline-block">
                   <span class="glyphicon glyphicon-shopping-cart orange font-size-40"></span>
@@ -68,7 +68,7 @@
               <% end %>
             </div>
 
-            <div class="itemAdmin">
+            <div class="items">
               <% if logged_in? && current_user.admin? %>
                 <div class="inline-block">
                   <span class="glyphicon glyphicon-dashboard orange font-size-40"></span>
