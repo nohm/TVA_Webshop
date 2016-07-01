@@ -141,13 +141,19 @@ crumb :search do
 end
 
 crumb :all_parts do
-	link Category.find_by(id: params[:category_id]).blank? ? "Parts" : Category.find_by(id: params[:category_id]).name, parts_path(params[:category_id])
-	parent :search
+	link Category.find_by(id: params[:category_id]).blank? ? "Parts" : Category.find_by(id: params[:category_id]).name, parts_path(category_id: params[:category_id], search_query: params[:search_query])
+	if !params[:search_query].nil?
+		parent :search
+	end
 end
 
 crumb :part do
 	link Part.find(params[:part_id]).name
-	parent :search
+	if !params[:search_query].nil? && params[:category_id].nil?
+		parent :search
+	elsif (params[:search_query].nil? && !params[:category_id].nil?) || (!params[:search_query].nil? && !params[:category_id].nil?)
+		parent :all_parts
+	end
 end
 
 crumb :parts_products do

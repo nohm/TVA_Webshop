@@ -1,5 +1,7 @@
 class StaticPagesController < ApplicationController
   def home
+    @part_actions = PartAction.where(active: true)
+
     # Integer used to keep track of the amount of recommendations used in "Populair products"
     @recommendation_count = 0
 

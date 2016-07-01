@@ -92,7 +92,7 @@
                       <span class="background"><%= number_to_currency(DiscountPrice.where(part_id: part_result.id, amount: 1).first.price, unit: "€") %></span>
                       <%= number_to_currency(PartAction.find_by(part_id: part_result.id).price, unit: "€") %><br>
                     <% end %>
-                    <small style="font-size: 9px;">Excl 21% VAT</small>
+                    <small class="font-size-9">Excl 21% VAT</small>
 	                </td>
 	                <td class="center">
                       <%= render partial: "cart_modal", locals: {part: part_result }%>
@@ -119,7 +119,7 @@
 			<% else %>
 				<div class="col-sm-12 borderBlack" >
 					<h4><%= @category_results.total_count %> <%= "Category".pluralize(@category_results.total_count) %> found</h4>
-					<ol class="noPadding" style="list-style-type:none;">	
+					<ol class="noPadding noListStyle">	
 						<% @category_results.each do |category_result| %>
 							<li>
 								<%= link_to parts_path(category_id: category_result.id, part_page: params[:part_page], category_page: params[:category_page], product_page: params[:product_page], search_query: params[:search_query]) do %>
@@ -144,7 +144,7 @@
 			<% else %>
 				<div class="col-sm-12 borderBlack" >
 					<h4><%= @product_results.total_count %> <%= "Product".pluralize(@product_results.total_count) %> found</h4>
-					<ol class="noPadding" style="list-style-type:none;">
+					<ol class="noPadding noListStyle">
 						<% @product_results.each do |product_result| %>
 							<li>
 								<%= link_to device_product_categories_path(product_result.device.id, product_result.id) do %>

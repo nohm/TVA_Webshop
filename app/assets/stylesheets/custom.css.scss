@@ -13,10 +13,6 @@ $gray-medium-light: #eaeaea;
 
 /* universal */
 
-body {
-  padding-top: 60px;
-}
-
 section {
   overflow: auto;
 }
@@ -397,6 +393,10 @@ aside {
   margin-bottom: 15px;
 }
 
+.noBorder {
+  border: 0px solid !important;
+}
+
 .bottomRight {
   position: absolute;
   bottom: 0;
@@ -424,6 +424,34 @@ aside {
 
 .green {
   color: green;
+}
+
+.white {
+  color: white;
+}
+
+.orange {
+  color: #FD7D26;
+}
+
+.font-size-40 {
+  font-size: 40px;
+}
+
+.font-size-18 {
+  font-size: 18px;
+}
+
+.font-size-12 {
+  font-size: 12px;
+}
+
+.font-size-9 {
+  font-size: 9px;
+}
+
+.width2 {
+  width: 2%;
 }
 
 .width5 {
@@ -458,6 +486,46 @@ aside {
   width: 66px;
 }
 
+.width140px {
+  width: 140px;
+}
+
+.width302px {
+  width: 302px;
+}
+
+.width1351px {
+  width: 1351px !important;
+}
+
+.height38px {
+  height: 38px;
+}
+
+.maxWidth {
+  width: 100%;
+}
+
+.maxHeight {
+  height: 100%;
+}
+
+.min-width284px {
+  min-width: 284px;
+}
+
+.max-width75px {
+  max-width: 75px;
+}
+
+.max-width250px {
+  max-width: 250px;
+}
+
+.min-height71px {
+  min-height: 71px;
+}
+
 #coupon {
   float:right; 
   margin-right:15px; 
@@ -474,8 +542,16 @@ aside {
   display: block !important;
 }
 
+.inline-block {
+  display: inline-block !important;
+}
+
 .bottom-none {
   margin-bottom: 0px;
+}
+
+.right-none {
+  margin-right: 0px;
 }
 
 .top-none {
@@ -490,12 +566,32 @@ aside {
   margin-top: 15px;
 }
 
+.top-50 {
+  margin-top: 50px;
+}
+
+.left-10 {
+  margin-left: 10px;
+}
+
 .left-15 {
   margin-left: 15px;
 }
 
 .bottom-15 {
   margin-bottom: 15px;
+}
+
+.partMargin {
+  margin: 15px -15px;
+}
+
+.padding5 {
+  padding: 5px;
+}
+
+.padding-left15 {
+  padding-left: 15px;
 }
 
 #device_select {
@@ -558,4 +654,131 @@ aside {
         width: 95%;
         z-index: -1;
     }
+}
+
+.header {
+  background-image: url('/images/bluebackground.png');
+  width: 100%; 
+  min-width: 1351px; 
+  height: 100px; 
+  padding-left: 15px; 
+  padding-right: 15px; 
+  padding-top: 5px;
+}
+
+.menu {
+  background-image: url('/images/orangebackground.png'); 
+  background-position: center; 
+  width: 100%; 
+  min-width: 1351px; 
+  height: 50px; 
+  padding-left: 15px; 
+  padding-right: 15px; 
+  padding-top: 8px;
+}
+
+.headerDiv {
+  width: 1321px; 
+  height: 90px; 
+  margin-left: auto; 
+  margin-right: auto;
+}
+
+.logo {
+  float: left; 
+  width: 276px; 
+  height: 90px;
+}
+
+.headerItems {
+  float: left; 
+  text-align: center;
+  width: 1045px;
+  height: 90px;
+}
+
+.itemAccount {
+  float: left; 
+  height: 90px; 
+  width: 200px; 
+  padding-top: 20px; 
+  border-left: 2px solid #FF7400
+}
+
+.itemCart {
+  float: left;
+  height: 90px;
+  width: 200px;
+  padding-top: 20px;
+  border-left: 2px solid #FF7400
+}
+
+.itemAdmin {
+  float: left;
+  height: 90px;
+  width: 150px;
+  padding-top: 20px;
+  border-left: 2px solid #FF7400
+}
+
+.menuCenter {
+  margin-left: auto; margin-right: auto; width: 933px;
+}
+
+.homeContainer {
+  margin: 0 auto; 
+  width: 1122px
+}
+
+.homeSide {
+  height: 750px; 
+  width: 220px; 
+  float: left;
+}
+
+.homeMiddle {
+  height: 100%; 
+  margin-left: 10px; 
+  margin-right: 10px; 
+  width: 660px; 
+  float: left;
+}
+
+.homeAction {
+  height: 400px; 
+  margin-bottom: 10px;
+}
+
+.homeRecommendations {
+  height: 100%; 
+  padding-bottom: 10px
+}
+
+.homeRecommendedList {
+  list-style-type: none; 
+  padding: 0px; 
+  margin: 0px;
+}
+
+.homeImageContainer {
+  margin-right: 10px; 
+  height: 162px
+}
+
+.homePopulairList {
+  list-style-type: decimal; 
+  height: 100%
+}
+
+.homePopulairImage {
+  width: 82%; 
+  float: left
+}
+
+.partPadding {
+  padding: 0px 15px 0px 15px;
+}
+
+.noListStyle {
+  list-style-type: none;
 }

@@ -13,6 +13,7 @@
             <th><b>Price</b></th>
             <th class="small-col"></th>
             <th class="small-col"></th>
+            <th class="small-col"></th>
           </tr>
         </thead>
         <tbody>
@@ -20,11 +21,31 @@
             <tr>
               <td><%= truncate(action.part.name, length: 50) %></td>
               <td>
-                <div class="col-md-6 width66px noPadding">
-                  <%= image_tag action.part.partimagefull.url(:thumb), class: "borderGray" %>
-                </div>
+                <a 
+                  <% if !action.actionimage_file_name.nil? %> 
+                    href=<%= action.actionimage.url %>
+                  <% end %>
+                >
+                  <div class="col-md-6 width66px noPadding">
+                    <%= image_tag action.actionimage.url(:thumb), class: "borderGray" %>
+                    <% if !action.actionimage_file_name.nil? %>
+                      <div class="bottomRight"><span class="glyphicon glyphicon-search"></span></div>
+                    <% end %>
+                  </div>
+                </a>
               </td>
               <td><%= number_to_currency(action.price, unit: '€') %></td>
+              <td>
+                <% if action.active == false %>
+                  <%= link_to device_product_category_part_part_action_show_on_homepage_path(action.part.category.product.device.id, action.part.category.product.id, action.part.category.id, action.part.id, action.id)  do %>
+                    <span class="glyphicon glyphicon-heart-empty" title="Show on homepage"></span>
+                  <% end %>
+                <% else %>
+                  <%= link_to device_product_category_part_part_action_show_on_homepage_path(action.part.category.product.device.id, action.part.category.product.id, action.part.category.id, action.part.id, action.id)  do %>
+                    <span class="glyphicon glyphicon-heart" title="Remove from homepage"></span>
+                  <% end %>
+                <% end %>
+              </td>
               <td>
                 <%= link_to edit_device_product_category_part_part_action_path(action.part.category.product.device.id, action.part.category.product.id, action.part.category.id, action.part.id, action.id)  do %>
                   <span class="glyphicon glyphicon-pencil" title="Edit"></span>

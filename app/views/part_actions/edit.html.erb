@@ -6,7 +6,9 @@
       <%= f.alert_message "Please fix the errors below." %>
       
       <%= f.hidden_field :part_id, value: params[:part_id] %>
-      <%= f.text_field :price, autofocus: true %>
+      <span><b>Normal price: </b><%= number_to_currency(DiscountPrice.where(part_id: params[:part_id], amount: 1).first.price, unit: "€") %></span>
+      <%= f.text_field :price, autofocus: true, prepend: '€', placeholder: '0.00' %>
+      <%= f.file_field :actionimage, class: "big", label: "Placeholder image" %>
 
       <%= f.submit "Edit action", class: "btn btn-primary" %>
       <%= link_to("Cancel", actions_path, class: "btn btn-primary") %>

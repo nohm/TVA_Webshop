@@ -1,14 +1,22 @@
-<div style="margin: 0 auto; width: 1122px">
-	<div class="borderBlack" style="height: 750px; width: 220px; float: left;">
+<div class="homeContainer">
+	<div class="borderBlack homeSide">
 		
 	</div>
 
-	<div class="noPadding" style="height: 100%; margin-left: 10px; margin-right: 10px; width: 660px; float: left;">
-		<div class="col-sm-12 borderBlack" style="height: 100%; margin-bottom: 19px; padding-bottom: 10px">
-			<p style="margin-bottom: 0px"><b>Our recommendations:</b></p>
-			<ul style="list-style-type: none; padding: 0px; margin: 0px;">
+	<div class="noPadding homeMiddle">
+		<% if @part_actions.any? %>
+			<div class="col-sm-12 borderBlack noPadding homeAction">
+				<a class="inline-block" href=<%= device_product_category_part_path(@part_actions.first.part.category.product.device.id, @part_actions.first.part.category.product.id, @part_actions.first.part.category.id, @part_actions.first.part.id) %>>
+	        <%= image_tag @part_actions.first.actionimage.url(:large) %>
+	      </a>
+			</div>
+		<% end %>
+
+		<div class="col-sm-12 borderBlack homeRecommendations">
+			<p class="bottom-none"><b>Our recommendations:</b></p>
+			<ul class="homeRecommendedList">
 				<% @partrecommendations.each do |recommendation| %>
-					<li class="smallImgContainer" style="margin-right: 10px; height: 162px">
+					<li class="smallImgContainer homeImageContainer">
 			      <a href="<%= device_product_category_part_path(recommendation.part.category.product.device.id, recommendation.part.category.product.id, recommendation.part.category.id, recommendation.part.id ) %>">
 			      	<% if recommendation.part.partimagefull_file_name.nil? %>
 			          <%= image_tag "missingSmall.png", class: "SmallImg borderGray" %>
@@ -16,7 +24,7 @@
 				      	<%= image_tag recommendation.part.partimagefull.url(:small), class: "SmallImg borderGray" %>
 				      <% end %>
 				    </a><br>
-				    <div style="width: 140px">
+				    <div class="width140px">
 				      <small><b><a href="<%= device_product_category_part_path(recommendation.part.category.product.device.id, recommendation.part.category.product.id, recommendation.part.category.id, recommendation.part.id ) %>" title="<%= recommendation.part.name %>"><%= truncate(recommendation.part.name, length: 35) %></a></b></small><br>
 				      <% if logged_in? %>
 				      	<% if PartAction.find_by(part_id: recommendation.part_id).nil? %>
@@ -31,21 +39,17 @@
 		    <% end %>	
 	    </ul>
 		</div>
-		
-		<div class="col-sm-12 borderBlack" style="height: 368px; margin-bottom: 0px;">
-			
-		</div>
 	</div>
 
-	<div class="borderBlack" style="height: 750px; width: 220px; float: left;">
-		<div class="" style="width: 100%; height: 100%">
-			<p style="margin-bottom: 0px; margin-left: 10px"><b>Populair products</b></p>
-			<ul style="list-style-type: decimal; height: 100%">
+	<div class="borderBlack homeSide">
+		<div class="maxWidth maxHeight">
+			<p class="bottom-none left-10"><b>Populair products</b></p>
+			<ul class="homePopulairList">
 				<% if @parts.length == 3 %>
 					<% @parts.each do |part| %>
-						<li class="smallImgContainer" style="height: 162px; margin-bottom: 10px">
-							<div class="" style="height: 100%">
-								<div style="width: 82%; float: left">
+						<li class="smallImgContainer homeImageContainer">
+							<div class="maxHeight">
+								<div class="homePopulairImage">
 						      <a href="<%= device_product_category_part_path(part.category.product.device.id, part.category.product.id, part.category.id, part.id ) %>">
 						      	<% if part.partimagefull_file_name.nil? %>
 						          <%= image_tag "missingSmall.png", class: "SmallImg borderGray" %>
@@ -53,7 +57,7 @@
 							      	<%= image_tag part.partimagefull.url(:small), class: "SmallImg borderGray" %>
 							      <% end %>
 							    </a><br>
-							    <div style="width: 140px">
+							    <div class="width140px">
 							      <small><b><a href="<%= device_product_category_part_path(part.category.product.device.id, part.category.product.id, part.category.id, part.id ) %>" title="<%= part.name %>"><%= truncate(part.name, length: 35) %></a></b></small><br>
 							      <% if logged_in? %>
 							      	<% if PartAction.find_by(part_id: part.id).nil? %>
@@ -70,9 +74,9 @@
 			    <% end %>
 			  <% elsif @parts.length == 2 %>
 			  	<% @parts.each do |part| %>
-						<li class="smallImgContainer" style="height: 162px; margin-bottom: 10px">
-							<div class="" style="height: 100%">
-								<div style="width: 82%; float: left">
+						<li class="smallImgContainer homeImageContainer">
+							<div class="maxHeight">
+								<div class="homePopulairImage">
 						      <a href="<%= device_product_category_part_path(part.category.product.device.id, part.category.product.id, part.category.id, part.id ) %>">
 						      	<% if part.partimagefull_file_name.nil? %>
 						          <%= image_tag "missingSmall.png", class: "SmallImg borderGray" %>
@@ -80,7 +84,7 @@
 							      	<%= image_tag part.partimagefull.url(:small), class: "SmallImg borderGray" %>
 							      <% end %>
 							    </a><br>
-							    <div style="width: 140px">
+							    <div class="width140px">
 							      <small><b><a href="<%= device_product_category_part_path(part.category.product.device.id, part.category.product.id, part.category.id, part.id ) %>" title="<%= part.name %>"><%= truncate(part.name, length: 35) %></a></b></small><br>
 							      <% if logged_in? %>
 							      	<% if PartAction.find_by(part_id: part.id).nil? %>
@@ -98,9 +102,9 @@
 			    <% @partrecommendations.each do |recommendation| %> 
 			    	<% break if @recommendation_count == 1 %>
 			    	<% next if @part_ids.include?(recommendation.part_id) %>
-			    	<li class="smallImgContainer" style="height: 162px; margin-bottom: 10px">
-							<div class="" style="height: 100%">
-								<div style="width: 82%; float: left">
+			    	<li class="smallImgContainer homeImageContainer">
+							<div class="maxHeight">
+								<div class="homePopulairImage">
 						      <a href="<%= device_product_category_part_path(recommendation.part.category.product.device.id, recommendation.part.category.product.id, recommendation.part.category.id, recommendation.part.id ) %>">
 						      	<% if recommendation.part.partimagefull_file_name.nil? %>
 						          <%= image_tag "missingSmall.png", class: "SmallImg borderGray" %>
@@ -108,7 +112,7 @@
 							      	<%= image_tag recommendation.part.partimagefull.url(:small), class: "SmallImg borderGray" %>
 							      <% end %>
 							    </a><br>
-							    <div style="width: 140px">
+							    <div class="width140px">
 							      <small><b><a href="<%= device_product_category_part_path(recommendation.part.category.product.device.id, recommendation.part.category.product.id, recommendation.part.category.id, recommendation.part.id ) %>" title="<%= recommendation.part.name %>"><%= truncate(recommendation.part.name, length: 35) %></a></b></small><br>
 							      <% if logged_in? %>
 							      	<% if PartAction.find_by(part_id: recommendation.part_id).nil? %>
@@ -126,9 +130,9 @@
 			    <% end %>
 			  <% elsif @parts.length == 1 %>
 			  		<% @parts.each do |part| %>
-						<li class="smallImgContainer" style="height: 162px; margin-bottom: 10px">
-							<div class="" style="height: 100%">
-								<div style="width: 82%; float: left">
+						<li class="smallImgContainer homeImageContainer">
+							<div class="maxHeight">
+								<div class="homePopulairImage">
 						      <a href="<%= device_product_category_part_path(part.category.product.device.id, part.category.product.id, part.category.id, part.id ) %>">
 						      	<% if part.partimagefull_file_name.nil? %>
 						          <%= image_tag "missingSmall.png", class: "SmallImg borderGray" %>
@@ -136,7 +140,7 @@
 							      	<%= image_tag part.partimagefull.url(:small), class: "SmallImg borderGray" %>
 							      <% end %>
 							    </a><br>
-							    <div style="width: 140px">
+							    <div class="width140px">
 							      <small><b><a href="<%= device_product_category_part_path(part.category.product.device.id, part.category.product.id, part.category.id, part.id ) %>" title="<%= part.name %>"><%= truncate(part.name, length: 35) %></a></b></small><br>
 							      <% if logged_in? %>
 							      	<% if PartAction.find_by(part_id: part.id).nil? %>
@@ -154,9 +158,9 @@
 			    <% @partrecommendations.each do |recommendation| %> 
 			    	<% break if @recommendation_count == 2 %>
 			    	<% next if @part_ids.include?(recommendation.part_id) %>
-			    	<li class="smallImgContainer" style="height: 162px; margin-bottom: 10px">
-							<div class="" style="height: 100%">
-								<div style="width: 82%; float: left">
+			    	<li class="smallImgContainer homeImageContainer">
+							<div class="maxHeight">
+								<div class="homePopulairImage">
 						      <a href="<%= device_product_category_part_path(recommendation.part.category.product.device.id, recommendation.part.category.product.id, recommendation.part.category.id, recommendation.part.id ) %>">
 						      	<% if recommendation.part.partimagefull_file_name.nil? %>
 						          <%= image_tag "missingSmall.png", class: "SmallImg borderGray" %>
@@ -164,7 +168,7 @@
 							      	<%= image_tag recommendation.part.partimagefull.url(:small), class: "SmallImg borderGray" %>
 							      <% end %>
 							    </a><br>
-							    <div style="width: 140px">
+							    <div class="width140px">
 							      <small><b><a href="<%= device_product_category_part_path(recommendation.part.category.product.device.id, recommendation.part.category.product.id, recommendation.part.category.id, recommendation.part.id ) %>" title="<%= recommendation.part.name %>"><%= truncate(recommendation.part.name, length: 35) %></a></b></small><br>
 							      <% if logged_in? %>
 							      	<% if PartAction.find_by(part_id: recommendation.part_id).nil? %>
@@ -184,9 +188,9 @@
 			    <% @partrecommendations.each do |recommendation| %> 
 			    	<% break if @recommendation_count == 3 %>
 			    	<% next if @part_ids.include?(recommendation.part_id) %>
-			    	<li class="smallImgContainer" style="height: 162px; margin-bottom: 10px">
-							<div class="" style="height: 100%">
-								<div style="width: 82%; float: left">
+			    	<li class="smallImgContainer homeImageContainer">
+							<div class="maxHeight">
+								<div class="homePopulairImage">
 						      <a href="<%= device_product_category_part_path(recommendation.part.category.product.device.id, recommendation.part.category.product.id, recommendation.part.category.id, recommendation.part.id ) %>">
 						      	<% if recommendation.part.partimagefull_file_name.nil? %>
 						          <%= image_tag "missingSmall.png", class: "SmallImg borderGray" %>
@@ -194,7 +198,7 @@
 							      	<%= image_tag recommendation.part.partimagefull.url(:small), class: "SmallImg borderGray" %>
 							      <% end %>
 							    </a><br>
-							    <div style="width: 140px">
+							    <div class="width140px">
 							      <small><b><a href="<%= device_product_category_part_path(recommendation.part.category.product.device.id, recommendation.part.category.product.id, recommendation.part.category.id, recommendation.part.id ) %>" title="<%= recommendation.part.name %>"><%= truncate(recommendation.part.name, length: 35) %></a></b></small><br>
 							      <% if logged_in? %>
 							      	<% if PartAction.find_by(part_id: recommendation.part_id).nil? %>

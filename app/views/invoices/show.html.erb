@@ -78,13 +78,16 @@
             <tr>
               <td class="width40"><%= item.name %></td>
               <td class="width12"><%= item.amount.to_s + "x" %></td>
-              <% if PartAction.find_by(part_id: item.part_id).nil? %>
+              <% if item.price_sale.nil? %>
                 <td class="width12"><%= number_to_currency(item.price, unit: '€') %></td>
                 <td class="width12"><%= item.discount_tier.to_s + "+" %></td>
                 <td class="width12"><%= number_to_currency(item.price_tier_discount, unit: "€") %></td>
                 <td class="width12"><%= number_to_currency(item.price_tier_discount * item.amount, unit: "€") %></td>
               <% else %>
-                <td class="width12"><%= number_to_currency(item.price_sale, unit: '€') %></td>
+                <td class="width12">
+                  <span class="background"><%= number_to_currency(DiscountPrice.where(part_id: item.part_id, amount: 1).first.price, unit: "€") %></span>
+                  <%= number_to_currency(item.price_sale, unit: '€') %>
+                </td>
                 <td class="width12">N/A</td>
                 <td class="width12">N/A</td>
                 <td class="width12"><%= number_to_currency(item.price_sale * item.amount, unit: "€") %></td>
@@ -93,7 +96,7 @@
           <% end %>
         <% end %>
         <tr>
-          <td colspan="5" style="height: 38px;" class="borderless"></td>
+          <td colspan="5" class="borderless height38px"></td>
         </tr>
           <% if params[:type] != "slip" %>
             <tr>
@@ -148,13 +151,13 @@
         <tbody>
           <div class="col-xs-6 col-md-4 col-md-offset-2">
             <strong>Signature sender</strong>
-            <p style="margin-top:50px">
+            <p class="top-50">
               ____________________
             </p>
           </div>
           <div class="col-xs-6 col-md-4 col-md-offset-2">
             <strong>Signature addressee</strong>
-            <p style="margin-top:50px">
+            <p class="top-50">
               ____________________
             </p>
           </div>

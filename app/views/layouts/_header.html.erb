@@ -1,79 +1,132 @@
-<header class="navbar navbar-fixed-top navbar-inverse" style="border: 0px solid !important">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <%= link_to "Smart Parts", root_path, id: "logo" %>
-    </div>
-    <nav class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-          <%= bootstrap_form_tag url: search_path, method: 'GET', html: {class: "form-inline"} do |f| %>
-            <div class="input-group">
-              <% if !params[:p_id].blank? %>
-                <%= f.select :product_device_id, options_for_select(Device.all.collect { |device| [device.name.titleize, device.id] }, Product.find(params[:p_id]).device_id), { prompt: "Choose device", hide_label: true}, { id: 'device_select', data: { url: options_brand_path, urlself: options_device_path } } %>
+<header class="noBorder">
+  <div class="container noPadding">
+    <div class="header">
+      <div class="headerDiv">
+        <div class="logo"><a href=<%= root_path %>><img src="/images/logoSmartParts.png" alt="Logo"></a></div>
+        <div class="headerItems">
+          <div class="inline-block">
+
+            <div class="itemAccount">
+              <% if logged_in? %>
+                <div class="inline-block">
+                  <span class="glyphicon glyphicon-user orange font-size-40"></span>
+                </div>
+                <div class="inline-block">
+                  <span class="dropdown">
+                    <a href="#" class="dropdown-toggle orange font-size-18" data-toggle="dropdown">
+                      My Account
+                    </a><br>
+                    <span class="white font-size-12"><%= truncate(current_user.name, length: 20) %></span>
+                    <ul class="dropdown-menu">
+                      <li><%= link_to "Profile",  current_user %></li>
+                      <li><%= link_to "Settings", edit_user_path(current_user) %></li>
+                      <li class="divider"></li>
+                      <li>
+                        <%= link_to "Log out", logout_path, method: "delete" %>
+                      </li>
+                    </ul>
+                  </span>
+                </div>
               <% else %>
-                <%= f.select :product_device_id, options_for_select(Device.all.collect { |device| [device.name.titleize, device.id] } ), { prompt: "Choose device", hide_label: true}, { id: 'device_select', data: { url: options_brand_path, urlself: options_device_path } } %>
+                <div class="inline-block">
+                  <span class="glyphicon glyphicon-user orange font-size-40"></span>
+                </div
+                ><div class="inline-block">
+                  <span>
+                    <a href=<%= login_path %> class="orange font-size-18"">My Account</a><br>
+                    <span class="white font-size-12">Sign in</span>
+                  </span>
+                </div>
               <% end %>
-
-              <%= f.select :product_brand, "Nothing", {prompt: "Choose brand", hide_label: true}, { id: 'brand_select', disabled: "disabled", data: { url: options_model_path } } %>
-        
-              <%= f.select :product_model, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'model_select', disabled: "disabled", data: { url: options_model_extended_path }} %>
-
-              <%= f.select :product_model_extended, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'model_extended_select', disabled: "disabled", data: { url: search_model_extended_path }} %>
             </div>
-            <div class="input-group">
-              <%= f.text_field :search_query, hide_label: true, class: "small" %>
-              <div class="input-group-btn">
-                <button class="btn btn-default btn-search" type="submit">
-                  <span class="glyphicon glyphicon-search"></span>
-                </button>
-              </div>
+
+            <div class="itemCart">
+              <% if logged_in? %>
+                <div class="inline-block">
+                  <span class="glyphicon glyphicon-shopping-cart orange font-size-40"></span>
+                </div>
+                <div class="inline-block">
+                  <span>
+                    <a href=<%= user_carts_path(current_user) %> class="orange font-size-18">
+                      Shopping Cart
+                    </a><br>
+                    <span class="white font-size-12"><%= cart_count(current_user) %> Items</span>
+                  </span>
+                </div>
+              <% else %>
+                <div class="inline-block">
+                  <span class="glyphicon glyphicon-shopping-cart orange font-size-40"></span>
+                </div>
+                <div class="inline-block">
+                  <span>
+                    <a href=<%= login_path %> class="orange font-size-18">
+                      Shopping Cart
+                    </a><br>
+                    <span class="white font-size-12">Not logged in</span>
+                  </span>
+                </div>
+              <% end %>
             </div>
-          <% end %>
-        </li>
-        <li><%= link_to "Home", root_path %></li>
-        <% if logged_in? %>
-          <li><%= link_to "My Cart (#{cart_count(current_user)})", user_carts_path(current_user) %></li>
-          <% if current_user.manager? %>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                Admin <b class="caret"></b>
-              </a>
-              <ul class="dropdown-menu">
-                  <li><%= link_to "Devices",          devices_path %></li>
-                  <li><%= link_to "Coupons",          coupons_path %></li>
-                  <li><%= link_to "Locations",        locations_path %></li>
-                  <li><%= link_to "Invoices",         invoices_path %></li>
-                  <li><%= link_to "Users",            users_path %></li>
-                  <li><%= link_to "Recommendations",  part_recommendations_path %></li>
-                  <li><%= link_to "Actions",          actions_path %></li>
-                  <% if current_user.admin? %>
-                    <li><%= link_to "Statuses",       cart_statuses_path %></li>
-                  <% end %>
-              </ul>
-            </li>
-          <% end %>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              Account <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-              <li><%= link_to "Profile",  current_user %></li>
-              <li><%= link_to "Settings", edit_user_path(current_user) %></li>
-              <li class="divider"></li>
-              <li>
-                <%= link_to "Log out", logout_path, method: "delete" %>
-              </li>
-            </ul>
-          </li>
-        <% else %>
-          <li><%= link_to "Log in", login_path %></li>
+
+            <div class="itemAdmin">
+              <% if logged_in? && current_user.admin? %>
+                <div class="inline-block">
+                  <span class="glyphicon glyphicon-dashboard orange font-size-40"></span>
+                </div>
+                <div class="inline-block">
+                  <span class="dropdown">
+                    <a href="#" class="dropdown-toggle orange font-size-18" data-toggle="dropdown">
+                      Admin <b class="caret"></b>
+                    </a><br>
+                    <span>test</span>
+                    <ul class="dropdown-menu">
+                      <li><%= link_to "Devices",          devices_path %></li>
+                      <li><%= link_to "Coupons",          coupons_path %></li>
+                      <li><%= link_to "Locations",        locations_path %></li>
+                      <li><%= link_to "Invoices",         invoices_path %></li>
+                      <li><%= link_to "Users",            users_path %></li>
+                      <li><%= link_to "Recommendations",  part_recommendations_path %></li>
+                      <li><%= link_to "Actions",          actions_path %></li>
+                      <li><%= link_to "Statuses",         cart_statuses_path %></li>
+                    </ul>
+                  </span>
+                </div>
+              <% end %>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu">
+      <div class="menuCenter">  
+        <%= bootstrap_form_tag url: search_path, method: 'GET', html: {class: "form-inline", style: "width: 933px"} do |f| %>
+          <span>Search your product: </span>
+          <div class="input-group">
+            <% if !params[:p_id].blank? %>
+              <%= f.select :product_device_id, options_for_select(Device.all.collect { |device| [device.name.titleize, device.id] }, Product.find(params[:p_id]).device_id), { prompt: "Choose device", hide_label: true}, { id: 'device_select', data: { url: options_brand_path, urlself: options_device_path } } %>
+            <% else %>
+              <%= f.select :product_device_id, options_for_select(Device.all.collect { |device| [device.name.titleize, device.id] } ), { prompt: "Choose device", hide_label: true}, { id: 'device_select', data: { url: options_brand_path, urlself: options_device_path } } %>
+            <% end %>
+
+            <%= f.select :product_brand, "Nothing", {prompt: "Choose brand", hide_label: true}, { id: 'brand_select', disabled: "disabled", data: { url: options_model_path } } %>
+          
+            <%= f.select :product_model, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'model_select', disabled: "disabled", data: { url: options_model_extended_path }} %>
+
+            <%= f.select :product_model_extended, "Nothing", {prompt: "Choose model", hide_label: true}, { id: 'model_extended_select', disabled: "disabled", data: { url: search_model_extended_path }} %>
+          </div>
+          <span>or: </span>
+          <div class="input-group">
+            <%= f.text_field :search_query, hide_label: true, class: "small" %>
+            <div class="input-group-btn">
+              <button class="btn btn-default btn-search" type="submit">
+                <span class="glyphicon glyphicon-search"></span>
+              </button>
+            </div>
+          </div>
         <% end %>
-      </ul>
-    </nav>
+      </div>
+    </div>
   </div>
 </header>

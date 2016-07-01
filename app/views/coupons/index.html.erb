@@ -24,7 +24,7 @@
         	<% @coupons.each do |coupon| %>
 	        	<tr>
 	        		<td><%= coupon.code %></td>
-	        		<td style="max-width: 75px;">
+	        		<td class="max-width75px">
                 <% if !coupon.category_ids.blank? %>
                   <% coupon.category_ids.each do |category_id| %>
                     <% if Category.exists?(category_id) %>
@@ -35,7 +35,7 @@
                   <% end %>
                 <% end %>
               </td>
-              <td style="max-width: 75px;">
+              <td class="max-width75px">
                 <% if !coupon.part_ids.blank? %>
                   <% coupon.part_ids.each do |part_id| %>
                     <% if Part.exists?(part_id) %>
@@ -46,7 +46,7 @@
                   <% end %>
                 <% end %>
               </td>
-              <td style="max-width: 75px;">
+              <td class="max-width75px">
                 <% if !coupon.user_ids.blank? %>
                   <% coupon.user_ids.each do |user_id| %>
                     <% if User.exists?(user_id) %>

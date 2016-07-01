@@ -139,8 +139,8 @@
   <% end %>  
       
   <% if @cart_items.length == 0 %>
-    <button class="btn btn-primary" disabled="disabled" style="float: right">Purchase</button>
-    <button class="btn btn-danger" disabled="disabled" style="float: right; margin-right: 10px">Current coupon: None</button>
+    <button class="btn btn-primary floatRight" disabled="disabled">Purchase</button>
+    <button class="btn btn-danger floatRight right-none" disabled="disabled">Current coupon: None</button>
   <% else %>
     <%= select_tag "delivery_method", options_for_select(["Shipping", "Pick up"], @cart.delivery_method), class: 'form-control small floatRight', data: { url: user_cart_path(current_user.id, @cart.id), cart: @cart.id } %>
 

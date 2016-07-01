@@ -16,8 +16,8 @@ class InvoicesController < ApplicationController
 		@cart_price_total_discount = 0
 		@cart_items.each do |item|
 			@cart_amount_total += item.amount
-			if PartAction.find_by(part_id: item.part_id).nil?
-				@cart_price_total += item.price_tier_discount * item.amount
+			if item.price_sale.nil?
+				@cart_price_total += (item.price_tier_discount * item.amount)
 			else
 				@cart_price_total += (item.price_sale * item.amount)
 			end	

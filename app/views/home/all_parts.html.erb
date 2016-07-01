@@ -23,7 +23,7 @@
             <tr>
               <td class="col-lg-4 col-md-5">
                 <div class="title">
-                  <%= link_to part_path(part_id: part.id) do %>
+                  <%= link_to part_path(part_id: part.id, category_id: params[:category_id], search_query: params[:search_query]) do %>
                     <b><%= part.name %></b>
                   <% end %>
                 </div>
@@ -82,7 +82,7 @@
                       <span class="background"><%= number_to_currency(DiscountPrice.where(part_id: part.id, amount: 1).first.price, unit: "€") %></span>
                       <%= number_to_currency(PartAction.find_by(part_id: part.id).price, unit: "€") %><br>
                     <% end %>
-                  <small style="font-size: 9px;">Excl 21% VAT</small>
+                  <small class="font-size-9">Excl 21% VAT</small>
                 </td>
                 <td class="center">
                   <%= render partial: "cart_modal", locals: {part: part }%>

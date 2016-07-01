@@ -1,21 +1,21 @@
 <% provide(:title, @part.name) %>
 <% breadcrumb :part, @part %>
-<div class="panel-body">
-  <div class="row">
+<div class="panel-body noPadding">
+  <div class="row partPadding">
     <div class="col-sm-6 ImageContainer noPadding">
       <h4><%= @part.name %></h4>
-      <div class="bigImage col-sm-1 noPadding" style="width: 302px;">
+      <div class="bigImage col-sm-1 noPadding width302px">
         <% if @partimages.first.nil? %>
           <%= image_tag "MissingLarge.png" %>
         <% else %>
-          <a class="BigImgOriginal" style="display: inline-block;" href=<%= @partimages.first.pimg.url %>>
+          <a class="BigImgOriginal inline-block" href=<%= @partimages.first.pimg.url %>>
             <%= image_tag @partimages.first.pimg.url(:large), class: "BigImg borderGray", title: @part.name %>
             <div class="bottomRight"><span class="glyphicon glyphicon-search"></span></div>
           </a>
         <% end %>
       </div>
       <div style="clear: both;"></div> 
-      <div style="min-width: 284px; min-height: 71px; ">
+      <div class="min-width284px min-height71px">
         <% @partimages.each do |image| %>
           <div class="smallImgContainer">
             <%= image_tag image.pimg.url(:thumb), data: {hover: image.pimg.url(:large), url: image.pimg.url}, class: "SmallImg borderGray" %>
@@ -36,10 +36,20 @@
               </tr>
             </thead>
             <tbody>
-              <% @discount_prices.each do |d_price| %>
+              <% if PartAction.find_by(part_id: @part.id).nil? %>
+                <% @discount_prices.each do |d_price| %>
+                  <tr>
+                    <td class="right"><%= d_price.amount.to_s + "+" %></td>
+                    <td class="right"><%= number_to_currency(d_price.price, unit: "€") %></td>
+                  </tr>
+                <% end %>
+              <% else %>
                 <tr>
-                  <td class="right"><%= d_price.amount.to_s + "+" %></td>
-                  <td class="right"><%= number_to_currency(d_price.price, unit: "€") %></td>
+                  <td class="right">1+</td>
+                  <td class="right">
+                    <span class="background"><%= number_to_currency(DiscountPrice.where(part_id: @part.id, amount: 1).first.price, unit: "€") %></span>
+                    <span><%= number_to_currency(PartAction.find_by(part_id: @part.id).price, unit: "€") %></span>
+                  </td>
                 </tr>
               <% end %>
               <tr>
@@ -84,7 +94,7 @@
       </div>
     <% end %>
   </div>
-  <div class="table-responsive noPadding borderGray" style="margin: 15px -15px">
+  <div class="table-responsive noPadding borderGray partMargin">
     <table class="table table-hover ">
       <tbody>
         <% if @descriptions.length > 0 %>
@@ -136,7 +146,7 @@
   </div>
 
   <% if @part.parts_products.count > 1 %>
-    <div class="col-md-6 borderGray" style="padding: 5px;">
+    <div class="col-md-6 borderGray padding5">
       <p>This part can be used in these products:</p> 
       <ul class="list">
         <% @part.parts_products.first(10).each do |connection| %>

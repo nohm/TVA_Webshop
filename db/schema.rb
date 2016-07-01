@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160616094855) do
+ActiveRecord::Schema.define(version: 20160701115021) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,9 +108,14 @@ ActiveRecord::Schema.define(version: 20160616094855) do
 
   create_table "part_actions", force: :cascade do |t|
     t.integer  "part_id"
-    t.decimal  "price",      precision: 10, scale: 2
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.decimal  "price",                    precision: 10, scale: 2
+    t.datetime "created_at",                                                        null: false
+    t.datetime "updated_at",                                                        null: false
+    t.string   "actionimage_file_name"
+    t.string   "actionimage_content_type"
+    t.integer  "actionimage_file_size"
+    t.datetime "actionimage_updated_at"
+    t.boolean  "active",                                            default: false
   end
 
   create_table "part_recommendations", force: :cascade do |t|

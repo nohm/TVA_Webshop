@@ -62,7 +62,9 @@ Rails.application.routes.draw do
             resources :partimages
             resources :discount_prices
             resources :part_stocks
-            resources :part_actions
+            resources :part_actions do
+              get '/show_on_homepage' => 'part_actions#show_on_homepage', :as => :show_on_homepage
+            end
             resources :partdescriptions do
               resources :part_subdescriptions
             end
